@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>资金与结算中心 - 客户原型 V3.0</title>
+  <title>资金与结算中心 - 客户原型 V3.3</title>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <style>
     :root {
@@ -433,6 +433,38 @@
       padding: 16px;
     }
 
+    .notice-card {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 14px;
+      padding: 12px 14px;
+      border: 1px solid #bcd4ff;
+      border-radius: 8px;
+      background: #eef5ff;
+    }
+
+    .notice-card svg {
+      width: 18px;
+      height: 18px;
+      color: var(--blue);
+      margin-top: 2px;
+    }
+
+    .notice-card strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .notice-card p {
+      margin: 0;
+      color: #4c5f7c;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
     .store-progress {
       display: grid;
       gap: 12px;
@@ -559,6 +591,91 @@
     .trend-stack i:nth-child(1) { background: var(--blue); }
     .trend-stack i:nth-child(2) { background: var(--green); }
     .trend-stack i:nth-child(3) { background: var(--amber); }
+
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend i {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      display: inline-block;
+      background: var(--blue);
+    }
+
+    .legend span:nth-child(2) i { background: var(--green); }
+    .legend span:nth-child(3) i { background: var(--amber); }
+
+    .flow-cards {
+      display: grid;
+      gap: 10px;
+    }
+
+    .flow-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+      padding: 13px;
+    }
+
+    .flow-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .flow-card strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 24px;
+      letter-spacing: 0;
+    }
+
+    .flow-card small {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .flow-progress {
+      height: 8px;
+      margin-top: 12px;
+      border-radius: 999px;
+      background: #e6edf6;
+      overflow: hidden;
+    }
+
+    .flow-progress span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--blue);
+    }
+
+    .flow-card.settlement .flow-progress span { background: var(--green); }
+    .flow-card.cash .flow-progress span { background: #157f3f; }
+
+    .reason-cell {
+      color: #334155;
+      line-height: 1.45;
+    }
 
     table {
       width: 100%;
@@ -815,6 +932,14 @@
             <button class="tab" data-view-target="import">Summary 导入</button>
           </div>
           <div class="panel-body view" data-view="dashboard">
+            <div class="notice-card">
+              <i data-lucide="info"></i>
+              <div>
+                <strong>数据来源与核对口径</strong>
+                <p>Summary PDF 用于经营账确认；付款结算-交易一览用于统计 Released / Deferred、交易净额与差异追溯；付款结算-所有结算用于账期应收与转账状态；第三方收款账户用于实际到账核对。日常核对不再要求用户上传 Transaction CSV。</p>
+              </div>
+              <span class="pill blue">客户可见</span>
+            </div>
             <div class="kpi-grid">
               <article class="kpi">
                 <div class="kpi-head">
@@ -905,26 +1030,26 @@
 
           <article class="panel">
             <div class="panel-header">
-              <div class="panel-title"><i data-lucide="triangle-alert"></i>店铺差异风险</div>
+              <div class="panel-title"><i data-lucide="triangle-alert"></i>差异预警排行</div>
               <button class="btn icon" title="刷新"><i data-lucide="refresh-cw"></i></button>
             </div>
             <div class="panel-body">
               <div class="risk-list">
                 <div class="risk-item">
                   <div><strong>A51-UK 经营差异</strong><span>跨月结算 7 个 SettlementID，延迟 GBP 767.78</span></div>
-                  <span class="pill amber">需解释</span>
+                  <span class="pill amber">£582.41</span>
                 </div>
                 <div class="risk-item">
                   <div><strong>A53-IT 未到账</strong><span>2 笔已转账未匹配第三方收款账户流水</span></div>
-                  <span class="pill red">高风险</span>
+                  <span class="pill red">€2,641.27</span>
                 </div>
                 <div class="risk-item">
                   <div><strong>A57-US 到账在途</strong><span>转账后 3 天内，仍处合理到账窗口</span></div>
-                  <span class="pill blue">观察</span>
+                  <span class="pill blue">$1,094.24</span>
                 </div>
                 <div class="risk-item">
                   <div><strong>A49-DE 已完成</strong><span>经营差异低于阈值，资金已到账</span></div>
-                  <span class="pill green">正常</span>
+                  <span class="pill green">€0.34</span>
                 </div>
               </div>
             </div>
@@ -934,8 +1059,8 @@
         <section class="grid-3 view" data-view="dashboard">
           <article class="panel">
             <div class="panel-header">
-              <div class="panel-title"><i data-lucide="chart-column"></i>释放趋势</div>
-              <span class="subtle">Released / Deferred</span>
+              <div class="panel-title"><i data-lucide="chart-column"></i>三账趋势</div>
+              <span class="subtle">经营净额 / 结算净额 / 到账金额</span>
             </div>
             <div class="panel-body">
               <div class="trend">
@@ -946,30 +1071,46 @@
                 <div class="trend-col"><div class="trend-stack"><i style="height:96px"></i><i style="height:22px"></i><i style="height:11px"></i></div><span>5月</span></div>
                 <div class="trend-col"><div class="trend-stack"><i style="height:72px"></i><i style="height:26px"></i><i style="height:16px"></i></div><span>6月</span></div>
               </div>
+              <div class="legend">
+                <span><i></i>经营净额</span>
+                <span><i></i>结算净额</span>
+                <span><i></i>到账金额</span>
+              </div>
             </div>
           </article>
 
           <article class="panel">
             <div class="panel-header">
-              <div class="panel-title"><i data-lucide="scale"></i>经营核对</div>
-              <span class="subtle">PDF vs 交易一览</span>
+              <div class="panel-title"><i data-lucide="route"></i>资金链路</div>
+              <span class="subtle">从经营到账户</span>
             </div>
             <div class="panel-body">
-              <table>
-                <thead><tr><th>项目</th><th class="num">PDF</th><th class="num">交易一览</th><th class="num">差异</th></tr></thead>
-                <tbody>
-                  <tr><td>收入</td><td class="num">60,521.79</td><td class="num">59,938.24</td><td class="num">583.55</td></tr>
-                  <tr><td>支出</td><td class="num">-36,295.82</td><td class="num">-36,294.68</td><td class="num">-1.14</td></tr>
-                  <tr><td>税费</td><td class="num">759.20</td><td class="num">759.20</td><td class="num">0.00</td></tr>
-                  <tr><td><strong>净额</strong></td><td class="num"><strong>24,985.17</strong></td><td class="num"><strong>24,402.76</strong></td><td class="num"><strong>582.41</strong></td></tr>
-                </tbody>
-              </table>
+              <div class="flow-cards">
+                <div class="flow-card">
+                  <div class="flow-top"><span>经营账</span><span>Summary PDF</span></div>
+                  <strong>$90.8万</strong>
+                  <small>按订单时间确认经营净额，用于税务与经营分析。</small>
+                  <div class="flow-progress"><span style="width:100%"></span></div>
+                </div>
+                <div class="flow-card settlement">
+                  <div class="flow-top"><span>结算账</span><span>付款结算</span></div>
+                  <strong>$86.2万</strong>
+                  <small>按交易一览统计已发放与延迟发放，解释平台释放差异。</small>
+                  <div class="flow-progress"><span style="width:94.9%"></span></div>
+                </div>
+                <div class="flow-card cash">
+                  <div class="flow-top"><span>资金账</span><span>第三方收款账户</span></div>
+                  <strong>$79.9万</strong>
+                  <small>按实际到账核对转账金额、手续费与汇损。</small>
+                  <div class="flow-progress"><span style="width:88%"></span></div>
+                </div>
+              </div>
             </div>
           </article>
 
           <article class="panel">
             <div class="panel-header">
-              <div class="panel-title"><i data-lucide="messages-square"></i>自动说明</div>
+              <div class="panel-title"><i data-lucide="messages-square"></i>差异说明</div>
               <span class="pill amber">已生成</span>
             </div>
             <div class="panel-body">
@@ -1005,6 +1146,7 @@
                   <th class="num">应转</th>
                   <th class="num">已到账</th>
                   <th style="width:96px">状态</th>
+                  <th style="width:180px">差异原因</th>
                   <th style="width:86px">操作</th>
                 </tr>
               </thead>
@@ -1021,11 +1163,12 @@
                   <td class="num">22,660.23</td>
                   <td class="num">21,934.18</td>
                   <td><span class="pill amber">需解释</span></td>
+                  <td class="reason-cell">跨月结算 + 部分订单延迟发放</td>
                   <td><a class="link" href="#detail" data-view-target="detail">详情</a></td>
                 </tr>
                 <tr>
                   <td>2026-05</td>
-                  <td>A49-DE</td>
+                  <td><a class="link" href="#detail" data-view-target="detail">A49-DE</a></td>
                   <td>EUR</td>
                   <td class="num">31,276.44</td>
                   <td class="num">31,276.10</td>
@@ -1035,11 +1178,12 @@
                   <td class="num">18,420.50</td>
                   <td class="num">18,420.50</td>
                   <td><span class="pill green">已到账</span></td>
-                  <td><a class="link">详情</a></td>
+                  <td class="reason-cell">经营差异低于阈值，资金已到账</td>
+                  <td><a class="link" href="#detail" data-view-target="detail">详情</a></td>
                 </tr>
                 <tr>
                   <td>2026-05</td>
-                  <td>A57-US</td>
+                  <td><a class="link" href="#detail" data-view-target="detail">A57-US</a></td>
                   <td>USD</td>
                   <td class="num">18,941.30</td>
                   <td class="num">18,886.08</td>
@@ -1049,11 +1193,12 @@
                   <td class="num">9,118.60</td>
                   <td class="num">8,024.36</td>
                   <td><span class="pill amber">在途</span></td>
-                  <td><a class="link">详情</a></td>
+                  <td class="reason-cell">平台已转账，第三方收款账户到账在途</td>
+                  <td><a class="link" href="#detail" data-view-target="detail">详情</a></td>
                 </tr>
                 <tr>
                   <td>2026-05</td>
-                  <td>A53-IT</td>
+                  <td><a class="link" href="#detail" data-view-target="detail">A53-IT</a></td>
                   <td>EUR</td>
                   <td class="num">12,405.12</td>
                   <td class="num">12,402.02</td>
@@ -1063,7 +1208,8 @@
                   <td class="num">6,950.72</td>
                   <td class="num">4,309.45</td>
                   <td><span class="pill red">未到账</span></td>
-                  <td><a class="link">详情</a></td>
+                  <td class="reason-cell">已转账未匹配第三方收款账户流水</td>
+                  <td><a class="link" href="#detail" data-view-target="detail">详情</a></td>
                 </tr>
               </tbody>
             </table>
