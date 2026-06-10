@@ -1,0 +1,2730 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>资金与结算中心 - HTML 原型</title>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --panel-soft: #f9fafc;
+      --line: #dfe5ef;
+      --line-strong: #c8d2e2;
+      --text: #152033;
+      --muted: #667085;
+      --subtle: #98a2b3;
+      --blue: #1f6feb;
+      --blue-soft: #eaf2ff;
+      --teal: #0f766e;
+      --teal-soft: #e8f6f4;
+      --green: #17803d;
+      --green-soft: #e9f7ee;
+      --amber: #b7791f;
+      --amber-soft: #fff4d8;
+      --red: #c24132;
+      --red-soft: #fdeceb;
+      --indigo: #4f46e5;
+      --violet: #7c3aed;
+      --shadow: 0 14px 34px rgba(16, 24, 40, 0.08);
+      --radius: 8px;
+      --sidebar: 248px;
+      --header: 68px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+      font-family: var(--font);
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: var(--sidebar) minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 18px 14px;
+      border-right: 1px solid var(--line);
+      background: #ffffff;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      height: 44px;
+      padding: 0 10px 16px;
+      border-bottom: 1px solid var(--line);
+      font-weight: 750;
+      letter-spacing: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 7px;
+      color: #fff;
+      background: #152033;
+      font-size: 14px;
+    }
+
+    .menu-section {
+      margin-top: 18px;
+    }
+
+    .menu-title {
+      padding: 0 10px 8px;
+      color: var(--subtle);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 38px;
+      padding: 8px 10px;
+      border: 0;
+      border-radius: 7px;
+      color: var(--muted);
+      background: transparent;
+      text-align: left;
+    }
+
+    .nav-item svg {
+      width: 17px;
+      height: 17px;
+      flex: 0 0 auto;
+    }
+
+    .nav-item.active {
+      color: var(--blue);
+      background: var(--blue-soft);
+      font-weight: 700;
+    }
+
+    .main {
+      min-width: 0;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: var(--header);
+      padding: 12px 22px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+    }
+
+    .page-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .page-title h1 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .page-title p {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .scope-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 30px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn,
+    .icon-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 34px;
+      border: 1px solid var(--line-strong);
+      border-radius: 7px;
+      color: var(--text);
+      background: #fff;
+      text-decoration: none;
+      transition: border-color .15s ease, background .15s ease, color .15s ease, transform .15s ease;
+    }
+
+    .btn {
+      padding: 0 12px;
+      white-space: nowrap;
+    }
+
+    .icon-btn {
+      width: 34px;
+      padding: 0;
+    }
+
+    .btn svg,
+    .icon-btn svg {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 auto;
+    }
+
+    .btn:hover,
+    .icon-btn:hover {
+      border-color: #aab7cc;
+      background: #f8fafc;
+    }
+
+    .btn.primary {
+      color: #fff;
+      border-color: var(--blue);
+      background: var(--blue);
+    }
+
+    .btn.primary:hover {
+      background: #1a5fc8;
+    }
+
+    .btn.danger {
+      color: var(--red);
+      border-color: #f2b4ad;
+      background: var(--red-soft);
+    }
+
+    [data-tip]::after {
+      content: attr(data-tip);
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 8px);
+      z-index: 50;
+      max-width: 220px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      color: #fff;
+      background: #101828;
+      font-size: 12px;
+      line-height: 1.35;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-50%) translateY(4px);
+      transition: opacity .12s ease, transform .12s ease;
+    }
+
+    [data-tip]:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .content {
+      width: min(1580px, 100%);
+      margin: 0 auto;
+      padding: 18px 22px 34px;
+    }
+
+    .workspace-tabs {
+      display: flex;
+      gap: 4px;
+      min-height: 42px;
+      margin-bottom: 14px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      overflow-x: auto;
+    }
+
+    .workspace-tab {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      height: 32px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 6px;
+      color: var(--muted);
+      background: transparent;
+      white-space: nowrap;
+    }
+
+    .workspace-tab svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .workspace-tab.active {
+      color: var(--text);
+      background: #eef4ff;
+      font-weight: 700;
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .filter-band,
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    .filter-band {
+      margin-bottom: 16px;
+      padding: 14px;
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(118px, 1fr));
+      gap: 10px;
+      align-items: end;
+    }
+
+    .field {
+      min-width: 0;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .control,
+    .search-box {
+      width: 100%;
+      min-height: 36px;
+      border: 1px solid var(--line-strong);
+      border-radius: 7px;
+      color: var(--text);
+      background: #fff;
+    }
+
+    .control {
+      padding: 0 10px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 10px;
+    }
+
+    .search-box svg {
+      width: 15px;
+      height: 15px;
+      color: var(--subtle);
+      flex: 0 0 auto;
+    }
+
+    .search-box input {
+      width: 100%;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      color: var(--text);
+      background: transparent;
+    }
+
+    .filter-actions {
+      display: flex;
+      gap: 8px;
+      align-items: end;
+      justify-content: flex-end;
+    }
+
+    .notice {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: start;
+      margin-bottom: 16px;
+      padding: 12px;
+      border: 1px solid #b8d1fb;
+      border-radius: var(--radius);
+      background: #f2f7ff;
+    }
+
+    .notice svg {
+      width: 18px;
+      height: 18px;
+      color: var(--blue);
+      margin-top: 2px;
+    }
+
+    .notice-title {
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .notice-text {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .source-card {
+      min-height: 148px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    .source-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 10px;
+      font-size: 14px;
+    }
+
+    .source-card h3 svg {
+      width: 16px;
+      height: 16px;
+      color: var(--blue);
+    }
+
+    .source-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .source-list {
+      display: grid;
+      gap: 7px;
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .source-list span {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .source-list strong {
+      color: var(--text);
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+
+    .mapping-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .mapping-card {
+      min-height: 106px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    .mapping-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .mapping-card strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .mapping-card small {
+      display: block;
+      margin-top: 8px;
+      color: var(--subtle);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .kpi-card {
+      min-width: 0;
+      min-height: 148px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    .kpi-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .kpi-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      font-size: 14px;
+      font-weight: 750;
+    }
+
+    .kpi-title svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    .source-tag {
+      display: inline-flex;
+      align-items: center;
+      height: 23px;
+      padding: 0 8px;
+      border-radius: 6px;
+      background: var(--panel-soft);
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: baseline;
+      padding: 7px 0;
+      border-top: 1px solid #edf1f7;
+    }
+
+    .metric-row:first-of-type {
+      border-top: 0;
+    }
+
+    .metric-row span {
+      min-width: 0;
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .metric-row strong {
+      font-size: 18px;
+      line-height: 1;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .metric-row small {
+      color: var(--subtle);
+      font-size: 12px;
+    }
+
+    .tone-blue .kpi-title,
+    .tone-blue .metric-row strong {
+      color: var(--blue);
+    }
+
+    .tone-teal .kpi-title,
+    .tone-teal .metric-row strong {
+      color: var(--teal);
+    }
+
+    .tone-green .kpi-title,
+    .tone-green .metric-row strong {
+      color: var(--green);
+    }
+
+    .tone-amber .kpi-title,
+    .tone-amber .metric-row strong {
+      color: var(--amber);
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr);
+      gap: 12px;
+    }
+
+    .panel {
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 52px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    .panel-subtitle {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .panel-body {
+      padding: 14px;
+    }
+
+    .segmented {
+      display: inline-flex;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--panel-soft);
+      white-space: nowrap;
+    }
+
+    .segmented button {
+      min-height: 28px;
+      padding: 0 10px;
+      border: 0;
+      border-radius: 5px;
+      color: var(--muted);
+      background: transparent;
+    }
+
+    .segmented button.active {
+      color: var(--text);
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(16, 24, 40, .08);
+      font-weight: 700;
+    }
+
+    .trend-chart {
+      display: grid;
+      grid-template-columns: 38px repeat(6, minmax(34px, 1fr));
+      grid-template-rows: 170px 24px;
+      gap: 0 8px;
+      align-items: end;
+      min-height: 210px;
+    }
+
+    .axis {
+      align-self: stretch;
+      display: grid;
+      grid-template-rows: repeat(4, 1fr);
+      padding-top: 8px;
+      color: var(--subtle);
+      font-size: 11px;
+      text-align: right;
+    }
+
+    .bars {
+      display: contents;
+    }
+
+    .bar-group {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(8px, 1fr));
+      gap: 4px;
+      align-items: end;
+      height: 170px;
+      padding-top: 8px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .bar {
+      border-radius: 5px 5px 0 0;
+      min-height: 8px;
+    }
+
+    .bar.operation {
+      background: #2b6cb0;
+    }
+
+    .bar.settlement {
+      background: #0f766e;
+    }
+
+    .bar.cash {
+      background: #17803d;
+    }
+
+    .month-label {
+      grid-row: 2;
+      align-self: start;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      padding-top: 6px;
+    }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: currentColor;
+    }
+
+    .flow-map {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      min-height: 210px;
+    }
+
+    .flow-node {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-width: 0;
+      min-height: 180px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-soft);
+    }
+
+    .flow-node h3 {
+      margin: 0;
+      font-size: 14px;
+      letter-spacing: 0;
+    }
+
+    .flow-node .amount {
+      margin-top: 10px;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .progress {
+      height: 8px;
+      margin-top: 12px;
+      border-radius: 999px;
+      background: #e7ecf3;
+      overflow: hidden;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+    }
+
+    .flow-meta {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .risk-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .risk-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 56px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    .risk-name {
+      min-width: 0;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .risk-detail {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .risk-value {
+      font-weight: 800;
+      color: var(--red);
+      white-space: nowrap;
+    }
+
+    .table-wrap {
+      overflow: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 1180px;
+    }
+
+    th,
+    td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      color: var(--muted);
+      background: #f8fafc;
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    td {
+      font-size: 13px;
+      background: #fff;
+    }
+
+    tr:hover td {
+      background: #fbfdff;
+    }
+
+    .cell-main {
+      font-weight: 750;
+      color: var(--text);
+    }
+
+    .cell-sub {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .num {
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    th.num {
+      text-align: right;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 24px;
+      padding: 0 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .status.ok {
+      color: var(--green);
+      background: var(--green-soft);
+    }
+
+    .status.warn {
+      color: var(--amber);
+      background: var(--amber-soft);
+    }
+
+    .status.bad {
+      color: var(--red);
+      background: var(--red-soft);
+    }
+
+    .status.info {
+      color: var(--blue);
+      background: var(--blue-soft);
+    }
+
+    .status.neutral {
+      color: var(--muted);
+      background: #eef2f7;
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
+    .import-layout {
+      display: grid;
+      grid-template-columns: minmax(280px, .82fr) minmax(0, 1.18fr);
+      gap: 12px;
+    }
+
+    .drop-zone {
+      display: grid;
+      place-items: center;
+      min-height: 278px;
+      padding: 18px;
+      border: 1px dashed #9fb1c9;
+      border-radius: var(--radius);
+      background: #f8fbff;
+      text-align: center;
+    }
+
+    .drop-zone svg {
+      width: 36px;
+      height: 36px;
+      color: var(--blue);
+      margin-bottom: 12px;
+    }
+
+    .drop-zone h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .drop-zone p {
+      max-width: 360px;
+      margin: 8px auto 16px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .steps {
+      display: grid;
+      gap: 10px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      min-height: 58px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    .step-num {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--blue);
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .step-title {
+      font-weight: 750;
+    }
+
+    .step-desc {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .export-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .export-card {
+      min-height: 132px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    .export-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 8px;
+      font-size: 15px;
+    }
+
+    .export-card h3 svg {
+      width: 17px;
+      height: 17px;
+      color: var(--blue);
+    }
+
+    .export-card p {
+      min-height: 38px;
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: none;
+      background: rgba(15, 23, 42, .38);
+    }
+
+    .drawer-backdrop.open {
+      display: block;
+    }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+      width: min(860px, 100vw);
+      height: 100vh;
+      background: #fff;
+      box-shadow: var(--shadow);
+      transform: translateX(100%);
+      transition: transform .2s ease;
+    }
+
+    .drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 76px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .drawer-title {
+      min-width: 0;
+    }
+
+    .drawer-title h2 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: 0;
+    }
+
+    .drawer-title p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .drawer-body {
+      min-height: 0;
+      overflow-y: auto;
+      padding: 16px 18px 24px;
+      background: var(--bg);
+    }
+
+    .summary-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .summary-item {
+      min-height: 82px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    .summary-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .summary-item strong {
+      display: block;
+      margin-top: 7px;
+      font-size: 21px;
+      letter-spacing: 0;
+    }
+
+    .detail-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 12px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      overflow-x: auto;
+    }
+
+    .detail-tab {
+      flex: 0 0 auto;
+      min-height: 32px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 6px;
+      color: var(--muted);
+      background: transparent;
+    }
+
+    .detail-tab.active {
+      color: var(--text);
+      background: #eef4ff;
+      font-weight: 750;
+    }
+
+    .detail-pane {
+      display: none;
+    }
+
+    .detail-pane.active {
+      display: block;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .kv-list {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .kv-row {
+      display: grid;
+      grid-template-columns: minmax(100px, .9fr) minmax(0, 1.1fr);
+      gap: 12px;
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--line);
+      font-size: 13px;
+    }
+
+    .kv-row:last-child {
+      border-bottom: 0;
+    }
+
+    .kv-row span {
+      color: var(--muted);
+    }
+
+    .kv-row strong {
+      min-width: 0;
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+
+    .analysis-box {
+      padding: 14px;
+      border: 1px solid #f0cf9b;
+      border-radius: var(--radius);
+      background: #fff8ea;
+    }
+
+    .analysis-box h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    .analysis-box p {
+      margin: 0 0 10px;
+      color: #6f4b14;
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 120px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      min-height: 42px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      font-size: 13px;
+    }
+
+    .timeline-row time {
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .timeline-row strong {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      place-items: center;
+      padding: 18px;
+      background: rgba(15, 23, 42, .38);
+    }
+
+    .modal-backdrop.open {
+      display: grid;
+    }
+
+    .modal {
+      width: min(520px, 100%);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .modal-head,
+    .modal-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .modal-foot {
+      justify-content: flex-end;
+      border-top: 1px solid var(--line);
+      border-bottom: 0;
+    }
+
+    .modal h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .modal-body {
+      padding: 16px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .file-preview {
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-soft);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .empty-state {
+      display: grid;
+      place-items: center;
+      min-height: 180px;
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius);
+      color: var(--muted);
+      background: var(--panel-soft);
+      text-align: center;
+    }
+
+    @media (max-width: 1220px) {
+      .filter-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .kpi-grid,
+      .mapping-grid,
+      .export-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .dashboard-grid,
+      .source-grid,
+      .import-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 860px) {
+      :root {
+        --sidebar: 0px;
+      }
+
+      .app {
+        display: block;
+      }
+
+      .sidebar {
+        position: static;
+        height: auto;
+        padding: 10px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .brand {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .menu-section {
+        display: none;
+      }
+
+      .topbar {
+        position: static;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .filter-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .filter-actions {
+        grid-column: 1 / -1;
+        justify-content: flex-start;
+      }
+
+      .kpi-grid,
+      .flow-map,
+      .mapping-grid,
+      .summary-strip,
+      .detail-grid,
+      .export-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .content {
+        padding: 14px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .filter-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .trend-chart {
+        grid-template-columns: 30px repeat(6, minmax(24px, 1fr));
+        gap: 0 5px;
+      }
+
+      .bar-group {
+        gap: 2px;
+      }
+
+      .timeline-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+
+      [data-tip]::after {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">FMS</div>
+        <div>凌羿 ERP</div>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-title">财务</div>
+        <button class="nav-item"><i data-lucide="wallet-cards"></i><span>付款结算</span></button>
+        <button class="nav-item"><i data-lucide="chart-no-axes-combined"></i><span>结算利润</span></button>
+        <button class="nav-item active"><i data-lucide="landmark"></i><span>资金与结算中心</span></button>
+        <button class="nav-item"><i data-lucide="receipt-text"></i><span>回款对账</span></button>
+        <button class="nav-item"><i data-lucide="credit-card"></i><span>收款工具</span></button>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-title">数据</div>
+        <button class="nav-item"><i data-lucide="plug-zap"></i><span>平台授权</span></button>
+        <button class="nav-item"><i data-lucide="database"></i><span>数据批次</span></button>
+        <button class="nav-item"><i data-lucide="shield-check"></i><span>店铺权限</span></button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="page-title">
+          <span class="scope-pill"><i data-lucide="building-2"></i> 财务 / 资金账户</span>
+          <div>
+            <h1>资金与结算中心</h1>
+            <p>经营账、结算账、资金账统一入口</p>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="icon-btn" data-tip="刷新数据" id="refreshBtn" aria-label="刷新数据"><i data-lucide="refresh-cw"></i></button>
+          <button class="btn" data-view="imports"><i data-lucide="upload"></i>上传 Summary</button>
+          <button class="btn" data-view="exports"><i data-lucide="download"></i>导出</button>
+          <button class="btn primary" id="recalcBtn"><i data-lucide="calculator"></i>重新核算</button>
+        </div>
+      </header>
+
+      <section class="content">
+        <nav class="workspace-tabs" aria-label="资金与结算中心视图">
+          <button class="workspace-tab active" data-view="dashboard"><i data-lucide="layout-dashboard"></i>首页看板</button>
+          <button class="workspace-tab" data-view="reconcile"><i data-lucide="list-filter"></i>对账列表</button>
+          <button class="workspace-tab" data-view="imports"><i data-lucide="file-up"></i>数据同步</button>
+          <button class="workspace-tab" data-view="exports"><i data-lucide="file-down"></i>导出记录</button>
+        </nav>
+
+        <section class="filter-band">
+          <div class="filter-grid">
+            <div class="field">
+              <label for="countryFilter">国家</label>
+              <select class="control" id="countryFilter">
+                <option>全部</option>
+                <option>US</option>
+                <option>UK</option>
+                <option>DE</option>
+                <option>JP</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="storeFilter">店铺</label>
+              <select class="control" id="storeFilter">
+                <option>全部店铺</option>
+                <option>E101-US</option>
+                <option>E204-UK</option>
+                <option>E318-DE</option>
+                <option>E506-JP</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="currencyFilter">币种</label>
+              <select class="control" id="currencyFilter">
+                <option>全部</option>
+                <option>USD</option>
+                <option>GBP</option>
+                <option>EUR</option>
+                <option>JPY</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="monthFilter">月份</label>
+              <select class="control" id="monthFilter">
+                <option>2026-03</option>
+                <option>2026-02</option>
+                <option>2026-01</option>
+                <option>2025-12</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="platformFilter">平台</label>
+              <select class="control" id="platformFilter">
+                <option>Amazon</option>
+                <option>TikTok Shop</option>
+                <option>Temu</option>
+                <option>Walmart</option>
+                <option>Shopify</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="dimensionFilter">统计维度</label>
+              <select class="control" id="dimensionFilter">
+                <option>全部</option>
+                <option>经营账</option>
+                <option>结算账</option>
+                <option>资金账</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="statusFilter">对账状态</label>
+              <select class="control" id="statusFilter">
+                <option>全部</option>
+                <option>平台平账</option>
+                <option>轻微差异</option>
+                <option>平台差异</option>
+                <option>未到账</option>
+                <option>部分到账</option>
+              </select>
+            </div>
+            <div class="field" style="grid-column: span 2;">
+              <label for="keywordInput">关键词</label>
+              <div class="search-box">
+                <i data-lucide="search"></i>
+                <input id="keywordInput" type="search" placeholder="店铺名称 / SettlementId / 万里汇流水号">
+              </div>
+            </div>
+            <div class="filter-actions">
+              <button class="btn" id="resetBtn"><i data-lucide="rotate-ccw"></i>重置</button>
+              <button class="btn primary" id="applyBtn"><i data-lucide="filter"></i>筛选</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="notice" aria-label="数据口径提示">
+          <i data-lucide="info"></i>
+          <div>
+            <div class="notice-title">T 层由 Finance API transaction 明细派生</div>
+            <div class="notice-text">Summary PDF 只负责经营账汇总与税务口径校验；释放状态、释放日期、延迟结算来自 Finance API transaction 明细。普通用户不再上传 Transaction CSV，CSV 仅作为后台兜底排查来源。各国家站点的本地语言项目会统一映射到美国站英文科目展示，并保留原始语言用于追溯。</div>
+          </div>
+          <span class="status info">API 派生</span>
+        </section>
+
+        <section class="view active" id="dashboardView">
+          <div class="kpi-grid">
+            <article class="kpi-card tone-blue">
+              <div class="kpi-head">
+                <div class="kpi-title"><i data-lucide="briefcase-business"></i>经营账</div>
+                <span class="source-tag">Summary PDF</span>
+              </div>
+              <div class="metric-row"><span>经营收入</span><strong>$459,250</strong></div>
+              <div class="metric-row"><span>经营支出</span><strong>$239,910</strong></div>
+              <div class="metric-row"><span>经营利润</span><strong>$219,340</strong></div>
+              <div class="metric-row"><span>经营利润率</span><strong>47.8%</strong></div>
+            </article>
+
+            <article class="kpi-card tone-teal">
+              <div class="kpi-head">
+                <div class="kpi-title"><i data-lucide="badge-dollar-sign"></i>结算账</div>
+                <span class="source-tag">Finance API T</span>
+              </div>
+              <div class="metric-row"><span>已释放金额</span><strong>$420,860</strong></div>
+              <div class="metric-row"><span>延迟结算金额</span><strong>$28,800</strong></div>
+              <div class="metric-row"><span>有释放日期金额</span><strong>$431,240</strong></div>
+              <div class="metric-row"><span>释放率</span><strong>91.6%</strong></div>
+            </article>
+
+            <article class="kpi-card tone-green">
+              <div class="kpi-head">
+                <div class="kpi-title"><i data-lucide="banknote-arrow-down"></i>资金账</div>
+                <span class="source-tag">Transfer + 万里汇</span>
+              </div>
+              <div class="metric-row"><span>应到账金额</span><strong>$402,740</strong></div>
+              <div class="metric-row"><span>已到账金额</span><strong>$383,920</strong></div>
+              <div class="metric-row"><span>到账率</span><strong>95.3%</strong></div>
+              <div class="metric-row"><span>未到账金额</span><strong>$18,820</strong></div>
+            </article>
+
+            <article class="kpi-card tone-amber">
+              <div class="kpi-head">
+                <div class="kpi-title"><i data-lucide="triangle-alert"></i>风险预警</div>
+                <span class="source-tag">异常识别</span>
+              </div>
+              <div class="metric-row"><span>存在差异店铺</span><strong>6</strong></div>
+              <div class="metric-row"><span>延迟结算金额</span><strong>$28,800</strong></div>
+              <div class="metric-row"><span>超7天未到账</span><strong>$12,480</strong></div>
+              <div class="metric-row"><span>异常店铺数量</span><strong>3</strong></div>
+            </article>
+          </div>
+
+          <div class="dashboard-grid">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2 class="panel-title">三账趋势</h2>
+                  <div class="panel-subtitle">按月份对比经营净额、结算净额、到账金额</div>
+                </div>
+                <div class="segmented">
+                  <button class="active">月</button>
+                  <button>季</button>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="trend-chart" aria-label="三账趋势图">
+                  <div class="axis"><span>60万</span><span>40万</span><span>20万</span><span>0</span></div>
+                  <div class="bars">
+                    <div class="bar-group">
+                      <div class="bar operation" style="height: 59%;"></div>
+                      <div class="bar settlement" style="height: 55%;"></div>
+                      <div class="bar cash" style="height: 52%;"></div>
+                    </div>
+                    <div class="bar-group">
+                      <div class="bar operation" style="height: 65%;"></div>
+                      <div class="bar settlement" style="height: 62%;"></div>
+                      <div class="bar cash" style="height: 58%;"></div>
+                    </div>
+                    <div class="bar-group">
+                      <div class="bar operation" style="height: 72%;"></div>
+                      <div class="bar settlement" style="height: 68%;"></div>
+                      <div class="bar cash" style="height: 61%;"></div>
+                    </div>
+                    <div class="bar-group">
+                      <div class="bar operation" style="height: 78%;"></div>
+                      <div class="bar settlement" style="height: 73%;"></div>
+                      <div class="bar cash" style="height: 70%;"></div>
+                    </div>
+                    <div class="bar-group">
+                      <div class="bar operation" style="height: 81%;"></div>
+                      <div class="bar settlement" style="height: 77%;"></div>
+                      <div class="bar cash" style="height: 74%;"></div>
+                    </div>
+                    <div class="bar-group">
+                      <div class="bar operation" style="height: 76%;"></div>
+                      <div class="bar settlement" style="height: 71%;"></div>
+                      <div class="bar cash" style="height: 66%;"></div>
+                    </div>
+                  </div>
+                  <div></div>
+                  <div class="month-label">10月</div>
+                  <div class="month-label">11月</div>
+                  <div class="month-label">12月</div>
+                  <div class="month-label">01月</div>
+                  <div class="month-label">02月</div>
+                  <div class="month-label">03月</div>
+                </div>
+                <div class="legend">
+                  <span class="legend-item" style="color:#2b6cb0;"><span class="dot"></span>经营净额</span>
+                  <span class="legend-item" style="color:#0f766e;"><span class="dot"></span>结算净额</span>
+                  <span class="legend-item" style="color:#17803d;"><span class="dot"></span>到账金额</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2 class="panel-title">资金链路</h2>
+                  <div class="panel-subtitle">从订单收入到平台释放再到收款账户</div>
+                </div>
+                <button class="icon-btn" data-tip="查看口径" aria-label="查看口径"><i data-lucide="info"></i></button>
+              </div>
+              <div class="panel-body">
+                <div class="flow-map">
+                  <div class="flow-node">
+                    <div>
+                      <h3>经营账</h3>
+                      <div class="amount" style="color:#2b6cb0;">45.9万</div>
+                    </div>
+                    <div>
+                      <div class="progress"><span style="width:100%;background:#2b6cb0;"></span></div>
+                      <div class="flow-meta"><span>订单时间</span><strong>Summary PDF</strong></div>
+                    </div>
+                  </div>
+                  <div class="flow-node">
+                    <div>
+                      <h3>结算账</h3>
+                      <div class="amount" style="color:#0f766e;">42.1万</div>
+                    </div>
+                    <div>
+                      <div class="progress"><span style="width:91.6%;background:#0f766e;"></span></div>
+                      <div class="flow-meta"><span>Release Date</span><strong>API</strong></div>
+                    </div>
+                  </div>
+                  <div class="flow-node">
+                    <div>
+                      <h3>资金账</h3>
+                      <div class="amount" style="color:#17803d;">38.4万</div>
+                    </div>
+                    <div>
+                      <div class="progress"><span style="width:95.3%;background:#17803d;"></span></div>
+                      <div class="flow-meta"><span>到账率</span><strong>95.3%</strong></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2 class="panel-title">数据源职责</h2>
+                  <div class="panel-subtitle">先定口径，再做自动对账</div>
+                </div>
+                <span class="status info">T/A 同源</span>
+              </div>
+              <div class="panel-body">
+                <div class="source-grid">
+                  <div class="source-card">
+                    <h3><i data-lucide="file-text"></i>Summary PDF</h3>
+                    <p>用于经营账汇总、税费与收入确认，不提供结算释放日期。</p>
+                    <div class="source-list">
+                      <span>统计维度<strong>订单时间</strong></span>
+                      <span>页面呈现<strong>经营账 / Summary 校验</strong></span>
+                    </div>
+                  </div>
+                  <div class="source-card">
+                    <h3><i data-lucide="table-properties"></i>Finance API Transaction</h3>
+                    <p>用于生成 T 层交易级明细，提供 Released / Deferred、maturity date 与释放归月依据。</p>
+                    <div class="source-list">
+                      <span>统计维度<strong>Status / Release Month</strong></span>
+                      <span>页面呈现<strong>T 层明细 / 差异溯源</strong></span>
+                    </div>
+                  </div>
+                  <div class="source-card">
+                    <h3><i data-lucide="landmark"></i>Transfer + 万里汇</h3>
+                    <p>用于资金到账核对，追踪平台转账、手续费、汇损与到账时间。</p>
+                    <div class="source-list">
+                      <span>统计维度<strong>Transfer Date / 到账时间</strong></span>
+                      <span>页面呈现<strong>资金账 / 到账状态</strong></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2 class="panel-title">差异预警排行</h2>
+                  <div class="panel-subtitle">按差异率和未到账金额综合排序</div>
+                </div>
+                <button class="btn" data-view="reconcile"><i data-lucide="arrow-right"></i>列表</button>
+              </div>
+              <div class="panel-body">
+                <div class="risk-list">
+                  <div class="risk-item">
+                    <div>
+                      <div class="risk-name">E101-US</div>
+                      <div class="risk-detail">部分订单尚未释放，预计下账期释放</div>
+                    </div>
+                    <div class="risk-value">$2,880</div>
+                  </div>
+                  <div class="risk-item">
+                    <div>
+                      <div class="risk-name">E204-UK</div>
+                      <div class="risk-detail">万里汇到账流水未匹配</div>
+                    </div>
+                    <div class="risk-value">$1,240</div>
+                  </div>
+                  <div class="risk-item">
+                    <div>
+                      <div class="risk-name">E318-DE</div>
+                      <div class="risk-detail">Transfer 已释放，到账超过 7 天</div>
+                    </div>
+                    <div class="risk-value">$980</div>
+                  </div>
+                  <div class="risk-item">
+                    <div>
+                      <div class="risk-name">E506-JP</div>
+                      <div class="risk-detail">轻微汇损，低于阈值</div>
+                    </div>
+                    <div class="risk-value">$0.72</div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2 class="panel-title">本月数据批次</h2>
+                  <div class="panel-subtitle">Finance API、Summary PDF、Transfer、万里汇同步状态</div>
+                </div>
+                <button class="btn" data-view="imports"><i data-lucide="upload-cloud"></i>导入</button>
+              </div>
+              <div class="panel-body">
+                <div class="timeline">
+                  <div class="timeline-row">
+                    <time>2026-04-01</time>
+                    <strong>Summary 汇总报告 PDF 自动识别完成</strong>
+                    <span class="status ok">已覆盖</span>
+                  </div>
+                  <div class="timeline-row">
+                    <time>2026-04-02</time>
+                    <strong>Finance API transaction 明细同步完成</strong>
+                    <span class="status ok">已生成 T 层</span>
+                  </div>
+                  <div class="timeline-row">
+                    <time>2026-04-03</time>
+                    <strong>Amazon Transfer 批次入库</strong>
+                    <span class="status info">待匹配</span>
+                  </div>
+                  <div class="timeline-row">
+                    <time>2026-04-04</time>
+                    <strong>万里汇流水匹配 92 条</strong>
+                    <span class="status warn">3 条异常</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="reconcileView">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">对账列表</h2>
+                <div class="panel-subtitle">聚合主键：平台 + 国家 + 店铺 + 币种 + 月份</div>
+              </div>
+              <div class="actions">
+                <button class="btn"><i data-lucide="columns-3"></i>字段</button>
+                <button class="btn"><i data-lucide="download"></i>差异导出</button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>月份</th>
+                    <th>国家 / 店铺</th>
+                    <th>币种</th>
+                    <th class="num">经营净额</th>
+                    <th class="num">结算净额</th>
+                    <th class="num">已释放</th>
+                    <th class="num">延迟结算</th>
+                    <th>释放状态</th>
+                    <th>释放日期</th>
+                    <th class="num">应转金额</th>
+                    <th class="num">到账金额</th>
+                    <th class="num">差异率</th>
+                    <th>对账状态</th>
+                    <th>到账状态</th>
+                    <th>差异说明</th>
+                    <th class="num">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="reconcileRows"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section class="view" id="importsView">
+          <div class="import-layout">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2 class="panel-title">Summary PDF 上传</h2>
+                  <div class="panel-subtitle">用户只上传 Summary，T/A 由 Finance API 自动同步生成</div>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="drop-zone">
+                  <div>
+                    <i data-lucide="files"></i>
+                    <h3>上传 Amazon Summary PDF</h3>
+                    <p>系统会自动识别国家、店铺、月份和原始语言科目，并映射到美国标准科目。释放状态和释放日期由 Finance API transaction 明细提供。</p>
+                    <button class="btn primary" id="openImportModal"><i data-lucide="upload"></i>选择 PDF</button>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2 class="panel-title">对账处理链路</h2>
+                  <div class="panel-subtitle">API 同步、Summary 解析、科目归一、统一核算</div>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="steps">
+                  <div class="step">
+                    <div class="step-num">1</div>
+                    <div>
+                      <div class="step-title">API 同步</div>
+                      <div class="step-desc">同步 Finance API transaction 明细并生成 T 层台账</div>
+                    </div>
+                    <span class="status ok">自动</span>
+                  </div>
+                  <div class="step">
+                    <div class="step-num">2</div>
+                    <div>
+                      <div class="step-title">Summary 解析</div>
+                      <div class="step-desc">解析 Summary PDF 的报告区间、原始语言科目和汇总金额</div>
+                    </div>
+                    <span class="status info">PDF</span>
+                  </div>
+                  <div class="step">
+                    <div class="step-num">3</div>
+                    <div>
+                      <div class="step-title">多语言映射</div>
+                      <div class="step-desc">瑞典语、德语、法语等本地科目映射到美国站英文科目</div>
+                    </div>
+                    <span class="status ok">保留原文</span>
+                  </div>
+                  <div class="step">
+                    <div class="step-num">4</div>
+                    <div>
+                      <div class="step-title">统一核算</div>
+                      <div class="step-desc">生成 S / T / A / F 差异，并输出可解释原因</div>
+                    </div>
+                    <span class="status warn">可手动</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <article class="panel" style="margin-top:12px;">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">字段映射规则</h2>
+                <div class="panel-subtitle">不同国家语言按美国站英文科目展示，保留原始名称</div>
+              </div>
+              <span class="status info">标准化字典</span>
+            </div>
+            <div class="panel-body">
+              <div class="mapping-grid">
+                <div class="mapping-card">
+                  <span>API 字段</span>
+                  <strong>transactionStatus</strong>
+                  <small>Released / Deferred / Deferred Released 是 T 层状态来源。</small>
+                </div>
+                <div class="mapping-card">
+                  <span>API 字段</span>
+                  <strong>maturityDate / release date</strong>
+                  <small>释放归月、延迟结算追踪和差异解释从这里取。</small>
+                </div>
+                <div class="mapping-card">
+                  <span>Summary PDF 字段</span>
+                  <strong>Income / Expenses / Tax / Transfers</strong>
+                  <small>用于 Summary 汇总、税务口径和经营账校验。</small>
+                </div>
+                <div class="mapping-card">
+                  <span>展示语言</span>
+                  <strong>US English Display Name</strong>
+                  <small>例如 Intäkter 映射为 Income，Utgifter 映射为 Expenses；CSV 仅后台兜底。</small>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel" style="margin-top:12px;">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">数据同步状态</h2>
+                <div class="panel-subtitle">承接现有“平台报告”弹窗，统一展示 API 同步、Summary 上传和映射状态</div>
+              </div>
+              <div class="actions">
+                <button class="btn"><i data-lucide="list-checks"></i>同步日志</button>
+                <button class="btn primary"><i data-lucide="play"></i>重新核算</button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>结算月份</th>
+                    <th>国家 / 店铺</th>
+                    <th>币种</th>
+                    <th>API Transaction</th>
+                    <th>A 层聚合</th>
+                    <th>Summary 汇总报告 PDF</th>
+                    <th>语言归一</th>
+                    <th>操作人员</th>
+                    <th>最近更新时间</th>
+                    <th>对账状态</th>
+                    <th class="num">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>2026-05</td>
+                    <td>波兰 / A49-PL</td>
+                    <td>PLN</td>
+                    <td><span class="status ok">已同步</span></td>
+                    <td><span class="status ok">已聚合</span></td>
+                    <td><span class="status ok">已导入</span></td>
+                    <td>PL → US English</td>
+                    <td>熊钰莹</td>
+                    <td>2026-06-01 09:48</td>
+                    <td><span class="status ok">可对账</span></td>
+                    <td class="num"><button class="btn"><i data-lucide="calculator"></i>核算</button></td>
+                  </tr>
+                  <tr>
+                    <td>2026-05</td>
+                    <td>英国 / A49-UK</td>
+                    <td>GBP</td>
+                    <td><span class="status ok">已同步</span></td>
+                    <td><span class="status ok">已聚合</span></td>
+                    <td><span class="status warn">需补传</span></td>
+                    <td>EN → US English</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td><span class="status warn">缺 Summary 校验</span></td>
+                    <td class="num"><button class="btn"><i data-lucide="upload"></i>上传 Summary</button></td>
+                  </tr>
+                  <tr>
+                    <td>2026-05</td>
+                    <td>德国 / A49-DE</td>
+                    <td>EUR</td>
+                    <td><span class="status ok">已同步</span></td>
+                    <td><span class="status ok">已聚合</span></td>
+                    <td><span class="status ok">已导入</span></td>
+                    <td>DE → US English</td>
+                    <td>胡妍</td>
+                    <td>2026-06-01 09:53</td>
+                    <td><span class="status ok">可对账</span></td>
+                    <td class="num"><button class="btn"><i data-lucide="calculator"></i>核算</button></td>
+                  </tr>
+                  <tr>
+                    <td>2026-05</td>
+                    <td>瑞典 / A49-SE</td>
+                    <td>SEK</td>
+                    <td><span class="status ok">已同步</span></td>
+                    <td><span class="status ok">已聚合</span></td>
+                    <td><span class="status ok">已导入</span></td>
+                    <td>SV → US English</td>
+                    <td>王婷</td>
+                    <td>2026-06-02 10:21</td>
+                    <td><span class="status ok">已核算</span></td>
+                    <td class="num"><button class="btn"><i data-lucide="eye"></i>详情</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel" style="margin-top:12px;">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">同步与解析日志</h2>
+                <div class="panel-subtitle">承接现有“导入明细”弹窗，展示 API 同步、Summary 解析、后台 CSV 兜底日志</div>
+              </div>
+              <button class="btn"><i data-lucide="history"></i>查看全部</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>导入时间</th>
+                    <th>任务名称</th>
+                    <th>任务类型</th>
+                    <th>国家 / 店铺</th>
+                    <th>月份</th>
+                    <th>失败原因</th>
+                    <th>任务状态</th>
+                    <th>操作人员</th>
+                    <th class="num">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>2026-06-01 09:42</td>
+                    <td><div class="cell-main">Finance API transaction 同步</div><div class="cell-sub">T 层明细台账</div></td>
+                    <td>API</td>
+                    <td>US / A57-US</td>
+                    <td>2026-05</td>
+                    <td>接口分页超时，待重新同步</td>
+                    <td><span class="status bad">同步失败</span></td>
+                    <td>徐玲</td>
+                    <td class="num"><button class="btn"><i data-lucide="rotate-cw"></i>重新执行</button></td>
+                  </tr>
+                  <tr>
+                    <td>2026-06-01 10:18</td>
+                    <td><div class="cell-main">2026.05-summary.pdf</div><div class="cell-sub">Summary 汇总报告</div></td>
+                    <td>PDF</td>
+                    <td>BE / A51-BE</td>
+                    <td>2026-05</td>
+                    <td>-</td>
+                    <td><span class="status ok">导入成功</span></td>
+                    <td>王婷</td>
+                    <td class="num"><button class="btn"><i data-lucide="eye"></i>查看</button></td>
+                  </tr>
+                  <tr>
+                    <td>2026-06-01 11:36</td>
+                    <td><div class="cell-main">2026.05-order-transaction.csv</div><div class="cell-sub">后台排查附件</div></td>
+                    <td>CSV 兜底</td>
+                    <td>US / A57-US</td>
+                    <td>2026-05</td>
+                    <td>仅用于工单排查，不参与正式核算</td>
+                    <td><span class="status neutral">已归档</span></td>
+                    <td>后台</td>
+                    <td class="num"><button class="btn"><i data-lucide="archive"></i>记录</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section class="view" id="exportsView">
+          <div class="export-grid">
+            <article class="export-card">
+              <h3><i data-lucide="layout-list"></i>页面导出</h3>
+              <p>导出当前筛选条件下的首页与列表汇总数据。</p>
+              <button class="btn primary"><i data-lucide="download"></i>导出</button>
+            </article>
+            <article class="export-card">
+              <h3><i data-lucide="triangle-alert"></i>差异导出</h3>
+              <p>导出平台差异、轻微差异、未到账与部分到账记录。</p>
+              <button class="btn primary"><i data-lucide="download"></i>导出</button>
+            </article>
+            <article class="export-card">
+              <h3><i data-lucide="banknote"></i>资金导出</h3>
+              <p>导出 Transfer、万里汇流水、手续费、汇损明细。</p>
+              <button class="btn primary"><i data-lucide="download"></i>导出</button>
+            </article>
+            <article class="export-card">
+              <h3><i data-lucide="file-spreadsheet"></i>结算账导出</h3>
+              <p>导出 Finance API transaction 释放状态、释放日期与结算明细。</p>
+              <button class="btn primary"><i data-lucide="download"></i>导出</button>
+            </article>
+          </div>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">导出记录</h2>
+                <div class="panel-subtitle">页面导出、差异导出、资金导出、经营账导出、结算账导出</div>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>创建时间</th>
+                    <th>导出类型</th>
+                    <th>筛选范围</th>
+                    <th>创建人</th>
+                    <th>文件状态</th>
+                    <th class="num">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>2026-04-05 11:20</td>
+                    <td>差异导出</td>
+                    <td>Amazon / 2026-03 / 全部店铺</td>
+                    <td>财务主管</td>
+                    <td><span class="status ok">可下载</span></td>
+                    <td class="num"><button class="btn"><i data-lucide="download"></i>下载</button></td>
+                  </tr>
+                  <tr>
+                    <td>2026-04-04 17:03</td>
+                    <td>资金导出</td>
+                    <td>Amazon / US / USD</td>
+                    <td>客户成功</td>
+                    <td><span class="status ok">可下载</span></td>
+                    <td class="num"><button class="btn"><i data-lucide="download"></i>下载</button></td>
+                  </tr>
+                  <tr>
+                    <td>2026-04-04 09:10</td>
+                    <td>页面导出</td>
+                    <td>Amazon / 2026-03</td>
+                    <td>老板</td>
+                    <td><span class="status neutral">已过期</span></td>
+                    <td class="num"><button class="btn"><i data-lucide="rotate-cw"></i>重新生成</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <aside class="drawer" id="detailDrawer" aria-label="对账详情">
+    <div class="drawer-head">
+      <div class="drawer-title">
+        <h2 id="drawerTitle">E101-US</h2>
+        <p id="drawerMeta">Amazon / US / USD / 2026-03</p>
+      </div>
+      <div class="actions">
+        <button class="btn"><i data-lucide="download"></i>导出详情</button>
+        <button class="icon-btn" data-tip="关闭" id="closeDrawer" aria-label="关闭"><i data-lucide="x"></i></button>
+      </div>
+    </div>
+    <div class="drawer-body">
+      <div class="summary-strip">
+        <div class="summary-item"><span>经营净额</span><strong id="summaryOperation">$21,934</strong></div>
+        <div class="summary-item"><span>结算净额</span><strong id="summarySettlement">$21,880</strong></div>
+        <div class="summary-item"><span>到账金额</span><strong id="summaryCash">$22,560</strong></div>
+        <div class="summary-item"><span>差异率</span><strong id="summaryDiff">0.25%</strong></div>
+      </div>
+
+      <div class="detail-tabs">
+        <button class="detail-tab active" data-pane="operationPane">经营账</button>
+        <button class="detail-tab" data-pane="settlementPane">交易明细</button>
+        <button class="detail-tab" data-pane="accountingPane">结算核算</button>
+        <button class="detail-tab" data-pane="cashPane">资金账</button>
+        <button class="detail-tab" data-pane="analysisPane">差异分析</button>
+      </div>
+
+      <section class="detail-pane active" id="operationPane">
+        <div class="detail-grid">
+          <div class="kv-list">
+            <div class="kv-row"><span>数据来源</span><strong>Amazon Summary PDF</strong></div>
+            <div class="kv-row"><span>统计维度</span><strong>订单时间</strong></div>
+            <div class="kv-row"><span>经营收入</span><strong id="opIncome">$45,925</strong></div>
+            <div class="kv-row"><span>经营支出</span><strong id="opExpense">$23,991</strong></div>
+            <div class="kv-row"><span>经营税费</span><strong>$2,416</strong></div>
+          </div>
+          <div class="kv-list">
+            <div class="kv-row"><span>Income</span><strong>$45,925</strong></div>
+            <div class="kv-row"><span>Expenses</span><strong>$21,575</strong></div>
+            <div class="kv-row"><span>Tax</span><strong>$2,416</strong></div>
+            <div class="kv-row"><span>Transfers</span><strong>$22,874</strong></div>
+            <div class="kv-row"><span>Summary 版本</span><strong>V3 最新</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="detail-pane" id="settlementPane">
+        <div class="detail-grid">
+          <div class="kv-list">
+            <div class="kv-row"><span>数据来源</span><strong>Finance API Transaction</strong></div>
+            <div class="kv-row"><span>统计维度</span><strong>transactionStatus + maturityDate</strong></div>
+            <div class="kv-row"><span>transactionStatus</span><strong id="transactionStatus">Deferred</strong></div>
+            <div class="kv-row"><span>maturityDate / releaseDate</span><strong id="transactionReleaseDate">2026-04-15</strong></div>
+            <div class="kv-row"><span>结算收入</span><strong id="setIncome">$45,880</strong></div>
+          </div>
+          <div class="kv-list">
+            <div class="kv-row"><span>RELEASED</span><strong id="releasedAmount">$43,000</strong></div>
+            <div class="kv-row"><span>DEFERRED</span><strong id="deferredAmount">$2,880</strong></div>
+            <div class="kv-row"><span>本地语言科目</span><strong id="localLanguageItem">Intäkter / Utgifter</strong></div>
+            <div class="kv-row"><span>英文标准科目</span><strong>Income / Expenses</strong></div>
+            <div class="kv-row"><span>SettlementId</span><strong id="settlementId">SETT-US-202603-017</strong></div>
+            <div class="kv-row"><span>API 快照</span><strong>FIN-TXN-20260601-01</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="detail-pane" id="accountingPane">
+        <div class="detail-grid">
+          <div class="kv-list">
+            <div class="kv-row"><span>数据来源</span><strong>Finance API Accounting</strong></div>
+            <div class="kv-row"><span>核算维度</span><strong>Settlement Group / 账期</strong></div>
+            <div class="kv-row"><span>结算净额</span><strong id="accountingNet">$21,880</strong></div>
+            <div class="kv-row"><span>已释放金额</span><strong id="accountingReleased">$43,000</strong></div>
+            <div class="kv-row"><span>延迟结算</span><strong id="accountingDeferred">$2,880</strong></div>
+          </div>
+          <div class="kv-list">
+            <div class="kv-row"><span>T/A 一致性</span><strong id="taConsistency">一致</strong></div>
+            <div class="kv-row"><span>结算编号组</span><strong id="accountingSettlementGroup">SETT-US-202603-017</strong></div>
+            <div class="kv-row"><span>API 快照</span><strong>FIN-ACC-20260601-01</strong></div>
+            <div class="kv-row"><span>异常定义</span><strong>T 与 A 不一致才是系统异常</strong></div>
+            <div class="kv-row"><span>业务差异</span><strong>S 与 API 口径差异</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="detail-pane" id="cashPane">
+        <div class="detail-grid">
+          <div class="kv-list">
+            <div class="kv-row"><span>数据来源</span><strong>Amazon Transfer</strong></div>
+            <div class="kv-row"><span>Transfer Date</span><strong>2026-04-03</strong></div>
+            <div class="kv-row"><span>应转金额</span><strong id="transferDue">$22,874</strong></div>
+            <div class="kv-row"><span>已转金额</span><strong>$22,874</strong></div>
+            <div class="kv-row"><span>TransferId</span><strong id="transferId">TRF-US-90482</strong></div>
+          </div>
+          <div class="kv-list">
+            <div class="kv-row"><span>到账金额</span><strong id="arrivedAmount">$22,560</strong></div>
+            <div class="kv-row"><span>手续费</span><strong id="feeAmount">$314</strong></div>
+            <div class="kv-row"><span>汇损</span><strong>$0</strong></div>
+            <div class="kv-row"><span>到账时间</span><strong>2026-04-04 10:24</strong></div>
+            <div class="kv-row"><span>万里汇流水号</span><strong id="worldfirstNo">WF-US-772190</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="detail-pane" id="analysisPane">
+        <div class="analysis-box">
+          <h3 id="analysisTitle">经营账与结算账存在差异</h3>
+          <p id="analysisText">存在 2,880 美元延迟结算，主要原因是部分订单尚未释放。预计下账期释放，当前不建议作为异常坏账处理。</p>
+          <div class="detail-grid">
+            <div class="kv-list">
+              <div class="kv-row"><span>预计释放金额</span><strong id="expectedRelease">$2,880</strong></div>
+              <div class="kv-row"><span>预计释放时间</span><strong id="expectedReleaseDate">2026-04-15</strong></div>
+              <div class="kv-row"><span>差异类型</span><strong>平台差异</strong></div>
+            </div>
+            <div class="kv-list">
+              <div class="kv-row"><span>处理建议</span><strong>持续追踪</strong></div>
+              <div class="kv-row"><span>责任对象</span><strong>财务</strong></div>
+              <div class="kv-row"><span>更新时间</span><strong>2026-04-05 09:35</strong></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </aside>
+
+  <div class="modal-backdrop" id="importModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="importModalTitle">
+      <div class="modal-head">
+        <h2 id="importModalTitle">上传 Summary PDF</h2>
+        <button class="icon-btn" id="closeImportModal" data-tip="关闭" aria-label="关闭"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="field">
+            <label>平台</label>
+            <select class="control"><option>Amazon</option></select>
+          </div>
+          <div class="field">
+            <label>月份</label>
+            <select class="control"><option>2026-03</option><option>2026-02</option></select>
+          </div>
+          <div class="field">
+            <label>国家</label>
+            <select class="control"><option>自动识别</option><option>US</option><option>UK</option></select>
+          </div>
+          <div class="field">
+            <label>店铺</label>
+            <select class="control"><option>自动识别</option><option>E101-US</option><option>E204-UK</option></select>
+          </div>
+          <div class="field">
+            <label>报告类型</label>
+            <select class="control"><option>Summary PDF</option><option>CSV 兜底排查（后台）</option></select>
+          </div>
+          <div class="field">
+            <label>展示语言</label>
+            <select class="control"><option>美国站英文科目</option><option>原始语言 + 英文科目</option></select>
+          </div>
+        </div>
+        <div class="file-preview">
+          <strong>文件：</strong>用户上传 Summary PDF 后，系统解析 Summary 汇总项并映射为美国标准科目。释放状态与释放日期来自 Finance API transaction 明细；CSV 仅后台排查时使用。
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn" id="cancelImport">取消</button>
+        <button class="btn primary" id="simulateImport"><i data-lucide="upload"></i>上传并解析</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const rows = [
+      {
+        month: "2026-03",
+        country: "US",
+        store: "E101-US",
+        currency: "USD",
+        operation: 21934,
+        settlement: 21880,
+        released: 43000,
+        deferred: 2880,
+        releaseStatus: "Deferred",
+        releaseDate: "2026-04-15",
+        due: 22874,
+        arrived: 22560,
+        diffRate: "0.25%",
+        reconcileStatus: "平台差异",
+        cashStatus: "部分到账",
+        desc: "部分订单尚未释放",
+        settlementId: "SETT-US-202603-017",
+        transferId: "TRF-US-90482",
+        wf: "WF-US-772190",
+        localItem: "Income / Expenses",
+        tone: "bad"
+      },
+      {
+        month: "2026-03",
+        country: "UK",
+        store: "E204-UK",
+        currency: "GBP",
+        operation: 18740,
+        settlement: 18739.4,
+        released: 36220,
+        deferred: 0,
+        releaseStatus: "Released",
+        releaseDate: "2026-06-01",
+        due: 18410,
+        arrived: 17170,
+        diffRate: "0.00%",
+        reconcileStatus: "轻微差异",
+        cashStatus: "部分到账",
+        desc: "万里汇到账流水未匹配",
+        settlementId: "SETT-UK-202603-009",
+        transferId: "TRF-UK-30418",
+        wf: "WF-UK-118720",
+        localItem: "Income / Expenses",
+        tone: "warn"
+      },
+      {
+        month: "2026-03",
+        country: "DE",
+        store: "E318-DE",
+        currency: "EUR",
+        operation: 28620,
+        settlement: 28620,
+        released: 53100,
+        deferred: 0,
+        releaseStatus: "Released",
+        releaseDate: "2026-06-02",
+        due: 27980,
+        arrived: 0,
+        diffRate: "0.00%",
+        reconcileStatus: "平台平账",
+        cashStatus: "未到账",
+        desc: "Transfer 已释放，超 7 天未到账",
+        settlementId: "SETT-DE-202603-021",
+        transferId: "TRF-DE-84720",
+        wf: "未匹配",
+        localItem: "Einnahmen / Ausgaben",
+        tone: "bad"
+      },
+      {
+        month: "2026-03",
+        country: "JP",
+        store: "E506-JP",
+        currency: "JPY",
+        operation: 15420,
+        settlement: 15420.72,
+        released: 29800,
+        deferred: 0,
+        releaseStatus: "Released",
+        releaseDate: "2026-06-03",
+        due: 14890,
+        arrived: 14889.28,
+        diffRate: "0.01%",
+        reconcileStatus: "轻微差异",
+        cashStatus: "已到账",
+        desc: "汇损低于阈值",
+        settlementId: "SETT-JP-202603-005",
+        transferId: "TRF-JP-55309",
+        wf: "WF-JP-620118",
+        localItem: "売上 / 費用",
+        tone: "warn"
+      },
+      {
+        month: "2026-03",
+        country: "US",
+        store: "E702-US",
+        currency: "USD",
+        operation: 31880,
+        settlement: 31880,
+        released: 61220,
+        deferred: 0,
+        releaseStatus: "Released",
+        releaseDate: "2026-06-01",
+        due: 30640,
+        arrived: 30640,
+        diffRate: "0.00%",
+        reconcileStatus: "平台平账",
+        cashStatus: "已到账",
+        desc: "无差异",
+        settlementId: "SETT-US-202603-026",
+        transferId: "TRF-US-67341",
+        wf: "WF-US-970221",
+        localItem: "Income / Expenses",
+        tone: "ok"
+      }
+    ];
+
+    const money = (value, currency = "USD") => {
+      const prefix = currency === "JPY" ? "¥" : currency === "GBP" ? "£" : currency === "EUR" ? "€" : "$";
+      return prefix + Number(value).toLocaleString("en-US", { maximumFractionDigits: 2 });
+    };
+
+    const statusClass = (status) => {
+      if (status === "平台平账" || status === "已到账" || status === "识别成功") return "ok";
+      if (status === "轻微差异" || status === "部分到账") return "warn";
+      if (status === "平台差异" || status === "未到账") return "bad";
+      return "neutral";
+    };
+
+    const rowsContainer = document.getElementById("reconcileRows");
+
+    function renderRows(list) {
+      rowsContainer.innerHTML = list.map(row => `
+        <tr>
+          <td>${row.month}</td>
+          <td>
+            <div class="cell-main">${row.country} / ${row.store}</div>
+            <div class="cell-sub">Amazon</div>
+          </td>
+          <td>${row.currency}</td>
+          <td class="num">${money(row.operation, row.currency)}</td>
+          <td class="num">${money(row.settlement, row.currency)}</td>
+          <td class="num">${money(row.released, row.currency)}</td>
+          <td class="num">${money(row.deferred, row.currency)}</td>
+          <td><span class="status ${row.releaseStatus === "Released" ? "ok" : "warn"}">${row.releaseStatus}</span></td>
+          <td>${row.releaseDate}</td>
+          <td class="num">${money(row.due, row.currency)}</td>
+          <td class="num">${money(row.arrived, row.currency)}</td>
+          <td class="num">${row.diffRate}</td>
+          <td><span class="status ${statusClass(row.reconcileStatus)}">${row.reconcileStatus}</span></td>
+          <td><span class="status ${statusClass(row.cashStatus)}">${row.cashStatus}</span></td>
+          <td>${row.desc}</td>
+          <td class="num">
+            <div class="row-actions">
+              <button class="btn view-detail" data-store="${row.store}"><i data-lucide="eye"></i>详情</button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
+      mountIcons();
+      document.querySelectorAll(".view-detail").forEach(button => {
+        button.addEventListener("click", () => openDrawer(rows.find(row => row.store === button.dataset.store)));
+      });
+    }
+
+    function mountIcons() {
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+    }
+
+    function switchView(view) {
+      document.querySelectorAll(".workspace-tab").forEach(tab => {
+        tab.classList.toggle("active", tab.dataset.view === view);
+      });
+      document.querySelectorAll(".view").forEach(panel => panel.classList.remove("active"));
+      document.getElementById(view + "View").classList.add("active");
+    }
+
+    function openDrawer(row) {
+      document.getElementById("drawerTitle").textContent = row.store;
+      document.getElementById("drawerMeta").textContent = `Amazon / ${row.country} / ${row.currency} / ${row.month}`;
+      document.getElementById("summaryOperation").textContent = money(row.operation, row.currency);
+      document.getElementById("summarySettlement").textContent = money(row.settlement, row.currency);
+      document.getElementById("summaryCash").textContent = money(row.arrived, row.currency);
+      document.getElementById("summaryDiff").textContent = row.diffRate;
+      document.getElementById("opIncome").textContent = money(row.operation + 23991, row.currency);
+      document.getElementById("opExpense").textContent = money(23991, row.currency);
+      document.getElementById("setIncome").textContent = money(row.settlement + 24000, row.currency);
+      document.getElementById("transactionStatus").textContent = row.releaseStatus;
+      document.getElementById("transactionReleaseDate").textContent = row.releaseDate;
+      document.getElementById("releasedAmount").textContent = money(row.released, row.currency);
+      document.getElementById("deferredAmount").textContent = money(row.deferred, row.currency);
+      document.getElementById("localLanguageItem").textContent = row.localItem;
+      document.getElementById("settlementId").textContent = row.settlementId;
+      document.getElementById("accountingNet").textContent = money(row.settlement, row.currency);
+      document.getElementById("accountingReleased").textContent = money(row.released, row.currency);
+      document.getElementById("accountingDeferred").textContent = money(row.deferred, row.currency);
+      document.getElementById("accountingSettlementGroup").textContent = row.settlementId;
+      document.getElementById("transferDue").textContent = money(row.due, row.currency);
+      document.getElementById("arrivedAmount").textContent = money(row.arrived, row.currency);
+      document.getElementById("feeAmount").textContent = money(Math.max(row.due - row.arrived, 0), row.currency);
+      document.getElementById("transferId").textContent = row.transferId;
+      document.getElementById("worldfirstNo").textContent = row.wf;
+      document.getElementById("expectedRelease").textContent = money(row.deferred, row.currency);
+      document.getElementById("expectedReleaseDate").textContent = row.releaseDate;
+      document.getElementById("analysisTitle").textContent = row.reconcileStatus === "平台平账" ? "经营账与结算账已平账" : "经营账与结算账存在差异";
+      document.getElementById("analysisText").textContent = row.desc === "无差异"
+        ? "经营账与结算账金额一致，资金账已完成到账匹配。"
+        : `${row.desc}，系统建议继续追踪相关 SettlementId、TransferId 与万里汇流水。`;
+      document.getElementById("drawerBackdrop").classList.add("open");
+      document.getElementById("detailDrawer").classList.add("open");
+    }
+
+    function closeDrawer() {
+      document.getElementById("drawerBackdrop").classList.remove("open");
+      document.getElementById("detailDrawer").classList.remove("open");
+    }
+
+    function openImportModal() {
+      document.getElementById("importModal").classList.add("open");
+    }
+
+    function closeImportModal() {
+      document.getElementById("importModal").classList.remove("open");
+    }
+
+    document.querySelectorAll("[data-view]").forEach(button => {
+      button.addEventListener("click", () => switchView(button.dataset.view));
+    });
+
+    document.querySelectorAll(".detail-tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".detail-tab").forEach(item => item.classList.remove("active"));
+        document.querySelectorAll(".detail-pane").forEach(item => item.classList.remove("active"));
+        tab.classList.add("active");
+        document.getElementById(tab.dataset.pane).classList.add("active");
+      });
+    });
+
+    document.getElementById("applyBtn").addEventListener("click", () => {
+      const country = document.getElementById("countryFilter").value;
+      const store = document.getElementById("storeFilter").value;
+      const status = document.getElementById("statusFilter").value;
+      const keyword = document.getElementById("keywordInput").value.trim().toLowerCase();
+      const filtered = rows.filter(row => {
+        const countryMatch = country === "全部" || row.country === country;
+        const storeMatch = store === "全部店铺" || row.store === store;
+        const statusMatch = status === "全部" || row.reconcileStatus === status || row.cashStatus === status;
+        const keywordMatch = !keyword || [row.store, row.settlementId, row.transferId, row.wf].some(value => value.toLowerCase().includes(keyword));
+        return countryMatch && storeMatch && statusMatch && keywordMatch;
+      });
+      renderRows(filtered);
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      document.getElementById("countryFilter").value = "全部";
+      document.getElementById("storeFilter").value = "全部店铺";
+      document.getElementById("currencyFilter").value = "全部";
+      document.getElementById("statusFilter").value = "全部";
+      document.getElementById("keywordInput").value = "";
+      renderRows(rows);
+    });
+
+    document.getElementById("refreshBtn").addEventListener("click", () => {
+      document.getElementById("refreshBtn").style.transform = "rotate(180deg)";
+      setTimeout(() => document.getElementById("refreshBtn").style.transform = "", 180);
+    });
+
+    document.getElementById("recalcBtn").addEventListener("click", () => {
+      switchView("reconcile");
+    });
+
+    document.getElementById("closeDrawer").addEventListener("click", closeDrawer);
+    document.getElementById("drawerBackdrop").addEventListener("click", closeDrawer);
+    document.getElementById("openImportModal").addEventListener("click", openImportModal);
+    document.getElementById("closeImportModal").addEventListener("click", closeImportModal);
+    document.getElementById("cancelImport").addEventListener("click", closeImportModal);
+    document.getElementById("importModal").addEventListener("click", (event) => {
+      if (event.target.id === "importModal") closeImportModal();
+    });
+    document.getElementById("simulateImport").addEventListener("click", () => {
+      closeImportModal();
+      switchView("imports");
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeDrawer();
+        closeImportModal();
+      }
+    });
+
+    renderRows(rows);
+    mountIcons();
+  </script>
+</body>
+</html>
