@@ -3,31 +3,33 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>资金与结算中心 - 客户功能页</title>
+  <title>资金与结算中心 - 客户原型 V3.0</title>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <style>
     :root {
-      --bg: #f4f6fa;
+      --bg: #f5f7fb;
       --surface: #ffffff;
       --surface-soft: #f8fafc;
-      --line: #dde5f0;
-      --line-strong: #c8d3e1;
+      --line: #dfe6ef;
+      --line-strong: #c8d3e0;
       --text: #172033;
-      --muted: #64748b;
-      --subtle: #94a3b8;
+      --muted: #667085;
+      --subtle: #98a2b3;
       --blue: #2563eb;
       --blue-soft: #eaf1ff;
       --green: #0f8a5f;
       --green-soft: #e8f7f0;
-      --amber: #c27803;
-      --amber-soft: #fff4d8;
+      --amber: #bf7a04;
+      --amber-soft: #fff5dd;
       --red: #c2413d;
       --red-soft: #fff0ee;
       --violet: #7057d2;
-      --violet-soft: #f1edff;
+      --violet-soft: #f2eeff;
+      --cyan: #0e7490;
+      --cyan-soft: #e7f7fb;
       --shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
       --radius: 8px;
-      font-family: Inter, "SF Pro Display", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
     }
 
     * {
@@ -36,9 +38,9 @@
 
     body {
       margin: 0;
+      min-width: 1220px;
       background: var(--bg);
       color: var(--text);
-      min-width: 1180px;
     }
 
     button,
@@ -47,26 +49,33 @@
       font: inherit;
     }
 
+    button {
+      cursor: pointer;
+    }
+
     .app {
       min-height: 100vh;
       display: grid;
-      grid-template-columns: 236px minmax(0, 1fr);
+      grid-template-columns: 232px minmax(0, 1fr);
     }
 
     .sidebar {
-      background: #101828;
-      color: #d5d9e4;
-      padding: 20px 14px;
+      background: #111827;
+      color: #d7deea;
+      padding: 18px 14px;
       display: flex;
       flex-direction: column;
       gap: 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 0 8px 14px;
+      padding: 0 8px 16px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
@@ -76,8 +85,8 @@
       border-radius: 8px;
       display: grid;
       place-items: center;
+      background: #2563eb;
       color: #fff;
-      background: linear-gradient(135deg, #2563eb, #0f8a5f);
       font-weight: 800;
     }
 
@@ -85,36 +94,34 @@
       display: block;
       color: #fff;
       font-size: 15px;
+      line-height: 1.2;
     }
 
     .brand span {
-      font-size: 12px;
+      display: block;
+      margin-top: 2px;
       color: #98a2b3;
-    }
-
-    .nav-group {
-      display: grid;
-      gap: 4px;
+      font-size: 12px;
     }
 
     .nav-title {
-      padding: 10px 10px 4px;
+      margin: 14px 8px 6px;
+      color: #8a94a6;
       font-size: 12px;
-      color: #8b95a7;
+      font-weight: 700;
     }
 
     .nav-item {
       width: 100%;
+      min-height: 38px;
+      padding: 0 10px;
       border: 0;
-      background: transparent;
-      color: #cbd5e1;
+      border-radius: 7px;
       display: flex;
       align-items: center;
       gap: 10px;
-      min-height: 38px;
-      padding: 0 10px;
-      border-radius: 8px;
-      cursor: pointer;
+      background: transparent;
+      color: #cbd5e1;
       text-align: left;
     }
 
@@ -137,21 +144,16 @@
 
     .topbar {
       height: 64px;
-      background: var(--surface);
+      padding: 0 24px;
+      background: rgba(255, 255, 255, 0.94);
       border-bottom: 1px solid var(--line);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 24px;
       position: sticky;
       top: 0;
       z-index: 5;
-    }
-
-    .topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 16px;
+      backdrop-filter: blur(12px);
     }
 
     .crumb {
@@ -166,7 +168,7 @@
       color: var(--text);
     }
 
-    .topbar-actions {
+    .actions {
       display: flex;
       align-items: center;
       gap: 8px;
@@ -174,16 +176,15 @@
 
     .btn {
       min-height: 34px;
-      border: 1px solid var(--line-strong);
-      background: var(--surface);
-      color: var(--text);
-      border-radius: 6px;
       padding: 0 12px;
+      border: 1px solid var(--line-strong);
+      border-radius: 7px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 7px;
-      cursor: pointer;
+      background: #fff;
+      color: var(--text);
       white-space: nowrap;
     }
 
@@ -204,7 +205,7 @@
     }
 
     main {
-      padding: 22px 24px 34px;
+      padding: 22px 24px 36px;
       display: grid;
       gap: 18px;
     }
@@ -213,64 +214,117 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 20px;
+      gap: 18px;
     }
 
     h1 {
       margin: 0;
       font-size: 24px;
-      letter-spacing: 0;
       line-height: 1.25;
+      letter-spacing: 0;
     }
 
-    .page-meta {
-      margin-top: 8px;
+    .page-head p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .status-line {
       display: flex;
       align-items: center;
+      justify-content: flex-end;
       gap: 8px;
       color: var(--muted);
       font-size: 13px;
+      flex-wrap: wrap;
     }
 
-    .page-meta span {
+    .pill {
+      min-height: 26px;
+      padding: 0 9px;
+      border-radius: 999px;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      justify-content: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
     }
 
-    .page-meta svg {
-      width: 14px;
-      height: 14px;
-    }
+    .pill.blue { color: var(--blue); background: var(--blue-soft); }
+    .pill.green { color: var(--green); background: var(--green-soft); }
+    .pill.amber { color: var(--amber); background: var(--amber-soft); }
+    .pill.red { color: var(--red); background: var(--red-soft); }
+    .pill.violet { color: var(--violet); background: var(--violet-soft); }
+    .pill.cyan { color: var(--cyan); background: var(--cyan-soft); }
+    .pill.gray { color: var(--muted); background: #eef2f7; }
 
-    .filters {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .filter-bar,
+    .panel {
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      padding: 10px;
-      overflow-x: auto;
+      box-shadow: 0 1px 0 rgba(15, 23, 42, 0.03);
+    }
+
+    .filter-bar {
+      padding: 14px;
+      display: grid;
+      grid-template-columns: repeat(7, minmax(130px, 1fr)) auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
     }
 
     .control {
+      width: 100%;
       height: 34px;
       border: 1px solid var(--line-strong);
+      border-radius: 7px;
       background: #fff;
       color: var(--text);
-      border-radius: 6px;
       padding: 0 10px;
-      min-width: 116px;
+      outline: 0;
     }
 
-    .search {
-      min-width: 220px;
+    .tabs {
+      display: flex;
+      gap: 6px;
+      border-bottom: 1px solid var(--line);
+      padding: 0 4px;
+    }
+
+    .tab {
+      min-height: 42px;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      padding: 0 14px;
+      font-weight: 700;
+    }
+
+    .tab.active {
+      color: var(--blue);
+      border-color: var(--blue);
     }
 
     .kpi-grid {
       display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 12px;
     }
 
@@ -278,109 +332,91 @@
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      padding: 16px;
-      min-height: 122px;
+      padding: 15px;
+      min-height: 126px;
       display: grid;
-      align-content: space-between;
+      gap: 12px;
     }
 
-    .kpi-top {
+    .kpi-head {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       gap: 10px;
     }
 
-    .kpi-label {
+    .kpi-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       color: var(--muted);
       font-size: 13px;
-    }
-
-    .kpi-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 8px;
-      display: grid;
-      place-items: center;
-    }
-
-    .kpi-icon svg {
-      width: 18px;
-      height: 18px;
-    }
-
-    .blue {
-      color: var(--blue);
-      background: var(--blue-soft);
-    }
-
-    .green {
-      color: var(--green);
-      background: var(--green-soft);
-    }
-
-    .amber {
-      color: var(--amber);
-      background: var(--amber-soft);
-    }
-
-    .red {
-      color: var(--red);
-      background: var(--red-soft);
-    }
-
-    .violet {
-      color: var(--violet);
-      background: var(--violet-soft);
-    }
-
-    .kpi-value {
-      margin-top: 12px;
-      font-size: 24px;
       font-weight: 750;
+    }
+
+    .kpi-title svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    .kpi strong {
+      display: block;
+      font-size: 25px;
+      line-height: 1.1;
       letter-spacing: 0;
     }
 
-    .kpi-note {
-      margin-top: 8px;
-      font-size: 12px;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .layout {
+    .kpi-foot {
       display: grid;
-      grid-template-columns: minmax(0, 1.65fr) minmax(340px, 0.85fr);
-      gap: 14px;
-      align-items: start;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
     }
 
-    .panel {
-      background: var(--surface);
+    .metric {
+      padding: 7px 8px;
       border: 1px solid var(--line);
-      border-radius: var(--radius);
-      overflow: hidden;
+      border-radius: 7px;
+      background: var(--surface-soft);
+      min-width: 0;
     }
 
-    .panel-head {
-      min-height: 54px;
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--line);
+    .metric b {
+      display: block;
+      margin-top: 2px;
+      color: var(--text);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+      gap: 14px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .panel-header {
+      min-height: 50px;
+      padding: 0 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
+      border-bottom: 1px solid var(--line);
     }
 
     .panel-title {
-      margin: 0;
-      font-size: 16px;
-      font-weight: 720;
       display: flex;
       align-items: center;
       gap: 8px;
+      font-weight: 800;
     }
 
     .panel-title svg {
@@ -393,233 +429,161 @@
       padding: 16px;
     }
 
-    .timeline {
+    .store-progress {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      position: relative;
+      gap: 12px;
     }
 
-    .timeline::before {
-      content: "";
-      position: absolute;
-      left: 11%;
-      right: 11%;
-      top: 28px;
-      border-top: 2px solid var(--line);
-      z-index: 0;
-    }
-
-    .stage {
-      position: relative;
-      z-index: 1;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 12px;
-      min-height: 116px;
-    }
-
-    .stage-dot {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
+    .store-row {
       display: grid;
-      place-items: center;
-      color: #fff;
-      background: var(--blue);
-      margin-bottom: 10px;
-    }
-
-    .stage-dot svg {
-      width: 16px;
-      height: 16px;
-    }
-
-    .stage-title {
-      font-weight: 700;
-      font-size: 13px;
-    }
-
-    .stage-amount {
-      margin-top: 8px;
-      font-size: 18px;
-      font-weight: 760;
-    }
-
-    .stage-note {
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .summary-strip {
-      margin-top: 14px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-
-    .summary-item {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 12px;
-      background: var(--surface-soft);
-      min-height: 90px;
-    }
-
-    .summary-item span {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .summary-item strong {
-      display: block;
-      margin-top: 7px;
-      font-size: 16px;
-      line-height: 1.45;
-    }
-
-    .chart-grid {
-      display: grid;
-      gap: 13px;
-    }
-
-    .bar-row {
-      display: grid;
-      grid-template-columns: 78px minmax(0, 1fr) 82px;
+      grid-template-columns: 110px minmax(0, 1fr) 88px 86px;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .store-row:last-child {
+      border-bottom: 0;
+    }
+
+    .store-name {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .store-name strong {
       font-size: 13px;
     }
 
-    .bar-track {
+    .store-name span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .bar {
       height: 10px;
-      background: #eef2f7;
-      border-radius: 99px;
+      border-radius: 999px;
+      background: #e7edf5;
       overflow: hidden;
+      position: relative;
     }
 
-    .bar-fill {
+    .bar span {
+      display: block;
       height: 100%;
-      border-radius: 99px;
-      background: var(--blue);
-    }
-
-    .bar-fill.green-fill {
+      border-radius: inherit;
       background: var(--green);
     }
 
-    .bar-fill.amber-fill {
-      background: #f0ad2e;
-    }
-
-    .todo-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .todo {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 12px;
-      display: grid;
-      grid-template-columns: 32px minmax(0, 1fr) auto;
-      gap: 10px;
-      align-items: center;
-      background: #fff;
-    }
-
-    .todo-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      display: grid;
-      place-items: center;
-    }
-
-    .todo-icon svg {
-      width: 16px;
-      height: 16px;
-    }
-
-    .todo strong {
-      display: block;
+    .bar.amber span { background: var(--amber); }
+    .bar.red span { background: var(--red); }
+    .amount-cell {
+      text-align: right;
       font-size: 13px;
+      font-weight: 750;
+      white-space: nowrap;
     }
 
-    .todo span {
-      margin-top: 3px;
-      display: block;
+    .subtle {
       color: var(--muted);
       font-size: 12px;
     }
 
-    .badge {
-      display: inline-flex;
+    .risk-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .risk-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--surface-soft);
       align-items: center;
-      justify-content: center;
-      gap: 5px;
-      min-height: 22px;
-      padding: 0 8px;
-      border-radius: 999px;
+    }
+
+    .risk-item strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .risk-item span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
       font-size: 12px;
-      white-space: nowrap;
-      border: 1px solid transparent;
     }
 
-    .badge.success {
-      color: var(--green);
-      background: var(--green-soft);
-      border-color: #bbe8d4;
+    .trend {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      height: 172px;
+      align-items: end;
+      padding: 8px 6px 0;
+      border-bottom: 1px solid var(--line);
     }
 
-    .badge.warn {
-      color: var(--amber);
-      background: var(--amber-soft);
-      border-color: #f6d58d;
+    .trend-col {
+      display: grid;
+      gap: 6px;
+      align-items: end;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
     }
 
-    .badge.danger {
-      color: var(--red);
-      background: var(--red-soft);
-      border-color: #f4c6c2;
+    .trend-stack {
+      height: 132px;
+      display: flex;
+      align-items: end;
+      justify-content: center;
+      gap: 3px;
     }
 
-    .badge.info {
-      color: var(--blue);
-      background: var(--blue-soft);
-      border-color: #c7d9ff;
+    .trend-stack i {
+      width: 10px;
+      border-radius: 6px 6px 0 0;
+      display: block;
     }
+
+    .trend-stack i:nth-child(1) { background: var(--blue); }
+    .trend-stack i:nth-child(2) { background: var(--green); }
+    .trend-stack i:nth-child(3) { background: var(--amber); }
 
     table {
       width: 100%;
       border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 11px 10px;
+      text-align: left;
       font-size: 13px;
+      vertical-align: middle;
     }
 
     th {
-      text-align: left;
-      color: var(--muted);
-      font-weight: 650;
-      background: var(--surface-soft);
-      border-bottom: 1px solid var(--line);
-      padding: 11px 12px;
+      color: #334155;
+      background: #f8fafc;
+      font-weight: 800;
       white-space: nowrap;
     }
 
     td {
-      border-bottom: 1px solid var(--line);
-      padding: 12px;
-      vertical-align: middle;
+      color: #1f2a44;
     }
 
-    tbody tr {
-      cursor: pointer;
-    }
-
-    tbody tr:hover {
-      background: #f8fbff;
+    tr:last-child td {
+      border-bottom: 0;
     }
 
     .num {
@@ -628,317 +592,124 @@
       white-space: nowrap;
     }
 
-    .store {
+    .link {
+      color: var(--blue);
+      font-weight: 750;
+      text-decoration: none;
+    }
+
+    .detail-head {
+      padding: 16px;
       display: grid;
-      gap: 3px;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      border-bottom: 1px solid var(--line);
+      align-items: start;
     }
 
-    .store strong {
-      font-weight: 720;
-    }
-
-    .store span {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .status-cell {
+    .detail-title {
       display: flex;
       align-items: center;
-      gap: 7px;
-      flex-wrap: wrap;
+      gap: 10px;
     }
 
-    .drawer-mask {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.28);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease;
-      z-index: 20;
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-weight: 850;
     }
 
-    .drawer {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 620px;
-      max-width: calc(100vw - 64px);
-      height: 100vh;
-      background: var(--surface);
-      border-left: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      transform: translateX(100%);
-      transition: transform 0.2s ease;
-      z-index: 21;
-      display: flex;
-      flex-direction: column;
-    }
-
-    body.drawer-open .drawer-mask {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    body.drawer-open .drawer {
-      transform: translateX(0);
-    }
-
-    .drawer-head {
-      padding: 18px 20px;
-      border-bottom: 1px solid var(--line);
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .drawer-head h2 {
+    .detail-title h2 {
       margin: 0;
       font-size: 18px;
       letter-spacing: 0;
     }
 
-    .drawer-meta {
-      margin-top: 7px;
-      display: flex;
-      gap: 8px;
+    .detail-title p {
+      margin: 4px 0 0;
       color: var(--muted);
-      font-size: 12px;
-      flex-wrap: wrap;
-    }
-
-    .tabs {
-      display: flex;
-      gap: 2px;
-      border-bottom: 1px solid var(--line);
-      padding: 0 16px;
-      background: #fff;
-    }
-
-    .tab {
-      height: 42px;
-      border: 0;
-      border-bottom: 2px solid transparent;
-      background: transparent;
-      color: var(--muted);
-      padding: 0 10px;
-      cursor: pointer;
-    }
-
-    .tab.active {
-      color: var(--blue);
-      border-bottom-color: var(--blue);
-      font-weight: 700;
-    }
-
-    .drawer-body {
-      padding: 16px 20px 24px;
-      overflow: auto;
-      display: grid;
-      gap: 14px;
-    }
-
-    .account-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .metric {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 12px;
-      background: var(--surface-soft);
-    }
-
-    .metric span {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .metric strong {
-      display: block;
-      margin-top: 7px;
-      font-size: 18px;
-    }
-
-    .explain {
-      border: 1px solid #c7d9ff;
-      background: #f5f8ff;
-      border-radius: 8px;
-      padding: 14px;
-      display: grid;
-      gap: 10px;
-    }
-
-    .explain-title {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 740;
-    }
-
-    .explain-title svg {
-      width: 17px;
-      height: 17px;
-      color: var(--blue);
-    }
-
-    .explain p {
-      margin: 0;
-      color: #334155;
-      line-height: 1.65;
       font-size: 13px;
     }
 
-    .mini-table {
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .summary-box {
       border: 1px solid var(--line);
-      border-radius: 8px;
-      overflow: hidden;
+      border-radius: 7px;
+      background: var(--surface-soft);
+      padding: 12px;
+      min-height: 88px;
     }
 
-    .import-modal {
-      position: fixed;
-      inset: 0;
+    .summary-box span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .summary-box strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 19px;
+      white-space: nowrap;
+    }
+
+    .explain {
       display: grid;
-      place-items: center;
-      background: rgba(15, 23, 42, 0.36);
-      z-index: 30;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease;
+      gap: 10px;
     }
 
-    body.modal-open .import-modal {
-      opacity: 1;
-      pointer-events: auto;
+    .explain-item {
+      padding: 12px;
+      border-left: 3px solid var(--blue);
+      background: var(--surface-soft);
+      border-radius: 0 7px 7px 0;
+      font-size: 13px;
+      line-height: 1.55;
     }
 
-    .modal-card {
-      width: 520px;
-      max-width: calc(100vw - 40px);
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
+    .explain-item.amber { border-color: var(--amber); }
+    .explain-item.green { border-color: var(--green); }
+    .explain-item.red { border-color: var(--red); }
 
-    .modal-head {
-      min-height: 56px;
-      padding: 0 16px;
-      border-bottom: 1px solid var(--line);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .modal-head h2 {
-      font-size: 17px;
-      margin: 0;
-    }
-
-    .modal-body {
-      padding: 16px;
-      display: grid;
-      gap: 12px;
-    }
-
-    .dropzone {
+    .upload-zone {
+      min-height: 180px;
       border: 1px dashed var(--line-strong);
       border-radius: 8px;
-      min-height: 142px;
+      background: #fbfdff;
       display: grid;
       place-items: center;
       text-align: center;
-      background: var(--surface-soft);
-      padding: 18px;
+      color: var(--muted);
+      padding: 24px;
     }
 
-    .dropzone svg {
+    .upload-zone svg {
       width: 34px;
       height: 34px;
       color: var(--blue);
       margin-bottom: 10px;
     }
 
-    .dropzone strong {
+    .upload-zone strong {
       display: block;
+      color: var(--text);
       margin-bottom: 6px;
     }
 
-    .dropzone span {
+    .footer-note {
       color: var(--muted);
       font-size: 12px;
-    }
-
-    .modal-foot {
-      padding: 14px 16px;
-      border-top: 1px solid var(--line);
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    @media (max-width: 900px) {
-      body {
-        min-width: 0;
-      }
-
-      .app {
-        grid-template-columns: 1fr;
-      }
-
-      .sidebar {
-        display: none;
-      }
-
-      .topbar {
-        padding: 0 14px;
-      }
-
-      main {
-        padding: 16px 14px 24px;
-      }
-
-      .page-head,
-      .topbar {
-        align-items: flex-start;
-      }
-
-      .page-head,
-      .layout {
-        grid-template-columns: 1fr;
-        display: grid;
-      }
-
-      .kpi-grid,
-      .timeline,
-      .summary-strip {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .filters {
-        align-items: stretch;
-        flex-wrap: wrap;
-      }
-
-      .control,
-      .search {
-        min-width: calc(50% - 4px);
-        flex: 1 1 calc(50% - 4px);
-      }
-
-      .drawer {
-        max-width: 100vw;
-        width: 100vw;
-      }
+      line-height: 1.6;
     }
   </style>
 </head>
@@ -948,41 +719,41 @@
       <div class="brand">
         <div class="brand-mark">LY</div>
         <div>
-          <strong>凌羿ERP</strong>
-          <span>财务中心</span>
+          <strong>凌羿 ERP</strong>
+          <span>财务经营中枢</span>
         </div>
       </div>
 
-      <div class="nav-group">
-        <div class="nav-title">经营</div>
-        <button class="nav-item"><i data-lucide="layout-dashboard"></i><span>销售看板</span></button>
-        <button class="nav-item"><i data-lucide="line-chart"></i><span>利润报表</span></button>
-      </div>
-
-      <div class="nav-group">
+      <div>
         <div class="nav-title">财务</div>
-        <button class="nav-item"><i data-lucide="wallet-cards"></i><span>资金账户</span></button>
-        <button class="nav-item active"><i data-lucide="landmark"></i><span>资金与结算中心</span></button>
-        <button class="nav-item"><i data-lucide="receipt-text"></i><span>付款结算</span></button>
-        <button class="nav-item"><i data-lucide="banknote"></i><span>收款工具</span></button>
+        <button class="nav-item"><i data-lucide="layout-dashboard"></i>经营看板</button>
+        <button class="nav-item"><i data-lucide="bar-chart-3"></i>结算利润</button>
+        <button class="nav-item active"><i data-lucide="landmark"></i>资金与结算中心</button>
+        <button class="nav-item"><i data-lucide="credit-card"></i>付款结算</button>
+        <button class="nav-item"><i data-lucide="wallet-cards"></i>收款工具</button>
       </div>
 
-      <div class="nav-group">
-        <div class="nav-title">资料</div>
-        <button class="nav-item"><i data-lucide="store"></i><span>店铺档案</span></button>
-        <button class="nav-item"><i data-lucide="shield-check"></i><span>权限设置</span></button>
+      <div>
+        <div class="nav-title">管理</div>
+        <button class="nav-item"><i data-lucide="store"></i>店铺资料</button>
+        <button class="nav-item"><i data-lucide="shield-check"></i>权限设置</button>
+        <button class="nav-item"><i data-lucide="settings"></i>系统配置</button>
       </div>
     </aside>
 
-    <section class="workspace">
+    <div class="workspace">
       <header class="topbar">
-        <div class="topbar-left">
-          <div class="crumb"><span>财务</span><i data-lucide="chevron-right"></i><strong>资金与结算中心</strong></div>
+        <div class="crumb">
+          <span>财务</span>
+          <i data-lucide="chevron-right"></i>
+          <span>资金账户</span>
+          <i data-lucide="chevron-right"></i>
+          <strong>资金与结算中心</strong>
         </div>
-        <div class="topbar-actions">
+        <div class="actions">
           <button class="btn"><i data-lucide="download"></i>导出</button>
-          <button class="btn" id="openImport"><i data-lucide="upload"></i>上传报告</button>
-          <button class="btn primary"><i data-lucide="refresh-cw"></i>重新核算</button>
+          <button class="btn"><i data-lucide="rotate-cw"></i>重新核算</button>
+          <button class="btn primary"><i data-lucide="upload-cloud"></i>导入 Summary</button>
         </div>
       </header>
 
@@ -990,668 +761,398 @@
         <section class="page-head">
           <div>
             <h1>资金与结算中心</h1>
-            <div class="page-meta">
-              <span><i data-lucide="calendar-days"></i>2026-03</span>
-              <span><i data-lucide="globe-2"></i>Amazon</span>
-              <span><i data-lucide="clock-3"></i>最后核算：2026-06-10 14:37</span>
-            </div>
+            <p>按店铺统一核对 Summary 经营账、付款结算交易明细、结算账期与万里汇到账。</p>
           </div>
-          <div class="status-cell">
-            <span class="badge success"><i data-lucide="check-circle-2"></i>数据已同步</span>
-            <span class="badge warn"><i data-lucide="triangle-alert"></i>3 个待处理</span>
+          <div class="status-line">
+            <span class="pill green">Amazon</span>
+            <span class="pill blue">2026-05</span>
+            <span class="pill gray">原币种</span>
+            <span class="pill amber">4 个店铺存在差异</span>
           </div>
         </section>
 
-        <section class="filters" aria-label="筛选条件">
-          <select class="control">
-            <option>平台：Amazon</option>
-            <option>TikTok Shop</option>
-            <option>Walmart</option>
-          </select>
-          <select class="control">
-            <option>国家：全部</option>
-            <option>美国</option>
-            <option>德国</option>
-            <option>英国</option>
-          </select>
-          <select class="control">
-            <option>店铺：全部</option>
-            <option>E101-US</option>
-            <option>A49-DE</option>
-            <option>A51-UK</option>
-          </select>
-          <select class="control">
-            <option>币种：原币</option>
-            <option>USD</option>
-            <option>EUR</option>
-            <option>GBP</option>
-          </select>
-          <select class="control">
-            <option>月份：2026-03</option>
-            <option>2026-04</option>
-            <option>2026-05</option>
-          </select>
-          <select class="control">
-            <option>状态：全部</option>
-            <option>已到账</option>
-            <option>部分到账</option>
-            <option>待释放</option>
-            <option>需确认</option>
-          </select>
-          <input class="control search" type="search" placeholder="搜索店铺 / 结算编号 / 流水号">
+        <section class="filter-bar">
+          <div class="field">
+            <label>平台</label>
+            <select class="control"><option>Amazon</option></select>
+          </div>
+          <div class="field">
+            <label>月份</label>
+            <input class="control" value="2026-05">
+          </div>
+          <div class="field">
+            <label>店铺</label>
+            <select class="control"><option>全部店铺</option><option>A51-UK</option><option>A49-DE</option></select>
+          </div>
+          <div class="field">
+            <label>币种</label>
+            <select class="control"><option>原币种</option><option>GBP</option><option>EUR</option><option>USD</option></select>
+          </div>
+          <div class="field">
+            <label>交易状态</label>
+            <select class="control"><option>全部</option><option>Released</option><option>Deferred</option></select>
+          </div>
+          <div class="field">
+            <label>到账状态</label>
+            <select class="control"><option>全部</option><option>已到账</option><option>部分到账</option><option>未到账</option></select>
+          </div>
+          <div class="field">
+            <label>关键词</label>
+            <input class="control" value="" placeholder="店铺 / SettlementID / 追踪编号">
+          </div>
           <button class="btn primary"><i data-lucide="search"></i>查询</button>
-          <button class="btn"><i data-lucide="rotate-ccw"></i>重置</button>
         </section>
 
-        <section class="kpi-grid" aria-label="核心指标">
-          <article class="kpi">
-            <div>
-              <div class="kpi-top">
-                <div class="kpi-label">经营销售净额</div>
-                <div class="kpi-icon blue"><i data-lucide="shopping-bag"></i></div>
-              </div>
-              <div class="kpi-value">$459,250.18</div>
-            </div>
-            <div class="kpi-note">按订单月份归集</div>
-          </article>
-          <article class="kpi">
-            <div>
-              <div class="kpi-top">
-                <div class="kpi-label">已释放金额</div>
-                <div class="kpi-icon green"><i data-lucide="unlock"></i></div>
-              </div>
-              <div class="kpi-value">$430,018.32</div>
-            </div>
-            <div class="kpi-note">释放率 93.6%</div>
-          </article>
-          <article class="kpi">
-            <div>
-              <div class="kpi-top">
-                <div class="kpi-label">待释放金额</div>
-                <div class="kpi-icon amber"><i data-lucide="hourglass"></i></div>
-              </div>
-              <div class="kpi-value">$28,801.74</div>
-            </div>
-            <div class="kpi-note">预计下账期释放</div>
-          </article>
-          <article class="kpi">
-            <div>
-              <div class="kpi-top">
-                <div class="kpi-label">已到账金额</div>
-                <div class="kpi-icon green"><i data-lucide="circle-dollar-sign"></i></div>
-              </div>
-              <div class="kpi-value">$401,562.40</div>
-            </div>
-            <div class="kpi-note">到账率 95.1%</div>
-          </article>
-          <article class="kpi">
-            <div>
-              <div class="kpi-top">
-                <div class="kpi-label">未到账金额</div>
-                <div class="kpi-icon red"><i data-lucide="alert-circle"></i></div>
-              </div>
-              <div class="kpi-value">$20,671.15</div>
-            </div>
-            <div class="kpi-note">2 笔超过 7 天</div>
-          </article>
-          <article class="kpi">
-            <div>
-              <div class="kpi-top">
-                <div class="kpi-label">需确认店铺</div>
-                <div class="kpi-icon violet"><i data-lucide="list-checks"></i></div>
-              </div>
-              <div class="kpi-value">6</div>
-            </div>
-            <div class="kpi-note">含 3 个金额差异</div>
-          </article>
-        </section>
-
-        <section class="layout">
-          <div class="panel">
-            <div class="panel-head">
-              <h2 class="panel-title"><i data-lucide="route"></i>本月资金链路</h2>
-              <span class="badge info">Amazon US / DE / UK</span>
-            </div>
-            <div class="panel-body">
-              <div class="timeline">
-                <div class="stage">
-                  <div class="stage-dot"><i data-lucide="shopping-cart"></i></div>
-                  <div class="stage-title">经营销售</div>
-                  <div class="stage-amount">$459,250.18</div>
-                  <div class="stage-note">已完成报告归集</div>
-                </div>
-                <div class="stage">
-                  <div class="stage-dot" style="background:#0f8a5f"><i data-lucide="receipt"></i></div>
-                  <div class="stage-title">平台结算</div>
-                  <div class="stage-amount">$430,018.32</div>
-                  <div class="stage-note">$28,801.74 待释放</div>
-                </div>
-                <div class="stage">
-                  <div class="stage-dot" style="background:#7057d2"><i data-lucide="send"></i></div>
-                  <div class="stage-title">平台转账</div>
-                  <div class="stage-amount">$422,233.55</div>
-                  <div class="stage-note">已生成转账记录</div>
-                </div>
-                <div class="stage">
-                  <div class="stage-dot" style="background:#c27803"><i data-lucide="landmark"></i></div>
-                  <div class="stage-title">实际到账</div>
-                  <div class="stage-amount">$401,562.40</div>
-                  <div class="stage-note">含手续费与汇损</div>
-                </div>
-              </div>
-
-              <div class="summary-strip">
-                <div class="summary-item">
-                  <span>本月结论</span>
-                  <strong>平台已释放 93.6%，剩余金额集中在 6 月账期释放。</strong>
-                </div>
-                <div class="summary-item">
-                  <span>主要差异</span>
-                  <strong>到账差异主要来自手续费、汇损与跨账期释放。</strong>
-                </div>
-                <div class="summary-item">
-                  <span>处理建议</span>
-                  <strong>优先确认 2 笔超 7 天未到账流水。</strong>
-                </div>
-              </div>
-            </div>
+        <section class="panel">
+          <div class="tabs">
+            <button class="tab active">首页看板</button>
+            <button class="tab">对账列表</button>
+            <button class="tab">店铺详情</button>
+            <button class="tab">Summary 导入</button>
           </div>
+          <div class="panel-body">
+            <div class="kpi-grid">
+              <article class="kpi">
+                <div class="kpi-head">
+                  <div class="kpi-title"><i data-lucide="file-text"></i>经营账</div>
+                  <span class="pill blue">Summary PDF</span>
+                </div>
+                <strong>£24,985.17</strong>
+                <div class="kpi-foot">
+                  <div class="metric">收入<b>£60,521.79</b></div>
+                  <div class="metric">支出<b>-£36,295.82</b></div>
+                </div>
+              </article>
 
-          <div class="panel">
-            <div class="panel-head">
-              <h2 class="panel-title"><i data-lucide="bell-ring"></i>待处理事项</h2>
-              <button class="btn">全部查看</button>
-            </div>
-            <div class="panel-body">
-              <div class="todo-list">
-                <div class="todo">
-                  <div class="todo-icon red"><i data-lucide="timer-off"></i></div>
-                  <div>
-                    <strong>2 笔转账超过 7 天未到账</strong>
-                    <span>A49-DE、A51-UK 待核对收款流水</span>
-                  </div>
-                  <span class="badge danger">高</span>
+              <article class="kpi">
+                <div class="kpi-head">
+                  <div class="kpi-title"><i data-lucide="split"></i>交易释放</div>
+                  <span class="pill cyan">交易一览</span>
                 </div>
-                <div class="todo">
-                  <div class="todo-icon amber"><i data-lucide="hourglass"></i></div>
-                  <div>
-                    <strong>$28,801.74 暂未释放</strong>
-                    <span>预计进入下一结算周期</span>
-                  </div>
-                  <span class="badge warn">中</span>
+                <strong>£23,635.00</strong>
+                <div class="kpi-foot">
+                  <div class="metric">已发放<b>£23,635.00</b></div>
+                  <div class="metric">延迟<b>£767.78</b></div>
                 </div>
-                <div class="todo">
-                  <div class="todo-icon blue"><i data-lucide="file-up"></i></div>
-                  <div>
-                    <strong>3 个店铺缺少经营报告</strong>
-                    <span>上传后可完成经营侧校验</span>
-                  </div>
-                  <span class="badge info">待补</span>
+              </article>
+
+              <article class="kpi">
+                <div class="kpi-head">
+                  <div class="kpi-title"><i data-lucide="receipt-text"></i>结算账期</div>
+                  <span class="pill violet">所有结算</span>
                 </div>
-                <div class="todo">
-                  <div class="todo-icon violet"><i data-lucide="badge-dollar-sign"></i></div>
-                  <div>
-                    <strong>$1,248.60 汇损需确认</strong>
-                    <span>德国与英国店铺波动较高</span>
-                  </div>
-                  <span class="badge warn">中</span>
+                <strong>£22,660.23</strong>
+                <div class="kpi-foot">
+                  <div class="metric">关闭账期<b>21 个</b></div>
+                  <div class="metric">已转账<b>£22,660.23</b></div>
                 </div>
-              </div>
+              </article>
+
+              <article class="kpi">
+                <div class="kpi-head">
+                  <div class="kpi-title"><i data-lucide="wallet"></i>资金到账</div>
+                  <span class="pill green">万里汇</span>
+                </div>
+                <strong>96.8%</strong>
+                <div class="kpi-foot">
+                  <div class="metric">已到账<b>£21,934.18</b></div>
+                  <div class="metric">未到账<b>£726.05</b></div>
+                </div>
+              </article>
             </div>
           </div>
         </section>
 
-        <section class="layout">
-          <div class="panel">
-            <div class="panel-head">
-              <h2 class="panel-title"><i data-lucide="table-2"></i>店铺资金对账</h2>
-              <div class="status-cell">
-                <span class="badge success">已到账 18</span>
-                <span class="badge warn">部分到账 4</span>
-                <span class="badge danger">未到账 2</span>
+        <section class="grid-2">
+          <article class="panel">
+            <div class="panel-header">
+              <div class="panel-title"><i data-lucide="store"></i>店铺到账进度</div>
+              <span class="subtle">按店铺统计，不按国家站点统计</span>
+            </div>
+            <div class="panel-body">
+              <div class="store-progress">
+                <div class="store-row">
+                  <div class="store-name"><strong>A51-UK</strong><span>GBP · 21 个账期</span></div>
+                  <div class="bar"><span style="width:96.8%"></span></div>
+                  <div class="amount-cell">96.8%</div>
+                  <span class="pill amber">部分到账</span>
+                </div>
+                <div class="store-row">
+                  <div class="store-name"><strong>A49-DE</strong><span>EUR · 18 个账期</span></div>
+                  <div class="bar"><span style="width:100%"></span></div>
+                  <div class="amount-cell">100%</div>
+                  <span class="pill green">已到账</span>
+                </div>
+                <div class="store-row">
+                  <div class="store-name"><strong>A57-US</strong><span>USD · 12 个账期</span></div>
+                  <div class="bar amber"><span style="width:88%"></span></div>
+                  <div class="amount-cell">88.0%</div>
+                  <span class="pill amber">在途</span>
+                </div>
+                <div class="store-row">
+                  <div class="store-name"><strong>A53-IT</strong><span>EUR · 9 个账期</span></div>
+                  <div class="bar red"><span style="width:62%"></span></div>
+                  <div class="amount-cell">62.0%</div>
+                  <span class="pill red">未到账</span>
+                </div>
               </div>
             </div>
-            <div style="overflow:auto">
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div class="panel-title"><i data-lucide="triangle-alert"></i>店铺差异风险</div>
+              <button class="btn icon" title="刷新"><i data-lucide="refresh-cw"></i></button>
+            </div>
+            <div class="panel-body">
+              <div class="risk-list">
+                <div class="risk-item">
+                  <div><strong>A51-UK 经营差异</strong><span>跨月结算 7 个 SettlementID，延迟 £767.78</span></div>
+                  <span class="pill amber">需解释</span>
+                </div>
+                <div class="risk-item">
+                  <div><strong>A53-IT 未到账</strong><span>2 笔已转账未匹配万里汇流水</span></div>
+                  <span class="pill red">高风险</span>
+                </div>
+                <div class="risk-item">
+                  <div><strong>A57-US 到账在途</strong><span>转账后 3 天内，仍处合理到账窗口</span></div>
+                  <span class="pill blue">观察</span>
+                </div>
+                <div class="risk-item">
+                  <div><strong>A49-DE 已完成</strong><span>经营差异低于阈值，资金已到账</span></div>
+                  <span class="pill green">正常</span>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="grid-3">
+          <article class="panel">
+            <div class="panel-header">
+              <div class="panel-title"><i data-lucide="chart-column"></i>释放趋势</div>
+              <span class="subtle">Released / Deferred</span>
+            </div>
+            <div class="panel-body">
+              <div class="trend">
+                <div class="trend-col"><div class="trend-stack"><i style="height:76px"></i><i style="height:14px"></i><i style="height:8px"></i></div><span>1月</span></div>
+                <div class="trend-col"><div class="trend-stack"><i style="height:82px"></i><i style="height:12px"></i><i style="height:10px"></i></div><span>2月</span></div>
+                <div class="trend-col"><div class="trend-stack"><i style="height:91px"></i><i style="height:18px"></i><i style="height:9px"></i></div><span>3月</span></div>
+                <div class="trend-col"><div class="trend-stack"><i style="height:86px"></i><i style="height:17px"></i><i style="height:13px"></i></div><span>4月</span></div>
+                <div class="trend-col"><div class="trend-stack"><i style="height:96px"></i><i style="height:22px"></i><i style="height:11px"></i></div><span>5月</span></div>
+                <div class="trend-col"><div class="trend-stack"><i style="height:72px"></i><i style="height:26px"></i><i style="height:16px"></i></div><span>6月</span></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div class="panel-title"><i data-lucide="scale"></i>经营核对</div>
+              <span class="subtle">PDF vs 交易一览</span>
+            </div>
+            <div class="panel-body">
               <table>
-                <thead>
-                  <tr>
-                    <th>月份</th>
-                    <th>店铺</th>
-                    <th class="num">经营净额</th>
-                    <th class="num">已释放</th>
-                    <th class="num">已到账</th>
-                    <th class="num">差异</th>
-                    <th>状态</th>
-                    <th>最近动作</th>
-                  </tr>
-                </thead>
-                <tbody id="storeRows"></tbody>
+                <thead><tr><th>项目</th><th class="num">PDF</th><th class="num">交易一览</th><th class="num">差异</th></tr></thead>
+                <tbody>
+                  <tr><td>收入</td><td class="num">60,521.79</td><td class="num">59,938.24</td><td class="num">583.55</td></tr>
+                  <tr><td>支出</td><td class="num">-36,295.82</td><td class="num">-36,294.68</td><td class="num">-1.14</td></tr>
+                  <tr><td>税费</td><td class="num">759.20</td><td class="num">759.20</td><td class="num">0.00</td></tr>
+                  <tr><td><strong>净额</strong></td><td class="num"><strong>24,985.17</strong></td><td class="num"><strong>24,402.76</strong></td><td class="num"><strong>582.41</strong></td></tr>
+                </tbody>
               </table>
             </div>
-          </div>
+          </article>
 
-          <div class="panel">
-            <div class="panel-head">
-              <h2 class="panel-title"><i data-lucide="bar-chart-3"></i>到账进度</h2>
-              <span class="badge info">按国家</span>
+          <article class="panel">
+            <div class="panel-header">
+              <div class="panel-title"><i data-lucide="messages-square"></i>自动说明</div>
+              <span class="pill amber">已生成</span>
             </div>
             <div class="panel-body">
-              <div class="chart-grid">
-                <div class="bar-row">
-                  <span>美国</span>
-                  <div class="bar-track"><div class="bar-fill green-fill" style="width:98%"></div></div>
-                  <strong class="num">98%</strong>
-                </div>
-                <div class="bar-row">
-                  <span>德国</span>
-                  <div class="bar-track"><div class="bar-fill amber-fill" style="width:91%"></div></div>
-                  <strong class="num">91%</strong>
-                </div>
-                <div class="bar-row">
-                  <span>英国</span>
-                  <div class="bar-track"><div class="bar-fill amber-fill" style="width:88%"></div></div>
-                  <strong class="num">88%</strong>
-                </div>
-                <div class="bar-row">
-                  <span>法国</span>
-                  <div class="bar-track"><div class="bar-fill green-fill" style="width:96%"></div></div>
-                  <strong class="num">96%</strong>
-                </div>
-                <div class="bar-row">
-                  <span>西班牙</span>
-                  <div class="bar-track"><div class="bar-fill" style="width:94%"></div></div>
-                  <strong class="num">94%</strong>
-                </div>
+              <div class="explain">
+                <div class="explain-item amber">A51-UK 存在跨月结算：5 月交易涉及 7 个 6 月关闭账期。</div>
+                <div class="explain-item">交易一览显示 Deferred 金额 £767.78，属于延迟发放。</div>
+                <div class="explain-item green">5 月关闭账期已转账 £22,660.23，万里汇已匹配 £21,934.18。</div>
               </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <div class="panel-title"><i data-lucide="list-checks"></i>对账列表</div>
+            <div class="actions">
+              <button class="btn"><i data-lucide="filter"></i>高级筛选</button>
+              <button class="btn"><i data-lucide="file-down"></i>导出差异</button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:86px">月份</th>
+                  <th style="width:100px">店铺</th>
+                  <th style="width:70px">币种</th>
+                  <th class="num">经营净额</th>
+                  <th class="num">交易净额</th>
+                  <th class="num">经营差异</th>
+                  <th class="num">已发放</th>
+                  <th class="num">延迟</th>
+                  <th class="num">应转</th>
+                  <th class="num">已到账</th>
+                  <th style="width:96px">状态</th>
+                  <th style="width:86px">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>2026-05</td>
+                  <td><a class="link" href="#detail">A51-UK</a></td>
+                  <td>GBP</td>
+                  <td class="num">24,985.17</td>
+                  <td class="num">24,402.76</td>
+                  <td class="num">582.41</td>
+                  <td class="num">23,635.00</td>
+                  <td class="num">767.78</td>
+                  <td class="num">22,660.23</td>
+                  <td class="num">21,934.18</td>
+                  <td><span class="pill amber">需解释</span></td>
+                  <td><a class="link" href="#detail">详情</a></td>
+                </tr>
+                <tr>
+                  <td>2026-05</td>
+                  <td>A49-DE</td>
+                  <td>EUR</td>
+                  <td class="num">31,276.44</td>
+                  <td class="num">31,276.10</td>
+                  <td class="num">0.34</td>
+                  <td class="num">30,918.20</td>
+                  <td class="num">0.00</td>
+                  <td class="num">18,420.50</td>
+                  <td class="num">18,420.50</td>
+                  <td><span class="pill green">已到账</span></td>
+                  <td><a class="link">详情</a></td>
+                </tr>
+                <tr>
+                  <td>2026-05</td>
+                  <td>A57-US</td>
+                  <td>USD</td>
+                  <td class="num">18,941.30</td>
+                  <td class="num">18,886.08</td>
+                  <td class="num">55.22</td>
+                  <td class="num">17,402.18</td>
+                  <td class="num">490.80</td>
+                  <td class="num">9,118.60</td>
+                  <td class="num">8,024.36</td>
+                  <td><span class="pill amber">在途</span></td>
+                  <td><a class="link">详情</a></td>
+                </tr>
+                <tr>
+                  <td>2026-05</td>
+                  <td>A53-IT</td>
+                  <td>EUR</td>
+                  <td class="num">12,405.12</td>
+                  <td class="num">12,402.02</td>
+                  <td class="num">3.10</td>
+                  <td class="num">11,762.44</td>
+                  <td class="num">110.00</td>
+                  <td class="num">6,950.72</td>
+                  <td class="num">4,309.45</td>
+                  <td><span class="pill red">未到账</span></td>
+                  <td><a class="link">详情</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel" id="detail">
+          <div class="detail-head">
+            <div class="detail-title">
+              <div class="avatar">UK</div>
+              <div>
+                <h2>A51-UK · 2026-05 对账详情</h2>
+                <p>PDF 报告区间：2026-05-01 至 2026-05-31 · 账期关闭范围：2026-05 · 原币种 GBP</p>
+              </div>
+            </div>
+            <div class="actions">
+              <span class="pill amber">经营差异</span>
+              <span class="pill green">已转账</span>
+              <span class="pill amber">部分到账</span>
+            </div>
+          </div>
+
+          <div class="panel-body">
+            <div class="summary-grid">
+              <div class="summary-box"><span>PDF 经营净额</span><strong>£24,985.17</strong></div>
+              <div class="summary-box"><span>交易一览经营净额</span><strong>£24,402.76</strong></div>
+              <div class="summary-box"><span>5月关闭账期应转</span><strong>£22,660.23</strong></div>
+              <div class="summary-box"><span>万里汇已到账</span><strong>£21,934.18</strong></div>
+            </div>
+          </div>
+
+          <div class="tabs">
+            <button class="tab active">经营账核对</button>
+            <button class="tab">交易一览</button>
+            <button class="tab">结算账期</button>
+            <button class="tab">资金到账</button>
+            <button class="tab">差异说明</button>
+          </div>
+
+          <div class="panel-body">
+            <div class="grid-2">
+              <article>
+                <table>
+                  <thead><tr><th>核对项</th><th class="num">Summary PDF</th><th class="num">交易一览</th><th class="num">差异</th></tr></thead>
+                  <tbody>
+                    <tr><td>Income</td><td class="num">60,521.79</td><td class="num">59,938.24</td><td class="num">583.55</td></tr>
+                    <tr><td>Expenses</td><td class="num">-36,295.82</td><td class="num">-36,294.68</td><td class="num">-1.14</td></tr>
+                    <tr><td>Tax</td><td class="num">759.20</td><td class="num">759.20</td><td class="num">0.00</td></tr>
+                    <tr><td>Transfers</td><td class="num">-22,660.23</td><td class="num">不参与经营净额</td><td class="num">-</td></tr>
+                  </tbody>
+                </table>
+              </article>
+
+              <article class="explain">
+                <div class="explain-item amber">经营差异主要来自跨月结算：5 月交易中存在 7 个 SettlementID 在 6 月关闭。</div>
+                <div class="explain-item">PDF 不包含交易状态与 SettlementID；Released / Deferred 以付款结算-交易一览为准。</div>
+                <div class="explain-item green">所有结算 5 月关闭账期应收与已转账合计一致，均为 £22,660.23。</div>
+              </article>
             </div>
           </div>
         </section>
-      </main>
-    </section>
-  </div>
 
-  <div class="drawer-mask" id="drawerMask"></div>
-  <aside class="drawer" aria-label="店铺详情">
-    <div class="drawer-head">
-      <div>
-        <h2 id="drawerTitle">E101-US</h2>
-        <div class="drawer-meta" id="drawerMeta"></div>
-      </div>
-      <button class="btn icon" id="closeDrawer" aria-label="关闭"><i data-lucide="x"></i></button>
-    </div>
-    <div class="tabs" id="detailTabs">
-      <button class="tab active" data-tab="overview">对账结果</button>
-      <button class="tab" data-tab="business">经营账</button>
-      <button class="tab" data-tab="settlement">结算账</button>
-      <button class="tab" data-tab="cash">资金账</button>
-    </div>
-    <div class="drawer-body">
-      <section class="tab-panel" data-panel="overview">
-        <div class="explain">
-          <div class="explain-title"><i data-lucide="sparkles"></i><span id="explainTitle">差异说明</span></div>
-          <p id="explainText"></p>
-        </div>
-        <div class="account-grid" id="overviewMetrics"></div>
-        <div class="mini-table">
-          <table>
-            <thead>
-              <tr>
-                <th>项目</th>
-                <th class="num">金额</th>
-                <th>说明</th>
-              </tr>
-            </thead>
-            <tbody id="differenceRows"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="tab-panel hidden" data-panel="business">
-        <div class="account-grid" id="businessMetrics"></div>
-        <div class="mini-table">
-          <table>
-            <thead>
-              <tr>
-                <th>科目</th>
-                <th class="num">金额</th>
-              </tr>
-            </thead>
-            <tbody id="businessRows"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="tab-panel hidden" data-panel="settlement">
-        <div class="account-grid" id="settlementMetrics"></div>
-        <div class="mini-table">
-          <table>
-            <thead>
-              <tr>
-                <th>释放状态</th>
-                <th class="num">金额</th>
-                <th>预计时间</th>
-              </tr>
-            </thead>
-            <tbody id="settlementRows"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="tab-panel hidden" data-panel="cash">
-        <div class="account-grid" id="cashMetrics"></div>
-        <div class="mini-table">
-          <table>
-            <thead>
-              <tr>
-                <th>流水</th>
-                <th class="num">金额</th>
-                <th>状态</th>
-              </tr>
-            </thead>
-            <tbody id="cashRows"></tbody>
-          </table>
-        </div>
-      </section>
-    </div>
-  </aside>
-
-  <div class="import-modal" id="importModal" aria-hidden="true">
-    <div class="modal-card">
-      <div class="modal-head">
-        <h2>上传经营报告</h2>
-        <button class="btn icon" id="closeImport" aria-label="关闭"><i data-lucide="x"></i></button>
-      </div>
-      <div class="modal-body">
-        <div class="dropzone">
-          <div>
-            <i data-lucide="file-up"></i>
-            <strong>拖拽文件到此处，或选择文件上传</strong>
-            <span>支持 Amazon 月度经营报告 PDF，上传后自动匹配店铺与月份。</span>
+        <section class="panel">
+          <div class="panel-header">
+            <div class="panel-title"><i data-lucide="upload-cloud"></i>Summary 导入管理</div>
+            <button class="btn primary"><i data-lucide="plus"></i>上传 PDF</button>
           </div>
-        </div>
-        <div class="account-grid">
-          <label>
-            <span class="kpi-label">店铺</span>
-            <select class="control" style="width:100%;margin-top:6px"><option>自动识别</option><option>E101-US</option><option>A49-DE</option></select>
-          </label>
-          <label>
-            <span class="kpi-label">月份</span>
-            <select class="control" style="width:100%;margin-top:6px"><option>自动识别</option><option>2026-03</option><option>2026-04</option></select>
-          </label>
-        </div>
-      </div>
-      <div class="modal-foot">
-        <button class="btn" id="cancelImport">取消</button>
-        <button class="btn primary"><i data-lucide="upload"></i>开始上传</button>
-      </div>
+          <div class="panel-body grid-2">
+            <div class="upload-zone">
+              <div>
+                <i data-lucide="file-up"></i>
+                <strong>Summary PDF</strong>
+                <div>支持 Amazon 新版 Summary PDF，系统自动识别店铺、月份、币种。</div>
+              </div>
+            </div>
+            <table>
+              <thead><tr><th>月份</th><th>店铺</th><th>文件</th><th>状态</th><th>导入时间</th></tr></thead>
+              <tbody>
+                <tr><td>2026-05</td><td>A51-UK</td><td><a class="link">2026MayMonthlySummary.pdf</a></td><td><span class="pill green">解析成功</span></td><td>2026-06-10 18:21</td></tr>
+                <tr><td>2026-05</td><td>A49-DE</td><td><a class="link">2026MaySummary.pdf</a></td><td><span class="pill green">解析成功</span></td><td>2026-06-10 17:48</td></tr>
+                <tr><td>2026-05</td><td>A53-IT</td><td>-</td><td><span class="pill red">未导入</span></td><td>-</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <p class="footer-note">数据口径：Summary PDF 用于经营账；付款结算-交易一览用于交易明细与 Released / Deferred；付款结算-所有结算用于账期应收与转账状态；万里汇用于实际到账核对。</p>
+      </main>
     </div>
   </div>
 
   <script>
-    const stores = [
-      {
-        id: "E101-US",
-        month: "2026-03",
-        country: "美国",
-        currency: "USD",
-        businessNet: 45925,
-        released: 43000,
-        arrived: 22560,
-        diff: -314,
-        status: "部分到账",
-        statusType: "warn",
-        action: "待确认手续费",
-        explain: "E101-US 经营侧与结算侧存在 2,880.00 美元跨账期释放金额；已到账与应到账之间的 314.00 美元差异为收款手续费。该店铺无需重新上传明细，后续只需核对收款流水。",
-        business: { income: 45925, expense: 23991, tax: 0, profit: 21934 },
-        settlement: { income: 45880, expense: 22880, released: 43000, deferred: 2880 },
-        cash: { expected: 22874, transferred: 22874, arrived: 22560, fee: 314, fx: 0 },
-        rows: [
-          ["商品销售", "$45,925.00"],
-          ["平台费用", "-$18,240.00"],
-          ["配送相关费用", "-$5,751.00"],
-          ["税费", "$0.00"]
-        ],
-        settlementRows: [
-          ["已释放", "$43,000.00", "已完成"],
-          ["待释放", "$2,880.00", "2026-06 账期"]
-        ],
-        cashRows: [
-          ["WLD-202603-001", "$22,560.00", "已到账"],
-          ["手续费", "-$314.00", "已确认"]
-        ]
-      },
-      {
-        id: "A49-DE",
-        month: "2026-03",
-        country: "德国",
-        currency: "EUR",
-        businessNet: 87051,
-        released: 7490.85,
-        arrived: 4598.22,
-        diff: -2929.22,
-        status: "未到账",
-        statusType: "danger",
-        action: "核对收款流水",
-        explain: "A49-DE 已有平台转账记录，但收款流水尚未完全匹配。当前差异集中在 2,929.22 欧元转账在途金额，建议优先核对万里汇到账记录。",
-        business: { income: 87051, expense: 39984.82, tax: 177.39, profit: 46888.79 },
-        settlement: { income: 7490.85, expense: 0, released: 10420.07, deferred: 0 },
-        cash: { expected: 7490.85, transferred: 10420.07, arrived: 4598.22, fee: 144.18, fx: 65.29 },
-        rows: [
-          ["Product sales", "EUR 87,051.00"],
-          ["Amazon fees", "EUR -39,984.82"],
-          ["Tax", "EUR -177.39"],
-          ["Operating net", "EUR 46,888.79"]
-        ],
-        settlementRows: [
-          ["已释放", "EUR 10,420.07", "已完成"],
-          ["待释放", "EUR 0.00", "-"]
-        ],
-        cashRows: [
-          ["WLD-DE-8842", "EUR 4,598.22", "已到账"],
-          ["AMZ-TR-DE-291", "EUR 2,929.22", "未到账"]
-        ]
-      },
-      {
-        id: "A51-UK",
-        month: "2026-03",
-        country: "英国",
-        currency: "GBP",
-        businessNet: 60521.79,
-        released: 43211.11,
-        arrived: 40980.44,
-        diff: -527.73,
-        status: "部分到账",
-        statusType: "warn",
-        action: "确认汇损",
-        explain: "A51-UK 平台结算已释放，到账金额低于应到账金额。差异由手续费和汇损组成，其中 527.73 英镑需要财务确认入账科目。",
-        business: { income: 60521.79, expense: 36295.82, tax: 712.51, profit: 23513.46 },
-        settlement: { income: 60521.79, expense: 36295.82, released: 43211.11, deferred: 0 },
-        cash: { expected: 41508.17, transferred: 43211.11, arrived: 40980.44, fee: 226.6, fx: 301.13 },
-        rows: [
-          ["Product sales", "GBP 60,521.79"],
-          ["Amazon fees", "GBP -36,295.82"],
-          ["Tax", "GBP -712.51"],
-          ["Operating net", "GBP 23,513.46"]
-        ],
-        settlementRows: [
-          ["已释放", "GBP 43,211.11", "已完成"],
-          ["待释放", "GBP 0.00", "-"]
-        ],
-        cashRows: [
-          ["WLD-UK-1409", "GBP 40,980.44", "已到账"],
-          ["手续费与汇损", "GBP -527.73", "待确认"]
-        ]
-      },
-      {
-        id: "A57-US",
-        month: "2026-03",
-        country: "美国",
-        currency: "USD",
-        businessNet: 1851.91,
-        released: 1848.91,
-        arrived: 1848.91,
-        diff: 0,
-        status: "已到账",
-        statusType: "success",
-        action: "无需处理",
-        explain: "A57-US 经营金额、结算释放和实际到账已完成闭环。本月无待处理差异。",
-        business: { income: 1851.91, expense: 0, tax: 0, profit: 1851.91 },
-        settlement: { income: 1851.91, expense: 3, released: 1848.91, deferred: 0 },
-        cash: { expected: 1848.91, transferred: 1848.91, arrived: 1848.91, fee: 0, fx: 0 },
-        rows: [
-          ["Product sales", "$1,851.91"],
-          ["Amazon fees", "-$3.00"],
-          ["Tax", "$0.00"],
-          ["Operating net", "$1,848.91"]
-        ],
-        settlementRows: [
-          ["已释放", "$1,848.91", "已完成"],
-          ["待释放", "$0.00", "-"]
-        ],
-        cashRows: [
-          ["WLD-US-5728", "$1,848.91", "已到账"]
-        ]
-      },
-      {
-        id: "A53-ES",
-        month: "2026-03",
-        country: "西班牙",
-        currency: "EUR",
-        businessNet: 6262.63,
-        released: 6293.63,
-        arrived: 6120.22,
-        diff: -61.04,
-        status: "已到账",
-        statusType: "success",
-        action: "手续费已确认",
-        explain: "A53-ES 已完成到账。61.04 欧元差异为银行手续费和尾差，已归入本月资金费用。",
-        business: { income: 6262.63, expense: 2342.95, tax: 3.37, profit: 3916.31 },
-        settlement: { income: 6262.63, expense: 0, released: 6293.63, deferred: 0 },
-        cash: { expected: 6181.26, transferred: 6293.63, arrived: 6120.22, fee: 41.2, fx: 19.84 },
-        rows: [
-          ["Product sales", "EUR 6,262.63"],
-          ["Amazon fees", "EUR -2,342.95"],
-          ["Tax", "EUR -3.37"],
-          ["Operating net", "EUR 3,916.31"]
-        ],
-        settlementRows: [
-          ["已释放", "EUR 6,293.63", "已完成"],
-          ["待释放", "EUR 0.00", "-"]
-        ],
-        cashRows: [
-          ["WLD-ES-3810", "EUR 6,120.22", "已到账"]
-        ]
-      }
-    ];
-
-    const format = (value, currency = "$") => {
-      const abs = Math.abs(value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-      return `${value < 0 ? "-" : ""}${currency}${abs}`;
-    };
-
-    const badge = (row) => `<span class="badge ${row.statusType}">${row.status}</span>`;
-
-    const tableBody = document.getElementById("storeRows");
-    tableBody.innerHTML = stores.map((row, index) => `
-      <tr data-index="${index}">
-        <td>${row.month}</td>
-        <td><div class="store"><strong>${row.id}</strong><span>${row.country} / ${row.currency}</span></div></td>
-        <td class="num">${format(row.businessNet, row.currency === "EUR" ? "€" : row.currency === "GBP" ? "£" : "$")}</td>
-        <td class="num">${format(row.released, row.currency === "EUR" ? "€" : row.currency === "GBP" ? "£" : "$")}</td>
-        <td class="num">${format(row.arrived, row.currency === "EUR" ? "€" : row.currency === "GBP" ? "£" : "$")}</td>
-        <td class="num">${format(row.diff, row.currency === "EUR" ? "€" : row.currency === "GBP" ? "£" : "$")}</td>
-        <td>${badge(row)}</td>
-        <td>${row.action}</td>
-      </tr>
-    `).join("");
-
-    const drawerTitle = document.getElementById("drawerTitle");
-    const drawerMeta = document.getElementById("drawerMeta");
-    const explainText = document.getElementById("explainText");
-    const overviewMetrics = document.getElementById("overviewMetrics");
-    const differenceRows = document.getElementById("differenceRows");
-    const businessMetrics = document.getElementById("businessMetrics");
-    const settlementMetrics = document.getElementById("settlementMetrics");
-    const cashMetrics = document.getElementById("cashMetrics");
-    const businessRows = document.getElementById("businessRows");
-    const settlementRows = document.getElementById("settlementRows");
-    const cashRows = document.getElementById("cashRows");
-
-    function metric(label, value) {
-      return `<div class="metric"><span>${label}</span><strong>${value}</strong></div>`;
-    }
-
-    function openDrawer(row) {
-      const symbol = row.currency === "EUR" ? "€" : row.currency === "GBP" ? "£" : "$";
-      drawerTitle.textContent = row.id;
-      drawerMeta.innerHTML = `<span>${row.month}</span><span>${row.country}</span><span>${row.currency}</span>${badge(row)}`;
-      explainText.textContent = row.explain;
-      overviewMetrics.innerHTML = [
-        metric("经营净额", format(row.businessNet, symbol)),
-        metric("已释放", format(row.released, symbol)),
-        metric("已到账", format(row.arrived, symbol)),
-        metric("差异金额", format(row.diff, symbol))
-      ].join("");
-      differenceRows.innerHTML = [
-        ["经营与结算差异", format(row.businessNet - row.released, symbol), "跨账期释放与口径差异"],
-        ["到账差异", format(row.diff, symbol), row.action],
-        ["待释放金额", format(row.settlement.deferred, symbol), row.settlement.deferred ? "预计后续账期释放" : "无"]
-      ].map(cells => `<tr><td>${cells[0]}</td><td class="num">${cells[1]}</td><td>${cells[2]}</td></tr>`).join("");
-
-      businessMetrics.innerHTML = [
-        metric("经营收入", format(row.business.income, symbol)),
-        metric("经营支出", format(-row.business.expense, symbol)),
-        metric("经营税费", format(-row.business.tax, symbol)),
-        metric("经营利润", format(row.business.profit, symbol))
-      ].join("");
-      businessRows.innerHTML = row.rows.map(item => `<tr><td>${item[0]}</td><td class="num">${item[1]}</td></tr>`).join("");
-
-      settlementMetrics.innerHTML = [
-        metric("结算收入", format(row.settlement.income, symbol)),
-        metric("结算支出", format(-row.settlement.expense, symbol)),
-        metric("已释放", format(row.settlement.released, symbol)),
-        metric("待释放", format(row.settlement.deferred, symbol))
-      ].join("");
-      settlementRows.innerHTML = row.settlementRows.map(item => `<tr><td>${item[0]}</td><td class="num">${item[1]}</td><td>${item[2]}</td></tr>`).join("");
-
-      cashMetrics.innerHTML = [
-        metric("应到账", format(row.cash.expected, symbol)),
-        metric("已转账", format(row.cash.transferred, symbol)),
-        metric("已到账", format(row.cash.arrived, symbol)),
-        metric("手续费/汇损", format(row.cash.fee + row.cash.fx, symbol))
-      ].join("");
-      cashRows.innerHTML = row.cashRows.map(item => `<tr><td>${item[0]}</td><td class="num">${item[1]}</td><td>${item[2]}</td></tr>`).join("");
-      document.body.classList.add("drawer-open");
-    }
-
-    tableBody.addEventListener("click", (event) => {
-      const rowEl = event.target.closest("tr[data-index]");
-      if (!rowEl) return;
-      openDrawer(stores[Number(rowEl.dataset.index)]);
-    });
-
-    document.getElementById("closeDrawer").addEventListener("click", () => document.body.classList.remove("drawer-open"));
-    document.getElementById("drawerMask").addEventListener("click", () => document.body.classList.remove("drawer-open"));
-
-    document.getElementById("detailTabs").addEventListener("click", (event) => {
-      const tab = event.target.closest(".tab");
-      if (!tab) return;
-      document.querySelectorAll(".tab").forEach(item => item.classList.toggle("active", item === tab));
-      document.querySelectorAll(".tab-panel").forEach(panel => {
-        panel.classList.toggle("hidden", panel.dataset.panel !== tab.dataset.tab);
-      });
-    });
-
-    const openImport = document.getElementById("openImport");
-    const closeImport = document.getElementById("closeImport");
-    const cancelImport = document.getElementById("cancelImport");
-    openImport.addEventListener("click", () => document.body.classList.add("modal-open"));
-    closeImport.addEventListener("click", () => document.body.classList.remove("modal-open"));
-    cancelImport.addEventListener("click", () => document.body.classList.remove("modal-open"));
-
-    if (window.lucide) {
-      window.lucide.createIcons();
-    }
+    lucide.createIcons();
   </script>
 </body>
 </html>
