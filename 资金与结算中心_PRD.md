@@ -1,4 +1,4 @@
-# 资金与结算中心 PRD V3.3
+# 资金与结算中心 PRD V3.4
 
 ## 一、文档信息
 
@@ -10,6 +10,7 @@
 | V3.1 | 2026-06-10 | 产品部 | 补充 SettlementID 待回填、系统结算编号兜底关联、CSV settlement id 反查范围膨胀规则 |
 | V3.2 | 2026-06-10 | 产品部 | 补充币种展示规则：汇总看板统一按 USD 折算，对账列表与店铺详情保留原币种 |
 | V3.3 | 2026-06-10 | 产品部 | 补充客户版看板：保留三账趋势、资金链路、差异预警排行；对账列表保留差异原因 |
+| V3.4 | 2026-06-10 | 产品部 | 补充首页看板与详情页各指标的数据来源、查询条件、计算公式；详情页 Tab 交互可切换 |
 
 ## 二、功能定义
 
@@ -495,6 +496,88 @@ SettlementID = 空
 到账进度只按店铺统计，不按国家站点统计。
 ```
 
+### 7.1.1 首页看板数据来源与计算公式
+
+#### 7.1.1.1 统一查询条件
+
+首页看板按筛选条件查询：
+
+| 参数 | 说明 |
+| --- | --- |
+| platform | 平台，当前为 Amazon |
+| month | 对账月份，例如 2026-05 |
+| store_id | 店铺，可为空；为空时查询当前权限下全部店铺 |
+| currency | 看板固定 USD 折算；列表与详情使用原币种 |
+| month_start | 月份开始时间，含当天 00:00:00 |
+| month_end | 下月开始时间，不含当天 00:00:00 |
+
+跨币种折算规则：
+
+```text
+USD金额 = 原币种金额 * 月末汇率(currency -> USD)
+看板所有跨店铺金额必须先折算 USD 后再汇总。
+列表和详情不做跨币种汇总，保留原币种。
+```
+
+#### 7.1.1.2 基础数据集
+
+| 数据集 | 来源 | 查询条件 | 用途 |
+| --- | --- | --- | --- |
+| S_summary | Summary PDF 解析结果 | store_id + report_month = month | 经营账收入、支出、税费、经营净额 |
+| T_transaction | 付款结算-交易一览 | store_id + settlement_time >= month_start + settlement_time < month_end | 交易净额、Released / Deferred、费用科目归类、跨月 SettlementID |
+| A_settlement | 付款结算-所有结算 | store_id + settlement_close_time >= month_start + settlement_close_time < month_end | 账期应收、已转账、待转账、账期状态 |
+| R_receipt | 第三方收款账户到账流水 | 与 A_settlement 按店铺、币种、追踪编号、银行尾号、金额区间匹配 | 已到账、未到账、到账率、手续费、汇损 |
+
+注意：
+
+```text
+T_transaction 按结算时间查询，用于经营账核对与释放状态统计。
+A_settlement 按结算关闭时间查询，用于账期应收与转账状态统计。
+R_receipt 按匹配结果进入资金账，不直接按到账时间替代账期金额。
+```
+
+#### 7.1.1.3 顶部指标公式
+
+| 指标 | 数据来源 | 计算公式 |
+| --- | --- | --- |
+| 经营收入 | S_summary | SUM_USD(pdf_income) |
+| 经营支出 | S_summary | SUM_USD(pdf_expenses)，支出按负数存储，页面可展示绝对值或负数 |
+| 经营税费 | S_summary | SUM_USD(pdf_tax) |
+| 经营净额 | S_summary | SUM_USD(pdf_income + pdf_expenses + pdf_tax) |
+| 交易净额 | T_transaction | SUM_USD(mapped_income + mapped_expenses + mapped_tax)，Transfer 不参与经营净额 |
+| 已发放金额 | T_transaction | SUM_USD(amount) WHERE transaction_status = Released AND standard_subject IN Income / Expenses / Tax |
+| 延迟发放金额 | T_transaction | ABS(SUM_USD(amount)) WHERE transaction_status = Deferred |
+| 延迟笔数 | T_transaction | COUNT(transaction_id) WHERE transaction_status = Deferred |
+| 释放率 | T_transaction | 已发放金额 / (已发放金额 + 延迟发放金额) |
+| 本月关闭账期数 | A_settlement | COUNT(DISTINCT COALESCE(settlement_id, system_settlement_no)) |
+| 账期应收金额 | A_settlement | SUM_USD(receivable_amount) |
+| 已转账金额 | A_settlement | SUM_USD(transfer_amount) WHERE transfer_status = 已转账 |
+| 待转账金额 | A_settlement | 账期应收金额 - 已转账金额 |
+| 已到账金额 | R_receipt | SUM_USD(receipt_amount) WHERE receipt_status = 已匹配 |
+| 未到账金额 | A_settlement + R_receipt | 已转账金额 - 已到账金额 |
+| 到账率 | A_settlement + R_receipt | 已到账金额 / 已转账金额 |
+| 异常店铺数 | 对账结果表 | COUNT(DISTINCT store_id) WHERE 对账状态 IN 差异 / 未到账 / 部分到账 / 待回填 |
+
+#### 7.1.1.4 首页组件公式
+
+| 组件 | 查询/计算逻辑 |
+| --- | --- |
+| 店铺到账进度排行 | 按 store_id 聚合：到账率 = SUM(receipt_amount_matched) / SUM(transfer_amount_transferred)，按到账率升序或未到账金额降序展示 |
+| 三账趋势 | 按近 6 个月分别计算：经营净额 = S_summary 经营净额；结算净额 = T_transaction 交易净额；到账金额 = R_receipt 已匹配到账金额 |
+| 资金链路 | 当前筛选月份展示三段金额：经营账 = S_summary 经营净额；结算账 = A_settlement 已转账金额，辅助展示账期应收金额；资金账 = R_receipt 已到账金额 |
+| 差异预警排行 | 按店铺计算风险金额 = ABS(经营差异) + 延迟发放金额 + 未到账金额；按风险金额降序展示 |
+| 差异说明 | 根据差异规则生成：跨月结算、延迟发放、待回填 SettlementID、到账在途、已转账未匹配流水、未映射费用 |
+
+#### 7.1.1.5 差异字段公式
+
+| 差异字段 | 公式 |
+| --- | --- |
+| 经营差异 | S_summary 经营净额 - T_transaction 交易净额 |
+| 账期差异 | T_transaction 已发放金额 - A_settlement 账期应收金额 |
+| 到账差异 | A_settlement 已转账金额 - R_receipt 已到账金额 |
+| 差异率 | ABS(经营差异) / ABS(S_summary 经营净额) |
+| 跨月 SettlementID 数 | COUNT(DISTINCT settlement_id) WHERE T_transaction.settlement_time 在本月 AND A_settlement.settlement_close_time 不在本月 |
+
 ### 7.2 对账列表
 
 一行一个“月份 + 店铺 + 币种”，金额保留原币种。
@@ -529,6 +612,16 @@ SettlementID = 空
 | 结算账期 | 关联系统结算编号、SettlementID、账期开始/关闭时间、应收金额、转账状态、回填状态 |
 | 资金到账 | 第三方收款账户匹配流水、到账金额、手续费、汇损、未到账原因 |
 | 差异说明 | 系统自动解释跨月结算、延迟释放、未映射费用、在途资金 |
+
+详情页 Tab 交互规则：
+
+| 交互项 | 规则 |
+| --- | --- |
+| Tab 切换 | 点击 Tab 后在当前详情页内切换对应面板，不跳转页面 |
+| 默认 Tab | 默认打开“经营账核对” |
+| 数据加载 | 首次打开详情页时加载概要数据；切换 Tab 时可按需请求对应明细 |
+| 状态保持 | 从对账列表进入详情页后，返回列表时保留原筛选条件 |
+| 导出详情 | 导出当前店铺、月份、币种下所有 Tab 数据 |
 
 ### 7.4 导入管理
 

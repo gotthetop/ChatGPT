@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>资金与结算中心 - 客户原型 V3.3</title>
+  <title>资金与结算中心 - 客户原型 V3.4</title>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <style>
     :root {
@@ -677,6 +677,21 @@
       line-height: 1.45;
     }
 
+    .detail-tabs {
+      border-top: 1px solid var(--line);
+    }
+
+    .detail-tab-panel {
+      padding: 16px;
+    }
+
+    .detail-tab-panel .panel-note {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -1093,9 +1108,9 @@
                   <div class="flow-progress"><span style="width:100%"></span></div>
                 </div>
                 <div class="flow-card settlement">
-                  <div class="flow-top"><span>结算账</span><span>付款结算</span></div>
+                  <div class="flow-top"><span>结算账</span><span>所有结算</span></div>
                   <strong>$86.2万</strong>
-                  <small>按交易一览统计已发放与延迟发放，解释平台释放差异。</small>
+                  <small>按所有结算统计账期应转与已转账金额，解释平台转账进度。</small>
                   <div class="flow-progress"><span style="width:94.9%"></span></div>
                 </div>
                 <div class="flow-card cash">
@@ -1241,17 +1256,18 @@
             </div>
           </div>
 
-          <div class="tabs">
-            <button class="tab active">经营账核对</button>
-            <button class="tab">交易一览</button>
-            <button class="tab">结算账期</button>
-            <button class="tab">资金到账</button>
-            <button class="tab">差异说明</button>
+          <div class="tabs detail-tabs">
+            <button class="tab active" data-detail-tab="operating">经营账核对</button>
+            <button class="tab" data-detail-tab="transactions">交易一览</button>
+            <button class="tab" data-detail-tab="settlements">结算账期</button>
+            <button class="tab" data-detail-tab="cash">资金到账</button>
+            <button class="tab" data-detail-tab="analysis">差异说明</button>
           </div>
 
-          <div class="panel-body">
+          <div class="detail-tab-panel" data-detail-panel="operating">
             <div class="grid-2">
               <article>
+                <p class="panel-note">经营账核对按 Summary PDF 报告区间取数，并与付款结算-交易一览按结算时间统计后的收入、支出、税费进行比较。</p>
                 <table>
                   <thead><tr><th>核对项</th><th class="num">Summary PDF</th><th class="num">交易一览</th><th class="num">差异</th></tr></thead>
                   <tbody>
@@ -1268,6 +1284,60 @@
                 <div class="explain-item">PDF 不包含交易状态与 SettlementID；Released / Deferred 以付款结算-交易一览为准。</div>
                 <div class="explain-item green">所有结算 5 月关闭账期应收与已转账合计一致，均为 £22,660.23。</div>
               </article>
+            </div>
+          </div>
+
+          <div class="detail-tab-panel" data-detail-panel="transactions" hidden>
+            <p class="panel-note">交易一览来自付款结算-交易一览，按“结算时间 = 2026-05”查询，用于替代 Transaction CSV 的日常解析。</p>
+            <table>
+              <thead>
+                <tr><th>交易状态</th><th>费用类型</th><th>标准科目</th><th class="num">笔数</th><th class="num">金额 GBP</th><th>说明</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><span class="pill green">Released</span></td><td>ProductCharges</td><td>Income</td><td class="num">8,214</td><td class="num">59,938.24</td><td>商品收入与促销收入</td></tr>
+                <tr><td><span class="pill green">Released</span></td><td>AmazonFees / FBAFees</td><td>Expenses</td><td class="num">15,406</td><td class="num">-36,294.68</td><td>平台佣金、配送费、服务费</td></tr>
+                <tr><td><span class="pill green">Released</span></td><td>Tax</td><td>Tax</td><td class="num">6,102</td><td class="num">759.20</td><td>税费、税费退款、平台代扣税</td></tr>
+                <tr><td><span class="pill amber">Deferred</span></td><td>ProductCharges / Tax</td><td>Reserve</td><td class="num">302</td><td class="num">767.78</td><td>延迟发放，预计进入后续账期释放</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="detail-tab-panel" data-detail-panel="settlements" hidden>
+            <p class="panel-note">结算账期来自付款结算-所有结算，按“结算关闭时间 = 2026-05”查询；如 SettlementID 尚未回填，先展示系统结算编号与待回填状态。</p>
+            <table>
+              <thead>
+                <tr><th>SettlementID</th><th>结算打开时间</th><th>结算关闭时间</th><th class="num">应收金额</th><th class="num">转账金额</th><th>转账状态</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>27214060952</td><td>2026-04-30 04:52</td><td>2026-05-02 14:48</td><td class="num">£1,284.90</td><td class="num">£1,284.90</td><td><span class="pill green">已转账</span></td></tr>
+                <tr><td>27220958942</td><td>2026-05-02 14:48</td><td>2026-05-05 03:21</td><td class="num">£2,740.33</td><td class="num">£2,740.33</td><td><span class="pill green">已转账</span></td></tr>
+                <tr><td>27242544182</td><td>2026-05-12 03:18</td><td>2026-05-14 02:16</td><td class="num">£3,916.72</td><td class="num">£3,916.72</td><td><span class="pill green">已转账</span></td></tr>
+                <tr><td>合计</td><td>-</td><td>2026-05</td><td class="num"><strong>£22,660.23</strong></td><td class="num"><strong>£22,660.23</strong></td><td><span class="pill green">已对齐</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="detail-tab-panel" data-detail-panel="cash" hidden>
+            <p class="panel-note">资金到账以付款结算-所有结算的转账金额为锚点，与第三方收款账户到账流水按店铺、币种、银行尾号、追踪编号和金额匹配。</p>
+            <table>
+              <thead>
+                <tr><th>转账时间</th><th>银行尾号</th><th>追踪编号</th><th class="num">平台转账</th><th class="num">实际到账</th><th class="num">差异</th><th>到账状态</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>2026-05-03</td><td>181</td><td>TRK-UK-0521</td><td class="num">£6,850.20</td><td class="num">£6,850.20</td><td class="num">£0.00</td><td><span class="pill green">已到账</span></td></tr>
+                <tr><td>2026-05-16</td><td>181</td><td>TRK-UK-0528</td><td class="num">£8,094.70</td><td class="num">£8,094.70</td><td class="num">£0.00</td><td><span class="pill green">已到账</span></td></tr>
+                <tr><td>2026-05-31</td><td>181</td><td>TRK-UK-0601</td><td class="num">£7,715.33</td><td class="num">£6,989.28</td><td class="num">£726.05</td><td><span class="pill amber">部分到账</span></td></tr>
+                <tr><td>合计</td><td>-</td><td>-</td><td class="num"><strong>£22,660.23</strong></td><td class="num"><strong>£21,934.18</strong></td><td class="num"><strong>£726.05</strong></td><td><span class="pill amber">部分到账</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="detail-tab-panel" data-detail-panel="analysis" hidden>
+            <div class="explain">
+              <div class="explain-item amber">经营账与交易一览差异 GBP 582.41，主要来自跨月结算：5 月交易中存在 7 个 SettlementID 在 6 月关闭。</div>
+              <div class="explain-item">交易一览显示 Deferred 金额 GBP 767.78，当前不应计入已释放资金，但需要进入后续释放跟踪。</div>
+              <div class="explain-item green">5 月关闭账期应收与平台已转账均为 GBP 22,660.23，说明结算账期口径已对齐。</div>
+              <div class="explain-item amber">第三方收款账户已到账 GBP 21,934.18，差异 GBP 726.05，属于部分到账或到账流水暂未匹配。</div>
             </div>
           </div>
         </section>
@@ -1316,6 +1386,15 @@
       }
     }
 
+    function showDetailTab(tabName) {
+      document.querySelectorAll('[data-detail-panel]').forEach((panel) => {
+        panel.hidden = panel.dataset.detailPanel !== tabName;
+      });
+      document.querySelectorAll('[data-detail-tab]').forEach((button) => {
+        button.classList.toggle('active', button.dataset.detailTab === tabName);
+      });
+    }
+
     document.querySelectorAll('[data-view-target]').forEach((trigger) => {
       trigger.addEventListener('click', (event) => {
         event.preventDefault();
@@ -1325,9 +1404,18 @@
       });
     });
 
+    document.querySelectorAll('[data-detail-tab]').forEach((trigger) => {
+      trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+        showDetailTab(trigger.dataset.detailTab);
+      });
+    });
+
     if (location.hash === '#detail') {
       showView('detail');
     }
+
+    showDetailTab('operating');
 
     lucide.createIcons();
   </script>
