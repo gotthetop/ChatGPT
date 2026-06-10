@@ -322,6 +322,10 @@
       border-color: var(--blue);
     }
 
+    [hidden] {
+      display: none !important;
+    }
+
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -753,7 +757,7 @@
         <div class="actions">
           <button class="btn"><i data-lucide="download"></i>导出</button>
           <button class="btn"><i data-lucide="rotate-cw"></i>重新核算</button>
-          <button class="btn primary"><i data-lucide="upload-cloud"></i>导入 Summary</button>
+          <button class="btn primary" data-view-target="import"><i data-lucide="upload-cloud"></i>导入 Summary</button>
         </div>
       </header>
 
@@ -761,12 +765,12 @@
         <section class="page-head">
           <div>
             <h1>资金与结算中心</h1>
-            <p>按店铺统一核对 Summary 经营账、付款结算交易明细、结算账期与第三方收款账户到账。</p>
+            <p>看板汇总按 USD 统一折算；对账列表与店铺详情保留店铺原币种。</p>
           </div>
           <div class="status-line">
             <span class="pill green">Amazon</span>
             <span class="pill blue">2026-05</span>
-            <span class="pill gray">原币种</span>
+            <span class="pill gray">看板折算 USD</span>
             <span class="pill amber">4 个店铺存在差异</span>
           </div>
         </section>
@@ -786,7 +790,7 @@
           </div>
           <div class="field">
             <label>币种</label>
-            <select class="control"><option>原币种</option><option>GBP</option><option>EUR</option><option>USD</option></select>
+            <select class="control"><option>原币种（列表/详情）</option><option>USD（看板汇总）</option><option>GBP</option><option>EUR</option></select>
           </div>
           <div class="field">
             <label>交易状态</label>
@@ -805,46 +809,46 @@
 
         <section class="panel">
           <div class="tabs">
-            <button class="tab active">首页看板</button>
-            <button class="tab">对账列表</button>
-            <button class="tab">店铺详情</button>
-            <button class="tab">Summary 导入</button>
+            <button class="tab active" data-view-target="dashboard">首页看板</button>
+            <button class="tab" data-view-target="list">对账列表</button>
+            <button class="tab" data-view-target="detail">店铺详情</button>
+            <button class="tab" data-view-target="import">Summary 导入</button>
           </div>
-          <div class="panel-body">
+          <div class="panel-body view" data-view="dashboard">
             <div class="kpi-grid">
               <article class="kpi">
                 <div class="kpi-head">
                   <div class="kpi-title"><i data-lucide="file-text"></i>经营账</div>
-                  <span class="pill blue">Summary PDF</span>
+                  <span class="pill blue">USD 折算</span>
                 </div>
-                <strong>£24,985.17</strong>
+                <strong>$90,842.31</strong>
                 <div class="kpi-foot">
-                  <div class="metric">收入<b>£60,521.79</b></div>
-                  <div class="metric">支出<b>-£36,295.82</b></div>
+                  <div class="metric">收入<b>$219,718.64</b></div>
+                  <div class="metric">支出<b>-$128,876.33</b></div>
                 </div>
               </article>
 
               <article class="kpi">
                 <div class="kpi-head">
                   <div class="kpi-title"><i data-lucide="split"></i>交易释放</div>
-                  <span class="pill cyan">交易一览</span>
+                  <span class="pill cyan">USD 折算</span>
                 </div>
-                <strong>£23,635.00</strong>
+                <strong>$86,194.50</strong>
                 <div class="kpi-foot">
-                  <div class="metric">已发放<b>£23,635.00</b></div>
-                  <div class="metric">延迟<b>£767.78</b></div>
+                  <div class="metric">已发放<b>$83,401.20</b></div>
+                  <div class="metric">延迟<b>$2,793.30</b></div>
                 </div>
               </article>
 
               <article class="kpi">
                 <div class="kpi-head">
                   <div class="kpi-title"><i data-lucide="receipt-text"></i>结算账期</div>
-                  <span class="pill violet">所有结算</span>
+                  <span class="pill violet">USD 折算</span>
                 </div>
-                <strong>£22,660.23</strong>
+                <strong>$82,510.46</strong>
                 <div class="kpi-foot">
-                  <div class="metric">关闭账期<b>21 个</b></div>
-                  <div class="metric">已转账<b>£22,660.23</b></div>
+                  <div class="metric">关闭账期<b>60 个</b></div>
+                  <div class="metric">已转账<b>$82,510.46</b></div>
                 </div>
               </article>
 
@@ -855,15 +859,15 @@
                 </div>
                 <strong>96.8%</strong>
                 <div class="kpi-foot">
-                  <div class="metric">已到账<b>£21,934.18</b></div>
-                  <div class="metric">未到账<b>£726.05</b></div>
+                  <div class="metric">已到账<b>$79,870.14</b></div>
+                  <div class="metric">未到账<b>$2,640.32</b></div>
                 </div>
               </article>
             </div>
           </div>
         </section>
 
-        <section class="grid-2">
+        <section class="grid-2 view" data-view="dashboard">
           <article class="panel">
             <div class="panel-header">
               <div class="panel-title"><i data-lucide="store"></i>店铺到账进度</div>
@@ -907,7 +911,7 @@
             <div class="panel-body">
               <div class="risk-list">
                 <div class="risk-item">
-                  <div><strong>A51-UK 经营差异</strong><span>跨月结算 7 个 SettlementID，延迟 £767.78</span></div>
+                  <div><strong>A51-UK 经营差异</strong><span>跨月结算 7 个 SettlementID，延迟 GBP 767.78</span></div>
                   <span class="pill amber">需解释</span>
                 </div>
                 <div class="risk-item">
@@ -927,7 +931,7 @@
           </article>
         </section>
 
-        <section class="grid-3">
+        <section class="grid-3 view" data-view="dashboard">
           <article class="panel">
             <div class="panel-header">
               <div class="panel-title"><i data-lucide="chart-column"></i>释放趋势</div>
@@ -971,14 +975,14 @@
             <div class="panel-body">
               <div class="explain">
                 <div class="explain-item amber">A51-UK 存在跨月结算：5 月交易涉及 7 个 6 月关闭账期。</div>
-                <div class="explain-item">交易一览显示 Deferred 金额 £767.78，属于延迟发放。</div>
-                <div class="explain-item green">5 月关闭账期已转账 £22,660.23，第三方收款账户已匹配 £21,934.18。</div>
+                <div class="explain-item">A51-UK 交易一览显示 Deferred 金额 GBP 767.78，属于延迟发放。</div>
+                <div class="explain-item green">A51-UK 5 月关闭账期已转账 GBP 22,660.23，第三方收款账户已匹配 GBP 21,934.18。</div>
               </div>
             </div>
           </article>
         </section>
 
-        <section class="panel">
+        <section class="panel view" data-view="list" hidden>
           <div class="panel-header">
             <div class="panel-title"><i data-lucide="list-checks"></i>对账列表</div>
             <div class="actions">
@@ -1007,7 +1011,7 @@
               <tbody>
                 <tr>
                   <td>2026-05</td>
-                  <td><a class="link" href="#detail">A51-UK</a></td>
+                  <td><a class="link" href="#detail" data-view-target="detail">A51-UK</a></td>
                   <td>GBP</td>
                   <td class="num">24,985.17</td>
                   <td class="num">24,402.76</td>
@@ -1017,7 +1021,7 @@
                   <td class="num">22,660.23</td>
                   <td class="num">21,934.18</td>
                   <td><span class="pill amber">需解释</span></td>
-                  <td><a class="link" href="#detail">详情</a></td>
+                  <td><a class="link" href="#detail" data-view-target="detail">详情</a></td>
                 </tr>
                 <tr>
                   <td>2026-05</td>
@@ -1066,7 +1070,7 @@
           </div>
         </section>
 
-        <section class="panel" id="detail">
+        <section class="panel view" data-view="detail" id="detail" hidden>
           <div class="detail-head">
             <div class="detail-title">
               <div class="avatar">UK</div>
@@ -1122,7 +1126,7 @@
           </div>
         </section>
 
-        <section class="panel">
+        <section class="panel view" data-view="import" hidden>
           <div class="panel-header">
             <div class="panel-title"><i data-lucide="upload-cloud"></i>Summary 导入管理</div>
             <button class="btn primary"><i data-lucide="plus"></i>上传 PDF</button>
@@ -1152,6 +1156,33 @@
   </div>
 
   <script>
+    function showView(viewName) {
+      document.querySelectorAll('[data-view]').forEach((section) => {
+        section.hidden = section.dataset.view !== viewName;
+      });
+      document.querySelectorAll('.tabs [data-view-target]').forEach((button) => {
+        button.classList.toggle('active', button.dataset.viewTarget === viewName);
+      });
+      if (viewName === 'detail') {
+        history.replaceState(null, '', '#detail');
+      } else if (location.hash === '#detail') {
+        history.replaceState(null, '', location.pathname + location.search);
+      }
+    }
+
+    document.querySelectorAll('[data-view-target]').forEach((trigger) => {
+      trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+        const viewName = trigger.dataset.viewTarget;
+        showView(viewName);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+
+    if (location.hash === '#detail') {
+      showView('detail');
+    }
+
     lucide.createIcons();
   </script>
 </body>
