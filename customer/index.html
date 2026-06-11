@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>资金与结算中心 - 客户原型 V3.5</title>
+  <title>资金与结算中心 - 客户原型 V3.6</title>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <style>
     :root {
@@ -406,6 +406,12 @@
       gap: 14px;
     }
 
+    .grid-3-wide {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
     .panel-header {
       min-height: 50px;
       padding: 0 16px;
@@ -591,6 +597,223 @@
     .trend-stack i:nth-child(1) { background: var(--blue); }
     .trend-stack i:nth-child(2) { background: var(--green); }
     .trend-stack i:nth-child(3) { background: var(--amber); }
+
+    .chart-shell {
+      min-height: 226px;
+      display: grid;
+      align-content: end;
+      gap: 12px;
+    }
+
+    .bar-chart {
+      height: 164px;
+      padding: 16px 8px 0;
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(to bottom, transparent 24%, var(--line) 25%, transparent 26%),
+        linear-gradient(to bottom, transparent 49%, var(--line) 50%, transparent 51%),
+        linear-gradient(to bottom, transparent 74%, var(--line) 75%, transparent 76%);
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 16px;
+      align-items: end;
+    }
+
+    .bar-group {
+      height: 144px;
+      display: grid;
+      align-items: end;
+      justify-items: center;
+      gap: 7px;
+    }
+
+    .bar-pair {
+      height: 124px;
+      display: flex;
+      align-items: end;
+      justify-content: center;
+      gap: 7px;
+    }
+
+    .bar-pair i {
+      width: 20px;
+      min-height: 4px;
+      display: block;
+      border-radius: 5px 5px 0 0;
+      background: #245985;
+    }
+
+    .bar-pair i:nth-child(2) {
+      background: #7eb1dd;
+    }
+
+    .bar-pair.settlement i:nth-child(1) {
+      background: #3476ad;
+    }
+
+    .bar-pair.settlement i:nth-child(2) {
+      background: #f5a623;
+    }
+
+    .bar-label {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .line-chart {
+      height: 164px;
+      padding: 10px 8px 0;
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(to bottom, transparent 24%, var(--line) 25%, transparent 26%),
+        linear-gradient(to bottom, transparent 49%, var(--line) 50%, transparent 51%),
+        linear-gradient(to bottom, transparent 74%, var(--line) 75%, transparent 76%);
+    }
+
+    .line-chart svg {
+      width: 100%;
+      height: 136px;
+      display: block;
+      overflow: visible;
+    }
+
+    .month-axis {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      margin-top: 6px;
+    }
+
+    .legend span:nth-child(4) i { background: var(--red); }
+
+    .status-overview {
+      display: grid;
+      gap: 14px;
+    }
+
+    .status-summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .status-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+      padding: 12px;
+      min-height: 92px;
+    }
+
+    .status-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .status-card strong {
+      display: block;
+      margin-top: 7px;
+      font-size: 20px;
+      line-height: 1.1;
+    }
+
+    .status-card small {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .segment-bar {
+      height: 14px;
+      display: flex;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e7edf5;
+    }
+
+    .segment {
+      height: 100%;
+      display: block;
+    }
+
+    .segment.green { background: var(--green); }
+    .segment.amber { background: var(--amber); }
+    .segment.red { background: var(--red); }
+    .segment.blue { background: var(--blue); }
+
+    .status-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .status-line-row {
+      display: grid;
+      grid-template-columns: 92px 1fr 100px 110px;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    .risk-score-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .risk-score {
+      display: grid;
+      grid-template-columns: 96px minmax(0, 1fr) 92px;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .risk-score:last-child {
+      border-bottom: 0;
+    }
+
+    .risk-score strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .risk-score span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .risk-bar {
+      height: 12px;
+      border-radius: 999px;
+      background: #e7edf5;
+      overflow: hidden;
+    }
+
+    .risk-bar i {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--red);
+    }
+
+    .risk-bar.amber i {
+      background: var(--amber);
+    }
+
+    .drill-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
 
     .legend {
       display: flex;
@@ -933,7 +1156,7 @@
             <span class="pill green">Amazon</span>
             <span class="pill blue">2026-05</span>
             <span class="pill gray">看板折算 USD</span>
-            <span class="pill amber">4 个店铺存在差异</span>
+            <span class="pill amber">164 个店铺需处理</span>
           </div>
         </section>
 
@@ -1037,37 +1260,24 @@
           </div>
         </section>
 
-        <section class="grid-2 view" data-view="dashboard">
+        <section class="grid-3-wide view" data-view="dashboard">
           <article class="panel">
             <div class="panel-header">
-              <div class="panel-title"><i data-lucide="store"></i>店铺到账进度</div>
-              <span class="subtle">按店铺统计，不按国家站点统计</span>
+              <div class="panel-title"><i data-lucide="bar-chart-3"></i>经营账趋势</div>
+              <span class="subtle">收入 / 利润</span>
             </div>
             <div class="panel-body">
-              <div class="store-progress">
-                <div class="store-row">
-                  <div class="store-name"><strong>A51-UK</strong><span>GBP · 21 个账期</span></div>
-                  <div class="bar"><span style="width:96.8%"></span></div>
-                  <div class="amount-cell">96.8%</div>
-                  <span class="pill amber">部分到账</span>
+              <div class="chart-shell">
+                <div class="bar-chart">
+                  <div class="bar-group"><div class="bar-pair"><i style="height:82px"></i><i style="height:38px"></i></div><span class="bar-label">1月</span></div>
+                  <div class="bar-group"><div class="bar-pair"><i style="height:90px"></i><i style="height:42px"></i></div><span class="bar-label">2月</span></div>
+                  <div class="bar-group"><div class="bar-pair"><i style="height:104px"></i><i style="height:52px"></i></div><span class="bar-label">3月</span></div>
+                  <div class="bar-group"><div class="bar-pair"><i style="height:86px"></i><i style="height:40px"></i></div><span class="bar-label">4月</span></div>
+                  <div class="bar-group"><div class="bar-pair"><i style="height:98px"></i><i style="height:46px"></i></div><span class="bar-label">5月</span></div>
                 </div>
-                <div class="store-row">
-                  <div class="store-name"><strong>A49-DE</strong><span>EUR · 18 个账期</span></div>
-                  <div class="bar"><span style="width:100%"></span></div>
-                  <div class="amount-cell">100%</div>
-                  <span class="pill green">已到账</span>
-                </div>
-                <div class="store-row">
-                  <div class="store-name"><strong>A57-US</strong><span>USD · 12 个账期</span></div>
-                  <div class="bar amber"><span style="width:88%"></span></div>
-                  <div class="amount-cell">88.0%</div>
-                  <span class="pill amber">在途</span>
-                </div>
-                <div class="store-row">
-                  <div class="store-name"><strong>A53-IT</strong><span>EUR · 9 个账期</span></div>
-                  <div class="bar red"><span style="width:62%"></span></div>
-                  <div class="amount-cell">62.0%</div>
-                  <span class="pill red">未到账</span>
+                <div class="legend">
+                  <span><i></i>经营收入</span>
+                  <span><i style="background:#7eb1dd"></i>经营利润</span>
                 </div>
               </div>
             </div>
@@ -1075,59 +1285,120 @@
 
           <article class="panel">
             <div class="panel-header">
-              <div class="panel-title"><i data-lucide="triangle-alert"></i>差异预警排行</div>
-              <button class="btn icon" title="刷新"><i data-lucide="refresh-cw"></i></button>
+              <div class="panel-title"><i data-lucide="split"></i>结算账趋势</div>
+              <span class="subtle">已释放 / 延迟</span>
             </div>
             <div class="panel-body">
-              <div class="risk-list">
-                <div class="risk-item">
-                  <div><strong>A51-UK 经营差异</strong><span>跨月结算 7 个 SettlementID，延迟 GBP 767.78</span></div>
-                  <span class="pill amber">£582.41</span>
+              <div class="chart-shell">
+                <div class="bar-chart">
+                  <div class="bar-group"><div class="bar-pair settlement"><i style="height:90px"></i><i style="height:7px"></i></div><span class="bar-label">1月</span></div>
+                  <div class="bar-group"><div class="bar-pair settlement"><i style="height:95px"></i><i style="height:6px"></i></div><span class="bar-label">2月</span></div>
+                  <div class="bar-group"><div class="bar-pair settlement"><i style="height:99px"></i><i style="height:9px"></i></div><span class="bar-label">3月</span></div>
+                  <div class="bar-group"><div class="bar-pair settlement"><i style="height:92px"></i><i style="height:6px"></i></div><span class="bar-label">4月</span></div>
+                  <div class="bar-group"><div class="bar-pair settlement"><i style="height:106px"></i><i style="height:5px"></i></div><span class="bar-label">5月</span></div>
                 </div>
-                <div class="risk-item">
-                  <div><strong>A53-IT 未到账</strong><span>2 笔已转账未匹配第三方收款账户流水</span></div>
-                  <span class="pill red">€2,641.27</span>
+                <div class="legend">
+                  <span><i></i>已释放</span>
+                  <span><i style="background:#f5a623"></i>延迟发放</span>
                 </div>
-                <div class="risk-item">
-                  <div><strong>A57-US 到账在途</strong><span>转账后 3 天内，仍处合理到账窗口</span></div>
-                  <span class="pill blue">$1,094.24</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div class="panel-title"><i data-lucide="wallet"></i>资金到账趋势</div>
+              <span class="subtle">应到 / 已到</span>
+            </div>
+            <div class="panel-body">
+              <div class="chart-shell">
+                <div class="line-chart">
+                  <svg viewBox="0 0 360 136" aria-label="资金到账趋势">
+                    <polyline points="6,92 92,82 180,78 268,88 354,72" fill="none" stroke="#245985" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                    <polyline points="6,96 92,84 180,80 268,91 354,76" fill="none" stroke="#0f8a5f" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                    <circle cx="6" cy="92" r="5" fill="#fff" stroke="#245985" stroke-width="4"></circle>
+                    <circle cx="92" cy="82" r="5" fill="#fff" stroke="#245985" stroke-width="4"></circle>
+                    <circle cx="180" cy="78" r="5" fill="#fff" stroke="#245985" stroke-width="4"></circle>
+                    <circle cx="268" cy="88" r="5" fill="#fff" stroke="#245985" stroke-width="4"></circle>
+                    <circle cx="354" cy="72" r="5" fill="#fff" stroke="#245985" stroke-width="4"></circle>
+                    <circle cx="6" cy="96" r="5" fill="#fff" stroke="#0f8a5f" stroke-width="4"></circle>
+                    <circle cx="92" cy="84" r="5" fill="#fff" stroke="#0f8a5f" stroke-width="4"></circle>
+                    <circle cx="180" cy="80" r="5" fill="#fff" stroke="#0f8a5f" stroke-width="4"></circle>
+                    <circle cx="268" cy="91" r="5" fill="#fff" stroke="#0f8a5f" stroke-width="4"></circle>
+                    <circle cx="354" cy="76" r="5" fill="#fff" stroke="#0f8a5f" stroke-width="4"></circle>
+                  </svg>
+                  <div class="month-axis"><span>1月</span><span>2月</span><span>3月</span><span>4月</span><span>5月</span></div>
                 </div>
-                <div class="risk-item">
-                  <div><strong>A49-DE 已完成</strong><span>经营差异低于阈值，资金已到账</span></div>
-                  <span class="pill green">€0.34</span>
+                <div class="legend">
+                  <span><i></i>应到账</span>
+                  <span><i></i>已到账</span>
                 </div>
               </div>
             </div>
           </article>
         </section>
 
-        <section class="grid-3 view" data-view="dashboard">
+        <section class="grid-2 view" data-view="dashboard">
           <article class="panel">
             <div class="panel-header">
-              <div class="panel-title"><i data-lucide="chart-column"></i>三账趋势</div>
-              <span class="subtle">经营净额 / 结算净额 / 到账金额</span>
+              <div class="panel-title"><i data-lucide="layout-list"></i>到账状态分布</div>
+              <span class="subtle">1,000 个店铺，按状态聚合</span>
             </div>
             <div class="panel-body">
-              <div class="trend">
-                <div class="trend-col"><div class="trend-stack"><i style="height:76px"></i><i style="height:14px"></i><i style="height:8px"></i></div><span>1月</span></div>
-                <div class="trend-col"><div class="trend-stack"><i style="height:82px"></i><i style="height:12px"></i><i style="height:10px"></i></div><span>2月</span></div>
-                <div class="trend-col"><div class="trend-stack"><i style="height:91px"></i><i style="height:18px"></i><i style="height:9px"></i></div><span>3月</span></div>
-                <div class="trend-col"><div class="trend-stack"><i style="height:86px"></i><i style="height:17px"></i><i style="height:13px"></i></div><span>4月</span></div>
-                <div class="trend-col"><div class="trend-stack"><i style="height:96px"></i><i style="height:22px"></i><i style="height:11px"></i></div><span>5月</span></div>
-                <div class="trend-col"><div class="trend-stack"><i style="height:72px"></i><i style="height:26px"></i><i style="height:16px"></i></div><span>6月</span></div>
-              </div>
-              <div class="legend">
-                <span><i></i>经营净额</span>
-                <span><i></i>结算净额</span>
-                <span><i></i>到账金额</span>
+              <div class="status-overview">
+                <div class="status-summary">
+                  <div class="status-card"><span>已到账</span><strong>836</strong><small>$128.4万</small></div>
+                  <div class="status-card"><span>部分到账</span><strong>92</strong><small>$18.2万</small></div>
+                  <div class="status-card"><span>未到账</span><strong>31</strong><small>$6.4万</small></div>
+                  <div class="status-card"><span>待回填</span><strong>41</strong><small>$4.1万</small></div>
+                </div>
+                <div class="segment-bar">
+                  <span class="segment green" style="width:83.6%"></span>
+                  <span class="segment amber" style="width:9.2%"></span>
+                  <span class="segment red" style="width:3.1%"></span>
+                  <span class="segment blue" style="width:4.1%"></span>
+                </div>
+                <div class="status-list">
+                  <div class="status-line-row"><span class="pill green">已到账</span><div class="bar"><span style="width:83.6%"></span></div><strong>836 店铺</strong><span class="num">$128.4万</span></div>
+                  <div class="status-line-row"><span class="pill amber">部分到账</span><div class="bar amber"><span style="width:9.2%"></span></div><strong>92 店铺</strong><span class="num">$18.2万</span></div>
+                  <div class="status-line-row"><span class="pill red">未到账</span><div class="bar red"><span style="width:3.1%"></span></div><strong>31 店铺</strong><span class="num">$6.4万</span></div>
+                  <div class="status-line-row"><span class="pill blue">待回填</span><div class="bar"><span style="width:4.1%"></span></div><strong>41 账期</strong><span class="num">$4.1万</span></div>
+                </div>
+                <div class="drill-actions">
+                  <button class="btn"><i data-lucide="arrow-right"></i>查看未到账</button>
+                  <button class="btn"><i data-lucide="arrow-right"></i>查看待回填</button>
+                  <button class="btn"><i data-lucide="arrow-right"></i>查看全部异常</button>
+                </div>
               </div>
             </div>
           </article>
 
           <article class="panel">
             <div class="panel-header">
-              <div class="panel-title"><i data-lucide="route"></i>资金链路</div>
-              <span class="subtle">从经营到账户</span>
+              <div class="panel-title"><i data-lucide="triangle-alert"></i>差异预警 Top 10</div>
+              <span class="subtle">按综合风险排序</span>
+            </div>
+            <div class="panel-body">
+              <div class="risk-score-list">
+                <div class="risk-score"><div><strong>D07-JP</strong><span>未到账 12 天</span></div><div class="risk-bar"><i style="width:96%"></i></div><span class="num">6.06%</span></div>
+                <div class="risk-score"><div><strong>B22-DE</strong><span>已转账未匹配</span></div><div class="risk-bar"><i style="width:87%"></i></div><span class="num">5.49%</span></div>
+                <div class="risk-score"><div><strong>A53-IT</strong><span>部分到账</span></div><div class="risk-bar amber"><i style="width:52%"></i></div><span class="num">2.64%</span></div>
+                <div class="risk-score"><div><strong>A51-UK</strong><span>跨月结算</span></div><div class="risk-bar amber"><i style="width:21%"></i></div><span class="num">0.21%</span></div>
+                <div class="risk-score"><div><strong>C18-US</strong><span>轻微差异</span></div><div class="risk-bar amber"><i style="width:8%"></i></div><span class="num">0.04%</span></div>
+              </div>
+              <div class="drill-actions">
+                <button class="btn primary" data-view-target="list"><i data-lucide="list-checks"></i>进入异常列表</button>
+                <button class="btn"><i data-lucide="file-down"></i>导出预警</button>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="grid-2 view" data-view="dashboard">
+          <article class="panel">
+            <div class="panel-header">
+              <div class="panel-title"><i data-lucide="route"></i>资金链路摘要</div>
+              <span class="subtle">当前筛选月份</span>
             </div>
             <div class="panel-body">
               <div class="flow-cards">
@@ -1155,14 +1426,14 @@
 
           <article class="panel">
             <div class="panel-header">
-              <div class="panel-title"><i data-lucide="messages-square"></i>差异说明</div>
+              <div class="panel-title"><i data-lucide="messages-square"></i>自动差异说明</div>
               <span class="pill amber">已生成</span>
             </div>
             <div class="panel-body">
               <div class="explain">
-                <div class="explain-item amber">A51-UK 存在跨月结算：5 月交易涉及 7 个 6 月关闭账期。</div>
-                <div class="explain-item">A51-UK 交易一览显示 Deferred 金额 GBP 767.78，属于延迟发放。</div>
-                <div class="explain-item green">A51-UK 5 月关闭账期已转账 GBP 22,660.23，第三方收款账户已匹配 GBP 21,934.18。</div>
+                <div class="explain-item red">D07-JP 未到账金额占比 6.06%，超过 7 天未匹配第三方收款账户流水，建议优先处理。</div>
+                <div class="explain-item amber">B22-DE 平台已转账但追踪编号未匹配到账流水，需核对银行尾号与到账时间。</div>
+                <div class="explain-item green">836 个店铺已完成到账核对，占全部店铺 83.6%，整体资金到账率 96.8%。</div>
               </div>
             </div>
           </article>
