@@ -1150,13 +1150,6 @@
       min-height: 88px;
     }
 
-    .summary-box-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
     .summary-box span {
       color: var(--muted);
       font-size: 12px;
@@ -1168,25 +1161,6 @@
       margin-top: 8px;
       font-size: 19px;
       white-space: nowrap;
-    }
-
-    .inline-link {
-      min-height: 24px;
-      padding: 0 8px;
-      border: 0;
-      border-radius: 6px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: var(--blue-soft);
-      color: var(--blue);
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .inline-link svg {
-      width: 13px;
-      height: 13px;
     }
 
     .summary-parse-section {
@@ -1765,10 +1739,7 @@
             <div class="drawer-kpis">
               <div class="summary-grid">
                 <div class="summary-box">
-                  <div class="summary-box-head">
-                    <span>PDF 经营净额</span>
-                    <button class="inline-link" data-scroll-summary><i data-lucide="file-search"></i>查看解析</button>
-                  </div>
+                  <span>PDF 经营净额</span>
                   <strong>£24,985.17</strong>
                 </div>
                 <div class="summary-box"><span>交易一览经营净额</span><strong>£24,402.76</strong></div>
@@ -2057,17 +2028,6 @@
       trigger.addEventListener('click', (event) => {
         event.preventDefault();
         openDetailDrawer();
-      });
-    });
-
-    document.querySelectorAll('[data-scroll-summary]').forEach((trigger) => {
-      trigger.addEventListener('click', (event) => {
-        event.preventDefault();
-        showDetailTab('operating');
-        const section = document.getElementById('summaryParseDetail');
-        if (section) {
-          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
       });
     });
 
