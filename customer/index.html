@@ -958,6 +958,96 @@
       line-height: 1.55;
     }
 
+    .analysis-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .analysis-head {
+      min-height: 46px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--line);
+      background: #f8fafc;
+    }
+
+    .analysis-head h3 {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    .analysis-head h3::before {
+      content: "";
+      width: 3px;
+      height: 16px;
+      border-radius: 3px;
+      background: var(--blue);
+    }
+
+    .analysis-body {
+      padding: 14px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .analysis-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0 22px;
+      max-width: 620px;
+    }
+
+    .analysis-metric {
+      min-height: 44px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .analysis-metric strong {
+      color: var(--amber);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .analysis-metric strong.red {
+      color: var(--red);
+    }
+
+    .analysis-note {
+      padding: 13px 14px;
+      border: 1px solid #f3d59b;
+      border-radius: 8px;
+      background: #fff8ea;
+      color: #7a4f0e;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .analysis-note strong {
+      color: #5b3904;
+    }
+
+    .analysis-footnote {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
     .import-guide {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1906,12 +1996,45 @@
           </div>
 
           <div class="detail-tab-panel" data-detail-panel="analysis" hidden>
-            <div class="explain">
-              <div class="explain-item amber">经营账与交易一览差异 GBP 582.41，主要来自跨月结算：5 月交易中存在 7 个 SettlementID 在 6 月关闭。</div>
-              <div class="explain-item">交易一览显示 Deferred 金额 GBP 767.78，当前不应计入已释放资金，但需要进入后续释放跟踪。</div>
-              <div class="explain-item green">5 月关闭账期应收与平台已转账均为 GBP 22,660.23，说明结算账期口径已对齐。</div>
-              <div class="explain-item amber">第三方收款账户已到账 GBP 21,934.18，差异 GBP 726.05，属于部分到账或到账流水暂未匹配。</div>
-            </div>
+            <section class="analysis-card">
+              <div class="analysis-head">
+                <h3>差异分析（系统自动生成）</h3>
+                <div class="actions">
+                  <span class="pill amber">平台差异</span>
+                  <span class="pill amber">部分到账</span>
+                </div>
+              </div>
+              <div class="analysis-body">
+                <div class="analysis-metrics">
+                  <div class="analysis-metric">
+                    <span>经营账差异（经营净额 - 交易净额）</span>
+                    <strong>+£582.41</strong>
+                  </div>
+                  <div class="analysis-metric">
+                    <span>释放与应转差异（已释放 - 应转）</span>
+                    <strong>+£974.77</strong>
+                  </div>
+                  <div class="analysis-metric">
+                    <span>资金账差异（到账 - 应转）</span>
+                    <strong class="red">-£726.05</strong>
+                  </div>
+                  <div class="analysis-metric">
+                    <span>经营差异率</span>
+                    <strong>2.33%</strong>
+                  </div>
+                </div>
+
+                <div class="analysis-note">
+                  <strong>差异说明：</strong>经营账与交易一览存在 <strong>£582.41</strong> 差异，主要来自跨月结算：5 月交易中存在 <strong>7 个 SettlementID</strong> 在 6 月关闭。<br>
+                  <strong>释放说明：</strong>交易一览显示 <strong>£767.78</strong> 延迟发放（Deferred），预计进入后续账期释放；释放与应转差异需按 SettlementID 继续回溯。<br>
+                  <strong>资金说明：</strong>5 月关闭账期应转 <strong>£22,660.23</strong>，第三方收款账户已到账 <strong>£21,934.18</strong>，短少 <strong>£726.05</strong>，属于部分到账或到账流水暂未匹配。
+                </div>
+
+                <div class="analysis-footnote">
+                  注：经营账按 Summary 报告区间统计，结算账按付款结算数据统计，两者存在时间差时系统会自动生成差异说明；资金账以付款结算-所有结算的转账金额与第三方收款账户到账流水为准。
+                </div>
+              </div>
+            </section>
           </div>
           </aside>
         </div>
