@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>资金与结算中心 - 客户原型 V3.7</title>
+  <title>资金与结算中心 - 客户原型 V3.8</title>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <style>
     :root {
@@ -337,9 +337,9 @@
       border: 1px solid var(--line);
       border-radius: var(--radius);
       padding: 15px;
-      min-height: 126px;
+      min-height: 168px;
       display: grid;
-      gap: 12px;
+      gap: 10px;
     }
 
     .kpi-head {
@@ -393,6 +393,38 @@
       font-size: 13px;
       white-space: nowrap;
     }
+
+    .kpi-lines {
+      display: grid;
+      gap: 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .kpi-line {
+      min-height: 32px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .kpi-line:last-child {
+      border-bottom: 0;
+    }
+
+    .kpi-line b {
+      color: var(--text);
+      font-size: 16px;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .kpi-line b.blue { color: var(--blue); }
+    .kpi-line b.green { color: var(--green); }
+    .kpi-line b.amber { color: var(--amber); }
 
     .grid-2 {
       display: grid;
@@ -1211,60 +1243,56 @@
             <button class="tab" data-view-target="import">Summary 导入</button>
           </div>
           <div class="panel-body view" data-view="dashboard">
-            <div class="notice-card">
-              <i data-lucide="info"></i>
-              <div>
-                <strong>数据来源与核对口径</strong>
-                <p>Summary PDF 用于经营账确认；付款结算-交易一览用于统计 Released / Deferred、交易净额与差异追溯；付款结算-所有结算用于账期应收与转账状态；第三方收款账户用于实际到账核对。日常核对不再要求用户上传 Transaction CSV。</p>
-              </div>
-              <span class="pill blue">客户可见</span>
-            </div>
             <div class="kpi-grid">
               <article class="kpi">
                 <div class="kpi-head">
                   <div class="kpi-title"><i data-lucide="file-text"></i>经营账</div>
-                  <span class="pill blue">USD 折算</span>
+                  <span class="pill gray">Summary PDF</span>
                 </div>
-                <strong>$90,842.31</strong>
-                <div class="kpi-foot">
-                  <div class="metric">收入<b>$219,718.64</b></div>
-                  <div class="metric">支出<b>-$128,876.33</b></div>
+                <div class="kpi-lines">
+                  <div class="kpi-line"><span>经营收入</span><b class="blue">$459,250</b></div>
+                  <div class="kpi-line"><span>经营支出</span><b class="blue">$239,910</b></div>
+                  <div class="kpi-line"><span>经营税费</span><b class="blue">$2,416</b></div>
+                  <div class="kpi-line"><span>Transfer</span><b class="blue">$22,874</b></div>
                 </div>
               </article>
 
               <article class="kpi">
                 <div class="kpi-head">
                   <div class="kpi-title"><i data-lucide="split"></i>交易释放</div>
-                  <span class="pill cyan">USD 折算</span>
+                  <span class="pill cyan">API 交易一览</span>
                 </div>
-                <strong>$86,194.50</strong>
-                <div class="kpi-foot">
-                  <div class="metric">已发放<b>$83,401.20</b></div>
-                  <div class="metric">延迟<b>$2,793.30</b></div>
-                </div>
-              </article>
-
-              <article class="kpi">
-                <div class="kpi-head">
-                  <div class="kpi-title"><i data-lucide="receipt-text"></i>结算账期</div>
-                  <span class="pill violet">USD 折算</span>
-                </div>
-                <strong>$82,510.46</strong>
-                <div class="kpi-foot">
-                  <div class="metric">关闭账期<b>60 个</b></div>
-                  <div class="metric">已转账<b>$82,510.46</b></div>
+                <div class="kpi-lines">
+                  <div class="kpi-line"><span>已释放金额</span><b class="green">$420,860</b></div>
+                  <div class="kpi-line"><span>延迟发放金额</span><b class="green">$28,800</b></div>
+                  <div class="kpi-line"><span>有释放日期金额</span><b class="green">$431,240</b></div>
+                  <div class="kpi-line"><span>释放率</span><b class="green">91.6%</b></div>
                 </div>
               </article>
 
               <article class="kpi">
                 <div class="kpi-head">
-                  <div class="kpi-title"><i data-lucide="wallet"></i>资金到账</div>
-                  <span class="pill green">第三方收款账户</span>
+                  <div class="kpi-title"><i data-lucide="wallet"></i>资金账</div>
+                  <span class="pill green">所有结算 + 收款账户</span>
                 </div>
-                <strong>96.8%</strong>
-                <div class="kpi-foot">
-                  <div class="metric">已到账<b>$79,870.14</b></div>
-                  <div class="metric">未到账<b>$2,640.32</b></div>
+                <div class="kpi-lines">
+                  <div class="kpi-line"><span>应到账金额</span><b class="green">$402,740</b></div>
+                  <div class="kpi-line"><span>已到账金额</span><b class="green">$383,920</b></div>
+                  <div class="kpi-line"><span>到账率</span><b class="green">95.3%</b></div>
+                  <div class="kpi-line"><span>未到账金额</span><b class="green">$18,820</b></div>
+                </div>
+              </article>
+
+              <article class="kpi">
+                <div class="kpi-head">
+                  <div class="kpi-title"><i data-lucide="triangle-alert"></i>风险预警</div>
+                  <span class="pill gray">异常识别</span>
+                </div>
+                <div class="kpi-lines">
+                  <div class="kpi-line"><span>存在差异店铺</span><b class="amber">6</b></div>
+                  <div class="kpi-line"><span>延迟发放金额</span><b class="amber">$28,800</b></div>
+                  <div class="kpi-line"><span>超7天未到账金额</span><b class="amber">$12,480</b></div>
+                  <div class="kpi-line"><span>异常店铺数量</span><b class="amber">3</b></div>
                 </div>
               </article>
             </div>
