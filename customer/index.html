@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>资金与结算中心 - 客户原型 V3.9</title>
+  <title>资金与结算中心 - 客户原型 V3.10</title>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <style>
     :root {
@@ -1030,6 +1030,74 @@
       text-decoration: none;
     }
 
+    .row-action {
+      min-width: 72px;
+      height: 36px;
+      padding: 0 12px;
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: flex-end;
+      background: rgba(15, 23, 42, 0.44);
+    }
+
+    .detail-drawer {
+      width: min(780px, 48vw);
+      min-width: 680px;
+      height: 100vh;
+      overflow: auto;
+      background: var(--surface);
+      box-shadow: -20px 0 42px rgba(15, 23, 42, 0.16);
+    }
+
+    .drawer-head {
+      min-height: 86px;
+      padding: 18px 20px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: start;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    .drawer-title h2 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: 0;
+    }
+
+    .drawer-title p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .drawer-kpis {
+      padding: 14px 20px 0;
+    }
+
+    .detail-drawer .detail-tabs {
+      margin: 12px 20px 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .detail-drawer .detail-tab-panel {
+      padding: 14px 20px 22px;
+    }
+
     .detail-head {
       padding: 16px;
       display: grid;
@@ -1082,6 +1150,13 @@
       min-height: 88px;
     }
 
+    .summary-box-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
     .summary-box span {
       color: var(--muted);
       font-size: 12px;
@@ -1093,6 +1168,94 @@
       margin-top: 8px;
       font-size: 19px;
       white-space: nowrap;
+    }
+
+    .inline-link {
+      min-height: 24px;
+      padding: 0 8px;
+      border: 0;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .inline-link svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    .summary-parse-section {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .section-head {
+      min-height: 58px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--line);
+      background: #f8fafc;
+    }
+
+    .section-head h3 {
+      margin: 0;
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+
+    .summary-parse-body {
+      padding: 12px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .summary-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .mapping-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .mapping-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .mapping-card h4 {
+      margin: 0;
+      padding: 10px 12px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+      letter-spacing: 0;
+    }
+
+    .summary-parse-section .panel-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
     }
 
     .explain {
@@ -1185,7 +1348,7 @@
         <div class="actions">
           <button class="btn"><i data-lucide="download"></i>导出</button>
           <button class="btn"><i data-lucide="rotate-cw"></i>重新核算</button>
-          <button class="btn primary" data-view-target="import"><i data-lucide="upload-cloud"></i>导入 Summary</button>
+          <button class="btn primary" data-view-target="import"><i data-lucide="refresh-cw"></i>数据同步</button>
         </div>
       </header>
 
@@ -1193,7 +1356,7 @@
         <section class="page-head">
           <div>
             <h1>资金与结算中心</h1>
-            <p>看板汇总按 USD 统一折算；对账列表与店铺详情保留店铺原币种。</p>
+            <p>看板汇总按 USD 统一折算；对账列表与抽屉详情保留店铺原币种。</p>
           </div>
           <div class="status-line">
             <span class="pill green">Amazon</span>
@@ -1239,8 +1402,7 @@
           <div class="tabs">
             <button class="tab active" data-view-target="dashboard">首页看板</button>
             <button class="tab" data-view-target="list">对账列表</button>
-            <button class="tab" data-view-target="detail">店铺详情</button>
-            <button class="tab" data-view-target="import">Summary 导入</button>
+            <button class="tab" data-view-target="import">数据同步</button>
           </div>
           <div class="panel-body view" data-view="dashboard">
             <div class="kpi-grid">
@@ -1503,13 +1665,13 @@
                   <th class="num">已到账</th>
                   <th style="width:96px">状态</th>
                   <th style="width:180px">差异原因</th>
-                  <th style="width:86px">操作</th>
+                  <th style="width:110px">操作</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>2026-05</td>
-                  <td><a class="link" href="#detail" data-view-target="detail">A51-UK</a></td>
+                  <td><a class="link" href="#" data-open-detail>A51-UK</a></td>
                   <td>GBP</td>
                   <td class="num">24,985.17</td>
                   <td class="num">24,402.76</td>
@@ -1520,11 +1682,11 @@
                   <td class="num">21,934.18</td>
                   <td><span class="pill amber">需解释</span></td>
                   <td class="reason-cell">跨月结算 + 部分订单延迟发放</td>
-                  <td><a class="link" href="#detail" data-view-target="detail">详情</a></td>
+                  <td><button class="btn row-action" data-open-detail><i data-lucide="eye"></i>详情</button></td>
                 </tr>
                 <tr>
                   <td>2026-05</td>
-                  <td><a class="link" href="#detail" data-view-target="detail">A49-DE</a></td>
+                  <td><a class="link" href="#" data-open-detail>A49-DE</a></td>
                   <td>EUR</td>
                   <td class="num">31,276.44</td>
                   <td class="num">31,276.10</td>
@@ -1535,11 +1697,11 @@
                   <td class="num">18,420.50</td>
                   <td><span class="pill green">已到账</span></td>
                   <td class="reason-cell">经营差异低于阈值，资金已到账</td>
-                  <td><a class="link" href="#detail" data-view-target="detail">详情</a></td>
+                  <td><button class="btn row-action" data-open-detail><i data-lucide="eye"></i>详情</button></td>
                 </tr>
                 <tr>
                   <td>2026-05</td>
-                  <td><a class="link" href="#detail" data-view-target="detail">A57-US</a></td>
+                  <td><a class="link" href="#" data-open-detail>A57-US</a></td>
                   <td>USD</td>
                   <td class="num">18,941.30</td>
                   <td class="num">18,886.08</td>
@@ -1550,11 +1712,11 @@
                   <td class="num">8,024.36</td>
                   <td><span class="pill amber">在途</span></td>
                   <td class="reason-cell">平台已转账，第三方收款账户到账在途</td>
-                  <td><a class="link" href="#detail" data-view-target="detail">详情</a></td>
+                  <td><button class="btn row-action" data-open-detail><i data-lucide="eye"></i>详情</button></td>
                 </tr>
                 <tr>
                   <td>2026-05</td>
-                  <td><a class="link" href="#detail" data-view-target="detail">A53-IT</a></td>
+                  <td><a class="link" href="#" data-open-detail>A53-IT</a></td>
                   <td>EUR</td>
                   <td class="num">12,405.12</td>
                   <td class="num">12,402.02</td>
@@ -1565,45 +1727,63 @@
                   <td class="num">4,309.45</td>
                   <td><span class="pill red">未到账</span></td>
                   <td class="reason-cell">已转账未匹配第三方收款账户流水</td>
-                  <td><a class="link" href="#detail" data-view-target="detail">详情</a></td>
+                  <td><button class="btn row-action" data-open-detail><i data-lucide="eye"></i>详情</button></td>
                 </tr>
               </tbody>
             </table>
           </div>
         </section>
 
-        <section class="panel view" data-view="detail" id="detail" hidden>
-          <div class="detail-head">
-            <div class="detail-title">
-              <div class="avatar">UK</div>
-              <div>
-                <h2>A51-UK · 2026-05 对账详情</h2>
-                <p>PDF 报告区间：2026-05-01 至 2026-05-31 · 账期关闭范围：2026-05 · 原币种 GBP</p>
+        <div class="drawer-backdrop" id="detailDrawer" hidden>
+          <aside class="detail-drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+            <div class="drawer-head">
+              <div class="drawer-title">
+                <h2 id="drawerTitle">A51-UK</h2>
+                <p>Amazon / UK / GBP / 2026-05</p>
+              </div>
+              <div class="actions">
+                <button class="btn"><i data-lucide="download"></i>导出详情</button>
+                <button class="btn icon" data-close-detail aria-label="关闭详情"><i data-lucide="x"></i></button>
               </div>
             </div>
-            <div class="actions">
-              <span class="pill amber">经营差异</span>
-              <span class="pill green">已转账</span>
-              <span class="pill amber">部分到账</span>
-            </div>
-          </div>
 
-          <div class="panel-body">
-            <div class="summary-grid">
-              <div class="summary-box"><span>PDF 经营净额</span><strong>£24,985.17</strong></div>
-              <div class="summary-box"><span>交易一览经营净额</span><strong>£24,402.76</strong></div>
-              <div class="summary-box"><span>5月关闭账期应转</span><strong>£22,660.23</strong></div>
-              <div class="summary-box"><span>第三方收款账户已到账</span><strong>£21,934.18</strong></div>
+            <div class="detail-head">
+              <div class="detail-title">
+                <div class="avatar">UK</div>
+                <div>
+                  <h2>A51-UK · 2026-05 对账详情</h2>
+                  <p>PDF 报告区间：2026-05-01 至 2026-05-31 · 账期关闭范围：2026-05 · 原币种 GBP</p>
+                </div>
+              </div>
+              <div class="actions">
+                <span class="pill amber">经营差异</span>
+                <span class="pill green">已转账</span>
+                <span class="pill amber">部分到账</span>
+              </div>
             </div>
-          </div>
 
-          <div class="tabs detail-tabs">
-            <button class="tab active" data-detail-tab="operating">经营账核对</button>
-            <button class="tab" data-detail-tab="transactions">交易一览</button>
-            <button class="tab" data-detail-tab="settlements">结算账期</button>
-            <button class="tab" data-detail-tab="cash">资金到账</button>
-            <button class="tab" data-detail-tab="analysis">差异说明</button>
-          </div>
+            <div class="drawer-kpis">
+              <div class="summary-grid">
+                <div class="summary-box">
+                  <div class="summary-box-head">
+                    <span>PDF 经营净额</span>
+                    <button class="inline-link" data-scroll-summary><i data-lucide="file-search"></i>查看解析</button>
+                  </div>
+                  <strong>£24,985.17</strong>
+                </div>
+                <div class="summary-box"><span>交易一览经营净额</span><strong>£24,402.76</strong></div>
+                <div class="summary-box"><span>5月关闭账期应转</span><strong>£22,660.23</strong></div>
+                <div class="summary-box"><span>第三方收款账户已到账</span><strong>£21,934.18</strong></div>
+              </div>
+            </div>
+
+            <div class="tabs detail-tabs">
+              <button class="tab active" data-detail-tab="operating">经营账核对</button>
+              <button class="tab" data-detail-tab="transactions">交易一览</button>
+              <button class="tab" data-detail-tab="settlements">结算账期</button>
+              <button class="tab" data-detail-tab="cash">资金到账</button>
+              <button class="tab" data-detail-tab="analysis">差异说明</button>
+            </div>
 
           <div class="detail-tab-panel" data-detail-panel="operating">
             <div class="grid-2">
@@ -1626,6 +1806,87 @@
                 <div class="explain-item green">所有结算 5 月关闭账期应收与已转账合计一致，均为 £22,660.23。</div>
               </article>
             </div>
+
+            <section class="summary-parse-section" id="summaryParseDetail">
+              <div class="section-head">
+                <div>
+                  <h3>Summary 解析详情</h3>
+                  <div class="summary-meta">
+                    <span>A51-UK</span>
+                    <span>2026-05</span>
+                    <span>原币种 GBP</span>
+                    <span>数据来源：Amazon Summary PDF</span>
+                  </div>
+                </div>
+                <button class="btn"><i data-lucide="download"></i>导出 Summary 解析</button>
+              </div>
+              <div class="summary-parse-body">
+                <p class="panel-note">本区块只展示 Summary PDF 的解析结果与系统标准科目映射，不展示 Transaction CSV、交易一览或结算接口的逐项对照；上方核对表负责展示 Summary PDF 与交易一览的汇总差异。</p>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>PDF 汇总项</th>
+                      <th>系统标准科目</th>
+                      <th>参与经营净额</th>
+                      <th class="num">解析金额 GBP</th>
+                      <th>说明</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Income</td><td>Income</td><td>是</td><td class="num">60,521.79</td><td>商品销售、促销收入、退款冲回等收入类项目</td></tr>
+                    <tr><td>Expenses</td><td>Expenses</td><td>是</td><td class="num">-36,295.82</td><td>平台佣金、FBA 费用、配送费、服务费等支出类项目</td></tr>
+                    <tr><td>Tax</td><td>Tax</td><td>是</td><td class="num">759.20</td><td>订单税、税费退款、平台代扣税等税费类项目</td></tr>
+                    <tr><td>Transfers</td><td>Transfers</td><td>否</td><td class="num">-22,660.23</td><td>平台转账项目，仅用于资金链路展示，不计入经营净额</td></tr>
+                    <tr><td><strong>经营净额</strong></td><td><strong>Income + Expenses + Tax</strong></td><td>是</td><td class="num"><strong>24,985.17</strong></td><td>用于经营账展示与税务口径确认</td></tr>
+                  </tbody>
+                </table>
+
+                <div class="mapping-grid">
+                  <article class="mapping-card">
+                    <h4>Income 明细映射</h4>
+                    <table>
+                      <thead><tr><th>PDF 原文项</th><th>标准科目</th><th class="num">金额 GBP</th></tr></thead>
+                      <tbody>
+                        <tr><td>Product sales</td><td>Income / ProductCharges</td><td class="num">58,912.64</td></tr>
+                        <tr><td>Shipping credits</td><td>Income / Shipping</td><td class="num">1,245.80</td></tr>
+                        <tr><td>Promotional rebates</td><td>Income / Promotion</td><td class="num">363.35</td></tr>
+                      </tbody>
+                    </table>
+                  </article>
+                  <article class="mapping-card">
+                    <h4>Expenses 明细映射</h4>
+                    <table>
+                      <thead><tr><th>PDF 原文项</th><th>标准科目</th><th class="num">金额 GBP</th></tr></thead>
+                      <tbody>
+                        <tr><td>Selling fees</td><td>Expenses / Commission</td><td class="num">-8,972.44</td></tr>
+                        <tr><td>FBA fees</td><td>Expenses / FBAFees</td><td class="num">-19,304.12</td></tr>
+                        <tr><td>Other transaction fees</td><td>Expenses / OtherFees</td><td class="num">-8,019.26</td></tr>
+                      </tbody>
+                    </table>
+                  </article>
+                  <article class="mapping-card">
+                    <h4>Tax 明细映射</h4>
+                    <table>
+                      <thead><tr><th>PDF 原文项</th><th>标准科目</th><th class="num">金额 GBP</th></tr></thead>
+                      <tbody>
+                        <tr><td>Marketplace facilitator tax</td><td>Tax / MarketplaceTax</td><td class="num">-1,884.58</td></tr>
+                        <tr><td>Tax collected</td><td>Tax / CollectedTax</td><td class="num">2,643.78</td></tr>
+                      </tbody>
+                    </table>
+                  </article>
+                  <article class="mapping-card">
+                    <h4>Transfers 明细映射</h4>
+                    <table>
+                      <thead><tr><th>PDF 原文项</th><th>标准科目</th><th class="num">金额 GBP</th></tr></thead>
+                      <tbody>
+                        <tr><td>Transfers to bank account</td><td>Transfers / PlatformTransfer</td><td class="num">-22,660.23</td></tr>
+                        <tr><td>Failed transfers</td><td>Transfers / FailedTransfer</td><td class="num">0.00</td></tr>
+                      </tbody>
+                    </table>
+                  </article>
+                </div>
+              </div>
+            </section>
           </div>
 
           <div class="detail-tab-panel" data-detail-panel="transactions" hidden>
@@ -1681,11 +1942,12 @@
               <div class="explain-item amber">第三方收款账户已到账 GBP 21,934.18，差异 GBP 726.05，属于部分到账或到账流水暂未匹配。</div>
             </div>
           </div>
-        </section>
+          </aside>
+        </div>
 
         <section class="panel view" data-view="import" hidden>
           <div class="panel-header">
-            <div class="panel-title"><i data-lucide="upload-cloud"></i>Summary 批量导入</div>
+            <div class="panel-title"><i data-lucide="refresh-cw"></i>数据同步</div>
             <div class="actions">
               <button class="btn"><i data-lucide="file-spreadsheet"></i>下载导入模板</button>
               <button class="btn primary"><i data-lucide="folder-up"></i>批量上传</button>
@@ -1740,9 +2002,8 @@
       document.querySelectorAll('.tabs [data-view-target]').forEach((button) => {
         button.classList.toggle('active', button.dataset.viewTarget === viewName);
       });
-      if (viewName === 'detail') {
-        history.replaceState(null, '', '#detail');
-      } else if (location.hash === '#detail') {
+      closeDetailDrawer();
+      if (location.hash === '#detail') {
         history.replaceState(null, '', location.pathname + location.search);
       }
     }
@@ -1764,6 +2025,22 @@
         : '当前范围：全部店铺。可从首页“到账状态分布”或“差异预警 Top 10”下钻筛选。';
     }
 
+    function openDetailDrawer() {
+      const drawer = document.getElementById('detailDrawer');
+      if (!drawer) return;
+      drawer.hidden = false;
+      document.body.style.overflow = 'hidden';
+      showDetailTab('operating');
+      lucide.createIcons();
+    }
+
+    function closeDetailDrawer() {
+      const drawer = document.getElementById('detailDrawer');
+      if (!drawer || drawer.hidden) return;
+      drawer.hidden = true;
+      document.body.style.overflow = '';
+    }
+
     document.querySelectorAll('[data-view-target]').forEach((trigger) => {
       trigger.addEventListener('click', (event) => {
         event.preventDefault();
@@ -1776,6 +2053,46 @@
       });
     });
 
+    document.querySelectorAll('[data-open-detail]').forEach((trigger) => {
+      trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+        openDetailDrawer();
+      });
+    });
+
+    document.querySelectorAll('[data-scroll-summary]').forEach((trigger) => {
+      trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+        showDetailTab('operating');
+        const section = document.getElementById('summaryParseDetail');
+        if (section) {
+          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-close-detail]').forEach((trigger) => {
+      trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+        closeDetailDrawer();
+      });
+    });
+
+    const detailDrawer = document.getElementById('detailDrawer');
+    if (detailDrawer) {
+      detailDrawer.addEventListener('click', (event) => {
+        if (event.target === detailDrawer) {
+          closeDetailDrawer();
+        }
+      });
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeDetailDrawer();
+      }
+    });
+
     document.querySelectorAll('[data-detail-tab]').forEach((trigger) => {
       trigger.addEventListener('click', (event) => {
         event.preventDefault();
@@ -1784,7 +2101,8 @@
     });
 
     if (location.hash === '#detail') {
-      showView('detail');
+      showView('list');
+      openDetailDrawer();
     }
 
     showDetailTab('operating');
