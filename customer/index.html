@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>资金与结算中心 - 客户原型 V3.4</title>
+  <title>资金与结算中心 - 客户原型 V3.5</title>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <style>
     :root {
@@ -692,6 +692,36 @@
       line-height: 1.55;
     }
 
+    .import-guide {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .guide-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+      padding: 13px;
+      min-height: 108px;
+    }
+
+    .guide-card strong {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .guide-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -1344,23 +1374,43 @@
 
         <section class="panel view" data-view="import" hidden>
           <div class="panel-header">
-            <div class="panel-title"><i data-lucide="upload-cloud"></i>Summary 导入管理</div>
-            <button class="btn primary"><i data-lucide="plus"></i>上传 PDF</button>
+            <div class="panel-title"><i data-lucide="upload-cloud"></i>Summary 批量导入</div>
+            <div class="actions">
+              <button class="btn"><i data-lucide="file-spreadsheet"></i>下载导入模板</button>
+              <button class="btn primary"><i data-lucide="folder-up"></i>批量上传</button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="import-guide">
+              <div class="guide-card">
+                <strong><i data-lucide="package-open"></i>批量上传</strong>
+                <span>支持多选 PDF 或 ZIP 文件夹。千店场景建议按月份打包上传，系统创建异步解析任务。</span>
+              </div>
+              <div class="guide-card">
+                <strong><i data-lucide="scan-search"></i>店铺识别</strong>
+                <span>优先按导入清单匹配，其次按文件名或文件夹路径匹配，PDF 内容只做辅助校验。</span>
+              </div>
+              <div class="guide-card">
+                <strong><i data-lucide="shield-alert"></i>异常确认</strong>
+                <span>识别不到店铺、月份冲突、重复版本或多店铺命中的文件进入待确认，不自动入账。</span>
+              </div>
+            </div>
           </div>
           <div class="panel-body grid-2">
             <div class="upload-zone">
               <div>
-                <i data-lucide="file-up"></i>
-                <strong>Summary PDF</strong>
-                <div>支持 Amazon 新版 Summary PDF，系统自动识别店铺、月份、币种。</div>
+                <i data-lucide="folder-up"></i>
+                <strong>拖拽 ZIP 或多份 Summary PDF 到这里</strong>
+                <div>推荐附带 store_manifest.xlsx：文件名、店铺编码、国家、月份、币种。文件名建议：A51-UK_2026-05_Summary.pdf。</div>
               </div>
             </div>
             <table>
-              <thead><tr><th>月份</th><th>店铺</th><th>文件</th><th>状态</th><th>导入时间</th></tr></thead>
+              <thead><tr><th>文件</th><th>识别店铺</th><th>月份</th><th>识别方式</th><th>状态</th></tr></thead>
               <tbody>
-                <tr><td>2026-05</td><td>A51-UK</td><td><a class="link">2026MayMonthlySummary.pdf</a></td><td><span class="pill green">解析成功</span></td><td>2026-06-10 18:21</td></tr>
-                <tr><td>2026-05</td><td>A49-DE</td><td><a class="link">2026MaySummary.pdf</a></td><td><span class="pill green">解析成功</span></td><td>2026-06-10 17:48</td></tr>
-                <tr><td>2026-05</td><td>A53-IT</td><td>-</td><td><span class="pill red">未导入</span></td><td>-</td></tr>
+                <tr><td><a class="link">A51-UK_2026-05_Summary.pdf</a></td><td>A51-UK</td><td>2026-05</td><td>导入清单</td><td><span class="pill green">解析成功</span></td></tr>
+                <tr><td><a class="link">A49-DE_2026-05_Summary.pdf</a></td><td>A49-DE</td><td>2026-05</td><td>文件名</td><td><span class="pill green">解析成功</span></td></tr>
+                <tr><td><a class="link">2026MayMonthlySummary.pdf</a></td><td>-</td><td>2026-05</td><td>PDF 辅助识别</td><td><span class="pill amber">待确认店铺</span></td></tr>
+                <tr><td><a class="link">A53-IT_2026-05_Summary.pdf</a></td><td>A53-IT</td><td>2026-05</td><td>文件名</td><td><span class="pill red">重复版本</span></td></tr>
               </tbody>
             </table>
           </div>
