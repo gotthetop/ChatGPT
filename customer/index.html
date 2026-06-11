@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>资金与结算中心 - 客户原型 V3.6</title>
+  <title>资金与结算中心 - 客户原型 V3.7</title>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <style>
     :root {
@@ -815,6 +815,17 @@
       margin-top: 12px;
     }
 
+    .list-filter-hint {
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      border: 1px solid #bcd4ff;
+      border-radius: 8px;
+      background: #eef5ff;
+      color: #3d587b;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
     .legend {
       display: flex;
       align-items: center;
@@ -1365,9 +1376,9 @@
                   <div class="status-line-row"><span class="pill blue">待回填</span><div class="bar"><span style="width:4.1%"></span></div><strong>41 账期</strong><span class="num">$4.1万</span></div>
                 </div>
                 <div class="drill-actions">
-                  <button class="btn"><i data-lucide="arrow-right"></i>查看未到账</button>
-                  <button class="btn"><i data-lucide="arrow-right"></i>查看待回填</button>
-                  <button class="btn"><i data-lucide="arrow-right"></i>查看全部异常</button>
+                  <button class="btn" data-view-target="list" data-drill-label="未到账店铺"><i data-lucide="arrow-right"></i>查看未到账</button>
+                  <button class="btn" data-view-target="list" data-drill-label="待回填 SettlementID / 账期"><i data-lucide="arrow-right"></i>查看待回填</button>
+                  <button class="btn" data-view-target="list" data-drill-label="全部异常店铺"><i data-lucide="arrow-right"></i>查看全部异常</button>
                 </div>
               </div>
             </div>
@@ -1387,7 +1398,7 @@
                 <div class="risk-score"><div><strong>C18-US</strong><span>轻微差异</span></div><div class="risk-bar amber"><i style="width:8%"></i></div><span class="num">0.04%</span></div>
               </div>
               <div class="drill-actions">
-                <button class="btn primary" data-view-target="list"><i data-lucide="list-checks"></i>进入异常列表</button>
+                <button class="btn primary" data-view-target="list" data-drill-label="差异预警 Top 10"><i data-lucide="list-checks"></i>进入异常列表</button>
                 <button class="btn"><i data-lucide="file-down"></i>导出预警</button>
               </div>
             </div>
@@ -1448,6 +1459,7 @@
             </div>
           </div>
           <div class="panel-body">
+            <div class="list-filter-hint" id="listFilterHint">当前范围：全部店铺。可从首页“到账状态分布”或“差异预警 Top 10”下钻筛选。</div>
             <table>
               <thead>
                 <tr>
@@ -1716,10 +1728,21 @@
       });
     }
 
+    function setListDrillLabel(label) {
+      const hint = document.getElementById('listFilterHint');
+      if (!hint) return;
+      hint.textContent = label
+        ? `当前范围：${label}。已从首页聚合看板下钻，列表中展示对应店铺或账期明细。`
+        : '当前范围：全部店铺。可从首页“到账状态分布”或“差异预警 Top 10”下钻筛选。';
+    }
+
     document.querySelectorAll('[data-view-target]').forEach((trigger) => {
       trigger.addEventListener('click', (event) => {
         event.preventDefault();
         const viewName = trigger.dataset.viewTarget;
+        if (viewName === 'list') {
+          setListDrillLabel(trigger.dataset.drillLabel || '');
+        }
         showView(viewName);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
