@@ -2330,6 +2330,7 @@
               <tbody>
                 <tr><td><a class="link">A51-UK_2026-05_Summary.pdf</a></td><td>A51-UK</td><td>2026-05</td><td>导入清单</td><td><span class="pill green">解析成功</span></td></tr>
                 <tr><td><a class="link">A49-DE_2026-05_Summary.pdf</a></td><td>A49-DE</td><td>2026-05</td><td>文件名</td><td><span class="pill green">解析成功</span></td></tr>
+                <tr><td><a class="link">A64-DE_2026-05_Summary.pdf</a></td><td>A64-DE</td><td>2026-05</td><td>导入清单</td><td><span class="pill blue">解析中</span></td></tr>
                 <tr><td><a class="link">2026MayMonthlySummary.pdf</a></td><td>-</td><td>2026-05</td><td>PDF 辅助识别</td><td><span class="pill amber">待确认店铺</span></td></tr>
                 <tr><td><a class="link">A53-IT_2026-05_Summary.pdf</a></td><td>A53-IT</td><td>2026-05</td><td>文件名</td><td><span class="pill red">重复版本</span></td></tr>
               </tbody>
@@ -2343,9 +2344,9 @@
                 <span>按导入批次记录解析结果、失败原因、覆盖更新与重新解析操作。</span>
               </div>
               <div class="actions">
-                <select class="control" style="width:132px"><option>导入状态：全部</option><option>解析成功</option><option>解析失败</option><option>待确认</option><option>覆盖待确认</option></select>
-                <button class="btn"><i data-lucide="refresh-cw"></i>刷新</button>
-                <button class="btn"><i data-lucide="file-down"></i>导出日志</button>
+                <select class="control" style="width:132px"><option>导入状态：全部</option><option>解析中</option><option>解析成功</option><option>解析失败</option><option>待确认</option><option>覆盖待确认</option></select>
+                <select class="control" style="width:120px"><option>操作人：全部</option><option>熊钰莹</option><option>徐玲</option><option>系统</option></select>
+                <input class="control" style="width:158px" value="操作时间：2026-06-12" aria-label="操作时间">
               </div>
             </div>
             <div class="log-table">
@@ -2358,6 +2359,8 @@
                     <th style="width:86px">月份</th>
                     <th style="width:86px">版本</th>
                     <th style="width:112px">解析状态</th>
+                    <th style="width:82px">操作人</th>
+                    <th style="width:142px">操作时间</th>
                     <th>失败/确认原因</th>
                     <th style="width:170px">操作</th>
                   </tr>
@@ -2370,8 +2373,22 @@
                     <td>2026-05</td>
                     <td>V3 最新</td>
                     <td><span class="status-dot green">解析成功</span></td>
+                    <td>熊钰莹</td>
+                    <td>2026-06-12 10:31</td>
                     <td class="failure-reason">PDF 汇总项完整，Income / Expenses / Tax / Transfers 已映射。</td>
                     <td><div class="table-actions"><button class="text-btn">查看解析</button><button class="text-btn">下载原文件</button></div></td>
+                  </tr>
+                  <tr>
+                    <td>IMP-20260612-006</td>
+                    <td><a class="link">A64-DE_2026-05_Summary.pdf</a></td>
+                    <td>A64-DE</td>
+                    <td>2026-05</td>
+                    <td>V1</td>
+                    <td><span class="status-dot">解析中</span></td>
+                    <td>系统</td>
+                    <td>2026-06-12 10:42</td>
+                    <td class="failure-reason">系统正在识别 Summary 汇总项与店铺月份信息，完成后自动更新对账列表。</td>
+                    <td><div class="table-actions"><button class="text-btn">查看任务</button></div></td>
                   </tr>
                   <tr>
                     <td>IMP-20260612-002</td>
@@ -2380,6 +2397,8 @@
                     <td>2026-05</td>
                     <td>-</td>
                     <td><span class="status-dot red">解析失败</span></td>
+                    <td>徐玲</td>
+                    <td>2026-06-12 10:18</td>
                     <td class="failure-reason"><strong>失败原因：</strong>PDF 无法识别 Totals 区块，可能为扫描件、加密文件或非 Summary 报告。</td>
                     <td><div class="table-actions"><button class="text-btn" data-reparse-log>重新解析</button><button class="text-btn" data-open-upload data-upload-store="A57-US" data-upload-month="2026-05" data-upload-currency="USD">重新上传</button></div></td>
                   </tr>
@@ -2390,6 +2409,8 @@
                     <td>2026-05</td>
                     <td>-</td>
                     <td><span class="status-dot amber">待确认店铺</span></td>
+                    <td>徐玲</td>
+                    <td>2026-06-12 10:10</td>
                     <td class="failure-reason">文件名未包含店铺编码，PDF 内容只能识别月份，需人工选择店铺后入账。</td>
                     <td><div class="table-actions"><button class="text-btn" data-open-upload data-upload-month="2026-05">选择店铺</button><button class="text-btn">忽略</button></div></td>
                   </tr>
@@ -2400,6 +2421,8 @@
                     <td>2026-05</td>
                     <td>V2 → V3</td>
                     <td><span class="status-dot amber">覆盖待确认</span></td>
+                    <td>胡妍</td>
+                    <td>2026-06-12 09:58</td>
                     <td class="failure-reason">该店铺 2026-05 已存在 Summary PDF。覆盖后将重算经营净额、经营差异和对账状态，保留历史版本。</td>
                     <td><div class="table-actions"><button class="text-btn amber" data-open-upload data-upload-store="A53-IT" data-upload-month="2026-05" data-upload-currency="EUR" data-overwrite="true">覆盖更新</button><button class="text-btn">保留旧版</button></div></td>
                   </tr>
@@ -2410,6 +2433,8 @@
                     <td>2026-05</td>
                     <td>V2</td>
                     <td><span class="status-dot green">已覆盖</span></td>
+                    <td>熊钰莹</td>
+                    <td>2026-06-12 09:42</td>
                     <td class="failure-reason">用户确认覆盖更新，旧版本已归档，当前列表按新版本重新核算。</td>
                     <td><div class="table-actions"><button class="text-btn">查看版本</button><button class="text-btn">查看解析</button></div></td>
                   </tr>
@@ -2632,8 +2657,8 @@
         const status = row?.querySelector('.status-dot');
         const reason = row?.querySelector('.failure-reason');
         if (status) {
-          status.className = 'status-dot amber';
-          status.textContent = '重新解析中';
+          status.className = 'status-dot';
+          status.textContent = '解析中';
         }
         if (reason) {
           reason.textContent = '已提交重新解析任务，完成后会自动更新解析状态和对账列表。';
