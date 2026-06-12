@@ -1475,6 +1475,16 @@
       line-height: 1.55;
     }
 
+    .manual-form {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+    }
+
     .file-picker-box {
       min-height: 126px;
       border: 1px dashed var(--line-strong);
@@ -1498,6 +1508,104 @@
       justify-content: flex-end;
       gap: 8px;
       background: #f8fafc;
+    }
+
+    .import-log-header {
+      margin-top: 14px;
+      min-height: 48px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-bottom: 0;
+      border-radius: 8px 8px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: #f8fafc;
+    }
+
+    .import-log-title {
+      display: grid;
+      gap: 3px;
+    }
+
+    .import-log-title strong {
+      font-size: 14px;
+    }
+
+    .import-log-title span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .log-table {
+      border: 1px solid var(--line);
+      border-radius: 0 0 8px 8px;
+      overflow: hidden;
+    }
+
+    .status-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .status-dot::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--blue);
+    }
+
+    .status-dot.green { color: var(--green); }
+    .status-dot.green::before { background: var(--green); }
+    .status-dot.amber { color: var(--amber); }
+    .status-dot.amber::before { background: var(--amber); }
+    .status-dot.red { color: var(--red); }
+    .status-dot.red::before { background: var(--red); }
+
+    .failure-reason {
+      color: #475569;
+      line-height: 1.45;
+    }
+
+    .failure-reason strong {
+      color: var(--red);
+    }
+
+    .table-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      justify-content: flex-end;
+    }
+
+    .text-btn {
+      border: 0;
+      background: transparent;
+      color: var(--blue);
+      font-weight: 800;
+      padding: 0;
+      white-space: nowrap;
+    }
+
+    .text-btn.amber { color: var(--amber); }
+
+    .overwrite-card {
+      border: 1px solid #f3d59b;
+      border-radius: 8px;
+      background: #fff8ea;
+      padding: 12px;
+      color: #7a4f0e;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .overwrite-card strong {
+      color: #5b3904;
     }
   </style>
 </head>
@@ -2214,11 +2322,11 @@
               <div>
                 <i data-lucide="folder-up"></i>
                 <strong>拖拽 ZIP 或多份 Summary PDF 到这里</strong>
-                <div>点击打开导入弹窗，支持单个文件、批量文件或 ZIP 包上传。推荐附带 store_manifest.xlsx：文件名、店铺编码、国家、月份、币种。</div>
+                <div>点击打开导入弹窗，支持单个文件、批量文件或 ZIP 包上传。推荐附带 store_manifest.xlsx：文件名、店铺编码、月份、币种。</div>
               </div>
             </button>
             <table>
-              <thead><tr><th>文件</th><th>识别店铺</th><th>月份</th><th>识别方式</th><th>状态</th></tr></thead>
+              <thead><tr><th>文件</th><th>识别店铺</th><th>月份</th><th>识别方式</th><th>解析状态</th></tr></thead>
               <tbody>
                 <tr><td><a class="link">A51-UK_2026-05_Summary.pdf</a></td><td>A51-UK</td><td>2026-05</td><td>导入清单</td><td><span class="pill green">解析成功</span></td></tr>
                 <tr><td><a class="link">A49-DE_2026-05_Summary.pdf</a></td><td>A49-DE</td><td>2026-05</td><td>文件名</td><td><span class="pill green">解析成功</span></td></tr>
@@ -2226,6 +2334,88 @@
                 <tr><td><a class="link">A53-IT_2026-05_Summary.pdf</a></td><td>A53-IT</td><td>2026-05</td><td>文件名</td><td><span class="pill red">重复版本</span></td></tr>
               </tbody>
             </table>
+          </div>
+
+          <div class="panel-body">
+            <div class="import-log-header">
+              <div class="import-log-title">
+                <strong>Summary 导入日志</strong>
+                <span>按导入批次记录解析结果、失败原因、覆盖更新与重新解析操作。</span>
+              </div>
+              <div class="actions">
+                <select class="control" style="width:132px"><option>导入状态：全部</option><option>解析成功</option><option>解析失败</option><option>待确认</option><option>覆盖待确认</option></select>
+                <button class="btn"><i data-lucide="refresh-cw"></i>刷新</button>
+                <button class="btn"><i data-lucide="file-down"></i>导出日志</button>
+              </div>
+            </div>
+            <div class="log-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:132px">导入批次</th>
+                    <th>报告文件</th>
+                    <th style="width:92px">店铺</th>
+                    <th style="width:86px">月份</th>
+                    <th style="width:86px">版本</th>
+                    <th style="width:112px">解析状态</th>
+                    <th>失败/确认原因</th>
+                    <th style="width:170px">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>IMP-20260612-001</td>
+                    <td><a class="link">A51-UK_2026-05_Summary.pdf</a></td>
+                    <td>A51-UK</td>
+                    <td>2026-05</td>
+                    <td>V3 最新</td>
+                    <td><span class="status-dot green">解析成功</span></td>
+                    <td class="failure-reason">PDF 汇总项完整，Income / Expenses / Tax / Transfers 已映射。</td>
+                    <td><div class="table-actions"><button class="text-btn">查看解析</button><button class="text-btn">下载原文件</button></div></td>
+                  </tr>
+                  <tr>
+                    <td>IMP-20260612-002</td>
+                    <td><a class="link">A57-US-MaySummary.pdf</a></td>
+                    <td>A57-US</td>
+                    <td>2026-05</td>
+                    <td>-</td>
+                    <td><span class="status-dot red">解析失败</span></td>
+                    <td class="failure-reason"><strong>失败原因：</strong>PDF 无法识别 Totals 区块，可能为扫描件、加密文件或非 Summary 报告。</td>
+                    <td><div class="table-actions"><button class="text-btn" data-reparse-log>重新解析</button><button class="text-btn" data-open-upload data-upload-store="A57-US" data-upload-month="2026-05" data-upload-currency="USD">重新上传</button></div></td>
+                  </tr>
+                  <tr>
+                    <td>IMP-20260612-003</td>
+                    <td><a class="link">2026MayMonthlySummary.pdf</a></td>
+                    <td>-</td>
+                    <td>2026-05</td>
+                    <td>-</td>
+                    <td><span class="status-dot amber">待确认店铺</span></td>
+                    <td class="failure-reason">文件名未包含店铺编码，PDF 内容只能识别月份，需人工选择店铺后入账。</td>
+                    <td><div class="table-actions"><button class="text-btn" data-open-upload data-upload-month="2026-05">选择店铺</button><button class="text-btn">忽略</button></div></td>
+                  </tr>
+                  <tr>
+                    <td>IMP-20260612-004</td>
+                    <td><a class="link">A53-IT_2026-05_Summary.pdf</a></td>
+                    <td>A53-IT</td>
+                    <td>2026-05</td>
+                    <td>V2 → V3</td>
+                    <td><span class="status-dot amber">覆盖待确认</span></td>
+                    <td class="failure-reason">该店铺 2026-05 已存在 Summary PDF。覆盖后将重算经营净额、经营差异和对账状态，保留历史版本。</td>
+                    <td><div class="table-actions"><button class="text-btn amber" data-open-upload data-upload-store="A53-IT" data-upload-month="2026-05" data-upload-currency="EUR" data-overwrite="true">覆盖更新</button><button class="text-btn">保留旧版</button></div></td>
+                  </tr>
+                  <tr>
+                    <td>IMP-20260612-005</td>
+                    <td><a class="link">A49-DE_2026-05_Summary.pdf</a></td>
+                    <td>A49-DE</td>
+                    <td>2026-05</td>
+                    <td>V2</td>
+                    <td><span class="status-dot green">已覆盖</span></td>
+                    <td class="failure-reason">用户确认覆盖更新，旧版本已归档，当前列表按新版本重新核算。</td>
+                    <td><div class="table-actions"><button class="text-btn">查看版本</button><button class="text-btn">查看解析</button></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </section>
 
@@ -2247,7 +2437,7 @@
         <div class="upload-mode-grid">
           <div class="upload-mode">
             <strong><i data-lucide="file-text"></i>单个 PDF</strong>
-            <span>适合临时补传单店铺、单月份 Summary PDF。</span>
+            <span>适合临时补传单店铺、单月份 Summary PDF；若文件名不规范，需要手动选择店铺和月份。</span>
           </div>
           <div class="upload-mode">
             <strong><i data-lucide="files"></i>批量 PDF</strong>
@@ -2258,6 +2448,30 @@
             <span>适合上百或上千店铺，建议按月份打包并附带 store_manifest.xlsx。</span>
           </div>
         </div>
+        <div class="manual-form">
+          <div class="field">
+            <label>平台</label>
+            <select class="control" id="uploadPlatform"><option>Amazon</option></select>
+          </div>
+          <div class="field">
+            <label>店铺</label>
+            <select class="control" id="uploadStore">
+              <option>自动识别</option>
+              <option>A51-UK</option>
+              <option>A57-US</option>
+              <option>A53-IT</option>
+              <option>A49-DE</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>月份</label>
+            <select class="control" id="uploadMonth">
+              <option>2026-05</option>
+              <option>2026-04</option>
+              <option>2026-03</option>
+            </select>
+          </div>
+        </div>
         <div class="file-picker-box">
           <div>
             <strong>选择 Summary PDF / ZIP 文件</strong>
@@ -2265,6 +2479,9 @@
             <input id="summaryUploadInput" type="file" accept=".pdf,.zip" multiple hidden>
             <button class="btn primary" type="button" data-pick-upload><i data-lucide="folder-up"></i>选择文件</button>
           </div>
+        </div>
+        <div class="overwrite-card" id="overwriteNotice" hidden>
+          <strong>覆盖更新确认：</strong>当前店铺 + 月份已存在 Summary PDF。确认后会生成新版本并重新核算经营净额、经营差异和对账状态；旧文件与旧解析结果保留在历史版本中，可回溯。
         </div>
         <div class="list-filter-hint" id="uploadContextHint">识别不到店铺、月份冲突、重复版本或多店铺命中的文件会进入“待确认”，不会直接覆盖现有数据。</div>
       </div>
@@ -2322,17 +2539,32 @@
       document.body.style.overflow = '';
     }
 
+    function setSelectValue(selectId, value) {
+      if (!value) return;
+      const select = document.getElementById(selectId);
+      if (!select) return;
+      const option = Array.from(select.options).find((item) => item.value === value || item.textContent === value);
+      if (option) select.value = option.value;
+    }
+
     function openUploadModal(trigger) {
       const modal = document.getElementById('uploadModal');
       if (!modal) return;
       const hint = document.getElementById('uploadContextHint');
+      const overwriteNotice = document.getElementById('overwriteNotice');
       const store = trigger?.dataset.uploadStore;
       const month = trigger?.dataset.uploadMonth;
       const currency = trigger?.dataset.uploadCurrency;
+      const overwrite = trigger?.dataset.overwrite === 'true';
+      setSelectValue('uploadStore', store || '自动识别');
+      setSelectValue('uploadMonth', month || '2026-05');
+      if (overwriteNotice) {
+        overwriteNotice.hidden = !overwrite;
+      }
       if (hint) {
         hint.textContent = store
           ? `已自动带入：平台 Amazon / 店铺 ${store} / 月份 ${month || '当前月份'} / 币种 ${currency || '原币种'}。请选择对应 Summary PDF 文件即可。`
-          : '识别不到店铺、月份冲突、重复版本或多店铺命中的文件会进入“待确认”，不会直接覆盖现有数据。';
+          : '文件名符合“店铺_月份_Summary.pdf”时可自动识别；无法识别时请手动选择店铺和月份。识别不到店铺、月份冲突、重复版本或多店铺命中的文件会进入待确认。';
       }
       modal.hidden = false;
       document.body.style.overflow = 'hidden';
@@ -2390,6 +2622,22 @@
       trigger.addEventListener('click', (event) => {
         event.preventDefault();
         document.getElementById('summaryUploadInput')?.click();
+      });
+    });
+
+    document.querySelectorAll('[data-reparse-log]').forEach((trigger) => {
+      trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+        const row = trigger.closest('tr');
+        const status = row?.querySelector('.status-dot');
+        const reason = row?.querySelector('.failure-reason');
+        if (status) {
+          status.className = 'status-dot amber';
+          status.textContent = '重新解析中';
+        }
+        if (reason) {
+          reason.textContent = '已提交重新解析任务，完成后会自动更新解析状态和对账列表。';
+        }
       });
     });
 
