@@ -273,7 +273,7 @@
     .filter-bar {
       padding: 14px;
       display: grid;
-      grid-template-columns: repeat(7, minmax(130px, 1fr)) auto;
+      grid-template-columns: repeat(8, minmax(112px, 1fr)) auto;
       gap: 10px;
       align-items: end;
     }
@@ -1128,6 +1128,28 @@
       font-weight: 750;
     }
 
+    .summary-missing {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      width: 100%;
+      color: var(--amber);
+      font-weight: 750;
+    }
+
+    .mini-link {
+      min-height: 26px;
+      padding: 0 8px;
+      border: 1px solid #f1cc81;
+      border-radius: 6px;
+      background: var(--amber-soft);
+      color: var(--amber);
+      font-weight: 800;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
     .drawer-backdrop {
       position: fixed;
       inset: 0;
@@ -1341,6 +1363,7 @@
     .explain-item.red { border-color: var(--red); }
 
     .upload-zone {
+      width: 100%;
       min-height: 180px;
       border: 1px dashed var(--line-strong);
       border-radius: 8px;
@@ -1350,6 +1373,12 @@
       text-align: center;
       color: var(--muted);
       padding: 24px;
+      cursor: pointer;
+    }
+
+    .upload-zone:hover {
+      border-color: var(--blue);
+      background: #f4f8ff;
     }
 
     .upload-zone svg {
@@ -1369,6 +1398,106 @@
       color: var(--muted);
       font-size: 12px;
       line-height: 1.6;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      background: rgba(15, 23, 42, 0.42);
+    }
+
+    .upload-modal {
+      width: min(760px, 92vw);
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      min-height: 62px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .modal-head h3 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+
+    .modal-head p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .modal-body {
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .upload-mode-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .upload-mode {
+      min-height: 104px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: var(--surface-soft);
+    }
+
+    .upload-mode strong {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 7px;
+      font-size: 13px;
+    }
+
+    .upload-mode span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .file-picker-box {
+      min-height: 126px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 8px;
+      background: #fbfdff;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 18px;
+    }
+
+    .file-picker-box strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .modal-foot {
+      padding: 12px 16px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      background: #f8fafc;
     }
   </style>
 </head>
@@ -1408,11 +1537,6 @@
           <span>资金账户</span>
           <i data-lucide="chevron-right"></i>
           <strong>资金与结算中心</strong>
-        </div>
-        <div class="actions">
-          <button class="btn"><i data-lucide="download"></i>导出</button>
-          <button class="btn"><i data-lucide="rotate-cw"></i>重新核算</button>
-          <button class="btn primary" data-view-target="import"><i data-lucide="refresh-cw"></i>数据同步</button>
         </div>
       </header>
 
@@ -1456,6 +1580,10 @@
             <select class="control"><option>全部</option><option>已到账</option><option>部分到账</option><option>未到账</option></select>
           </div>
           <div class="field">
+            <label>报告获取状态</label>
+            <select class="control"><option>全部</option><option>是</option><option>否</option></select>
+          </div>
+          <div class="field">
             <label>关键词</label>
             <input class="control" value="" placeholder="店铺 / SettlementID / 追踪编号">
           </div>
@@ -1489,7 +1617,7 @@
                   <span class="pill cyan">API 交易一览</span>
                 </div>
                 <div class="kpi-lines">
-                  <div class="kpi-line"><span>已释放金额</span><b class="green">$420,860</b></div>
+                  <div class="kpi-line"><span>已发放金额</span><b class="green">$420,860</b></div>
                   <div class="kpi-line"><span>延迟发放金额</span><b class="green">$28,800</b></div>
                   <div class="kpi-line"><span>结算收入</span><b class="green">$451,380</b></div>
                   <div class="kpi-line"><span>结算支出 / 税费</span><b class="green">$31,520</b></div>
@@ -1499,7 +1627,7 @@
               <article class="kpi">
                 <div class="kpi-head">
                   <div class="kpi-title"><i data-lucide="wallet"></i>资金账</div>
-                  <span class="pill green">所有结算 + 收款账户</span>
+                  <span class="pill green">API所有结算 + 收款账户</span>
                 </div>
                 <div class="kpi-lines">
                   <div class="kpi-line"><span>应到账金额</span><b class="green">$402,740</b></div>
@@ -1516,7 +1644,6 @@
                 </div>
                 <div class="kpi-lines">
                   <div class="kpi-line"><span>存在差异店铺</span><b class="amber">6</b></div>
-                  <div class="kpi-line"><span>延迟发放金额</span><b class="amber">$28,800</b></div>
                   <div class="kpi-line"><span>超7天未到账金额</span><b class="amber">$12,480</b></div>
                   <div class="kpi-line"><span>异常店铺数量</span><b class="amber">3</b></div>
                 </div>
@@ -1551,7 +1678,7 @@
           <article class="panel">
             <div class="panel-header">
               <div class="panel-title"><i data-lucide="split"></i>结算账趋势</div>
-              <span class="subtle">已释放 / 延迟</span>
+              <span class="subtle">已发放 / 延迟</span>
             </div>
             <div class="panel-body">
               <div class="chart-shell">
@@ -1563,7 +1690,7 @@
                   <div class="bar-group"><div class="bar-pair settlement"><i style="height:106px"></i><i style="height:5px"></i></div><span class="bar-label">5月</span></div>
                 </div>
                 <div class="legend">
-                  <span><i></i>已释放</span>
+                  <span><i></i>已发放</span>
                   <span><i style="background:#f5a623"></i>延迟发放</span>
                 </div>
               </div>
@@ -1708,6 +1835,7 @@
           <div class="panel-header">
             <div class="panel-title"><i data-lucide="list-checks"></i>对账列表</div>
             <div class="actions">
+              <button class="btn"><i data-lucide="rotate-cw"></i>重新核算</button>
               <button class="btn"><i data-lucide="filter"></i>高级筛选</button>
               <button class="btn"><i data-lucide="file-down"></i>导出差异</button>
             </div>
@@ -1782,9 +1910,9 @@
                   <td>2026-05</td>
                   <td><a class="link" href="#" data-open-detail>A53-IT</a></td>
                   <td>EUR</td>
-                  <td class="num">12,405.12</td>
+                  <td class="num"><span class="summary-missing">Summary未上传<button class="mini-link" type="button" data-open-upload data-upload-store="A53-IT" data-upload-month="2026-05" data-upload-currency="EUR">上传</button></span></td>
                   <td class="num">12,402.02</td>
-                  <td class="num">3.10</td>
+                  <td class="num"><span class="pill amber">待核算</span></td>
                   <td class="num">11,762.44</td>
                   <td class="num">110.00</td>
                   <td class="num">6,950.72</td>
@@ -1985,7 +2113,7 @@
                 <tr><td><span class="pill green">Released</span></td><td>ProductCharges</td><td>Income</td><td class="num">8,214</td><td class="num">59,938.24</td><td>商品收入与促销收入</td></tr>
                 <tr><td><span class="pill green">Released</span></td><td>AmazonFees / FBAFees</td><td>Expenses</td><td class="num">15,406</td><td class="num">-36,294.68</td><td>平台佣金、配送费、服务费</td></tr>
                 <tr><td><span class="pill green">Released</span></td><td>Tax</td><td>Tax</td><td class="num">6,102</td><td class="num">759.20</td><td>税费、税费退款、平台代扣税</td></tr>
-                <tr><td><span class="pill amber">Deferred</span></td><td>ProductCharges / Tax</td><td>Reserve</td><td class="num">302</td><td class="num">767.78</td><td>延迟发放，预计进入后续账期释放</td></tr>
+                <tr><td><span class="pill amber">Deferred</span></td><td>ProductCharges / Tax</td><td>Reserve</td><td class="num">302</td><td class="num">767.78</td><td>延迟发放，预计进入后续账期发放</td></tr>
               </tbody>
             </table>
           </div>
@@ -2036,7 +2164,7 @@
                     <strong>+£582.41</strong>
                   </div>
                   <div class="analysis-metric">
-                    <span>释放与应转差异（已释放 - 应转）</span>
+                    <span>发放与应转差异（已发放 - 应转）</span>
                     <strong>+£974.77</strong>
                   </div>
                   <div class="analysis-metric">
@@ -2051,7 +2179,7 @@
 
                 <div class="analysis-note">
                   <strong>差异说明：</strong>经营账与交易一览存在 <strong>£582.41</strong> 差异，主要来自跨月结算：5 月交易中存在 <strong>7 个 SettlementID</strong> 在 6 月关闭。<br>
-                  <strong>释放说明：</strong>交易一览显示 <strong>£767.78</strong> 延迟发放（Deferred），预计进入后续账期释放；释放与应转差异需按 SettlementID 继续回溯。<br>
+                  <strong>发放说明：</strong>交易一览显示 <strong>£767.78</strong> 延迟发放（Deferred），预计进入后续账期发放；发放与应转差异需按 SettlementID 继续回溯。<br>
                   <strong>资金说明：</strong>5 月关闭账期应转 <strong>£22,660.23</strong>，第三方收款账户已到账 <strong>£21,934.18</strong>，短少 <strong>£726.05</strong>，属于部分到账或到账流水暂未匹配。
                 </div>
 
@@ -2065,13 +2193,6 @@
         </div>
 
         <section class="panel view" data-view="import" hidden>
-          <div class="panel-header">
-            <div class="panel-title"><i data-lucide="refresh-cw"></i>数据同步</div>
-            <div class="actions">
-              <button class="btn"><i data-lucide="file-spreadsheet"></i>下载导入模板</button>
-              <button class="btn primary"><i data-lucide="folder-up"></i>批量上传</button>
-            </div>
-          </div>
           <div class="panel-body">
             <div class="import-guide">
               <div class="guide-card">
@@ -2089,13 +2210,13 @@
             </div>
           </div>
           <div class="panel-body grid-2">
-            <div class="upload-zone">
+            <button class="upload-zone" type="button" data-open-upload>
               <div>
                 <i data-lucide="folder-up"></i>
                 <strong>拖拽 ZIP 或多份 Summary PDF 到这里</strong>
-                <div>推荐附带 store_manifest.xlsx：文件名、店铺编码、国家、月份、币种。文件名建议：A51-UK_2026-05_Summary.pdf。</div>
+                <div>点击打开导入弹窗，支持单个文件、批量文件或 ZIP 包上传。推荐附带 store_manifest.xlsx：文件名、店铺编码、国家、月份、币种。</div>
               </div>
-            </div>
+            </button>
             <table>
               <thead><tr><th>文件</th><th>识别店铺</th><th>月份</th><th>识别方式</th><th>状态</th></tr></thead>
               <tbody>
@@ -2111,6 +2232,47 @@
         <p class="footer-note">数据口径：Summary PDF 用于经营账；付款结算-交易一览用于交易明细与 Released / Deferred；付款结算-所有结算用于账期应收与转账状态；第三方收款账户用于实际到账核对。</p>
       </main>
     </div>
+  </div>
+
+  <div class="modal-backdrop" id="uploadModal" hidden>
+    <section class="upload-modal" role="dialog" aria-modal="true" aria-labelledby="uploadModalTitle">
+      <div class="modal-head">
+        <div>
+          <h3 id="uploadModalTitle">导入 Summary PDF</h3>
+          <p>支持单个文件、批量文件或 ZIP 包上传；系统按导入清单、文件名和 PDF 内容辅助识别店铺。</p>
+        </div>
+        <button class="btn icon" data-close-upload aria-label="关闭导入弹窗"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="upload-mode-grid">
+          <div class="upload-mode">
+            <strong><i data-lucide="file-text"></i>单个 PDF</strong>
+            <span>适合临时补传单店铺、单月份 Summary PDF。</span>
+          </div>
+          <div class="upload-mode">
+            <strong><i data-lucide="files"></i>批量 PDF</strong>
+            <span>可一次选择多份 PDF，系统异步解析并生成待确认清单。</span>
+          </div>
+          <div class="upload-mode">
+            <strong><i data-lucide="archive"></i>ZIP 包</strong>
+            <span>适合上百或上千店铺，建议按月份打包并附带 store_manifest.xlsx。</span>
+          </div>
+        </div>
+        <div class="file-picker-box">
+          <div>
+            <strong>选择 Summary PDF / ZIP 文件</strong>
+            <p class="panel-note">支持 .pdf、.zip；可多选。文件名建议：A51-UK_2026-05_Summary.pdf。</p>
+            <input id="summaryUploadInput" type="file" accept=".pdf,.zip" multiple hidden>
+            <button class="btn primary" type="button" data-pick-upload><i data-lucide="folder-up"></i>选择文件</button>
+          </div>
+        </div>
+        <div class="list-filter-hint" id="uploadContextHint">识别不到店铺、月份冲突、重复版本或多店铺命中的文件会进入“待确认”，不会直接覆盖现有数据。</div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn" type="button" data-close-upload>取消</button>
+        <button class="btn primary" type="button"><i data-lucide="play"></i>开始导入</button>
+      </div>
+    </section>
   </div>
 
   <script>
@@ -2160,6 +2322,30 @@
       document.body.style.overflow = '';
     }
 
+    function openUploadModal(trigger) {
+      const modal = document.getElementById('uploadModal');
+      if (!modal) return;
+      const hint = document.getElementById('uploadContextHint');
+      const store = trigger?.dataset.uploadStore;
+      const month = trigger?.dataset.uploadMonth;
+      const currency = trigger?.dataset.uploadCurrency;
+      if (hint) {
+        hint.textContent = store
+          ? `已自动带入：平台 Amazon / 店铺 ${store} / 月份 ${month || '当前月份'} / 币种 ${currency || '原币种'}。请选择对应 Summary PDF 文件即可。`
+          : '识别不到店铺、月份冲突、重复版本或多店铺命中的文件会进入“待确认”，不会直接覆盖现有数据。';
+      }
+      modal.hidden = false;
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+
+    function closeUploadModal() {
+      const modal = document.getElementById('uploadModal');
+      if (!modal || modal.hidden) return;
+      modal.hidden = true;
+      document.body.style.overflow = '';
+    }
+
     document.querySelectorAll('[data-view-target]').forEach((trigger) => {
       trigger.addEventListener('click', (event) => {
         event.preventDefault();
@@ -2186,6 +2372,27 @@
       });
     });
 
+    document.querySelectorAll('[data-open-upload]').forEach((trigger) => {
+      trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+        openUploadModal(trigger);
+      });
+    });
+
+    document.querySelectorAll('[data-close-upload]').forEach((trigger) => {
+      trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+        closeUploadModal();
+      });
+    });
+
+    document.querySelectorAll('[data-pick-upload]').forEach((trigger) => {
+      trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+        document.getElementById('summaryUploadInput')?.click();
+      });
+    });
+
     const detailDrawer = document.getElementById('detailDrawer');
     if (detailDrawer) {
       detailDrawer.addEventListener('click', (event) => {
@@ -2195,9 +2402,19 @@
       });
     }
 
+    const uploadModal = document.getElementById('uploadModal');
+    if (uploadModal) {
+      uploadModal.addEventListener('click', (event) => {
+        if (event.target === uploadModal) {
+          closeUploadModal();
+        }
+      });
+    }
+
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
         closeDetailDrawer();
+        closeUploadModal();
       }
     });
 
