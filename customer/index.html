@@ -274,9 +274,10 @@
       padding: 14px;
       display: grid;
       grid-template-columns:
-        repeat(7, minmax(104px, 1fr))
-        minmax(150px, 0.9fr)
-        minmax(210px, 1.25fr)
+        minmax(100px, 0.75fr)
+        minmax(300px, 1.85fr)
+        repeat(5, minmax(104px, 1fr))
+        minmax(260px, 1.45fr)
         auto;
       gap: 10px;
       align-items: end;
@@ -302,6 +303,74 @@
       color: var(--text);
       padding: 0 10px;
       outline: 0;
+    }
+
+    .month-range-control,
+    .settlement-search-control {
+      height: 34px;
+      border: 1px solid var(--line-strong);
+      border-radius: 7px;
+      background: #fff;
+      display: grid;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .month-range-control {
+      grid-template-columns: 92px minmax(80px, 1fr) 24px minmax(80px, 1fr) 34px;
+    }
+
+    .settlement-search-control {
+      grid-template-columns: 112px 34px 1fr;
+    }
+
+    .month-range-control select,
+    .month-range-control input,
+    .settlement-search-control select,
+    .settlement-search-control input {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      padding: 0 10px;
+      outline: 0;
+      min-width: 0;
+    }
+
+    .month-range-control select,
+    .settlement-search-control select {
+      border-right: 1px solid var(--line);
+      color: var(--text);
+      font-weight: 650;
+    }
+
+    .month-range-control .range-separator {
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .month-range-control .calendar-icon,
+    .settlement-search-control .search-prefix {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+    }
+
+    .month-range-control .calendar-icon {
+      border-left: 1px solid var(--line);
+    }
+
+    .settlement-search-control .search-prefix {
+      border-right: 1px solid var(--line);
+    }
+
+    .month-range-control svg,
+    .settlement-search-control svg {
+      width: 15px;
+      height: 15px;
     }
 
     .tabs {
@@ -1672,8 +1741,14 @@
             <select class="control"><option>Amazon</option></select>
           </div>
           <div class="field">
-            <label>月份</label>
-            <input class="control" value="2026-05">
+            <label>统计月份</label>
+            <div class="month-range-control">
+              <select aria-label="统计维度"><option>按月统计</option></select>
+              <input aria-label="开始月份" value="2026-05">
+              <span class="range-separator">→</span>
+              <input aria-label="结束月份" value="2026-05">
+              <span class="calendar-icon"><i data-lucide="calendar-days"></i></span>
+            </div>
           </div>
           <div class="field">
             <label>店铺</label>
@@ -1696,17 +1771,12 @@
             <select class="control"><option>全部</option><option>是</option><option>否</option></select>
           </div>
           <div class="field">
-            <label>搜索条件</label>
-            <select class="control">
-              <option>店铺</option>
-              <option>SettlementID</option>
-              <option>追踪编号</option>
-              <option>SettlementID / 追踪编号</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>输入搜索</label>
-            <input class="control" value="" placeholder="请输入搜索内容">
+            <label>SettlementID</label>
+            <div class="settlement-search-control">
+              <select aria-label="搜索字段"><option>SettlementID</option></select>
+              <span class="search-prefix"><i data-lucide="list-filter"></i></span>
+              <input aria-label="SettlementID 搜索" value="" placeholder="请输入 SettlementID">
+            </div>
           </div>
           <button class="btn primary"><i data-lucide="search"></i>查询</button>
         </section>
