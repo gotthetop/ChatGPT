@@ -273,7 +273,11 @@
     .filter-bar {
       padding: 14px;
       display: grid;
-      grid-template-columns: repeat(8, minmax(112px, 1fr)) auto;
+      grid-template-columns:
+        repeat(7, minmax(104px, 1fr))
+        minmax(150px, 0.9fr)
+        minmax(210px, 1.25fr)
+        auto;
       gap: 10px;
       align-items: end;
     }
@@ -1692,8 +1696,17 @@
             <select class="control"><option>全部</option><option>是</option><option>否</option></select>
           </div>
           <div class="field">
-            <label>关键词</label>
-            <input class="control" value="" placeholder="店铺 / SettlementID / 追踪编号">
+            <label>搜索条件</label>
+            <select class="control">
+              <option>店铺</option>
+              <option>SettlementID</option>
+              <option>追踪编号</option>
+              <option>SettlementID / 追踪编号</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>输入搜索</label>
+            <input class="control" value="" placeholder="请输入搜索内容">
           </div>
           <button class="btn primary"><i data-lucide="search"></i>查询</button>
         </section>
@@ -1715,6 +1728,7 @@
                   <div class="kpi-line"><span>经营收入</span><b class="blue">$459,250</b></div>
                   <div class="kpi-line"><span>经营支出</span><b class="blue">$239,910</b></div>
                   <div class="kpi-line"><span>经营税费</span><b class="blue">$2,416</b></div>
+                  <div class="kpi-line"><span>经营净额</span><b class="blue">$221,756</b></div>
                   <div class="kpi-line"><span>Transfer</span><b class="blue">$22,874</b></div>
                 </div>
               </article>
@@ -1725,10 +1739,11 @@
                   <span class="pill cyan">API 交易一览</span>
                 </div>
                 <div class="kpi-lines">
-                  <div class="kpi-line"><span>已发放金额</span><b class="green">$420,860</b></div>
-                  <div class="kpi-line"><span>延迟发放金额</span><b class="green">$28,800</b></div>
                   <div class="kpi-line"><span>结算收入</span><b class="green">$451,380</b></div>
-                  <div class="kpi-line"><span>结算支出 / 税费</span><b class="green">$31,520</b></div>
+                  <div class="kpi-line"><span>结算支出</span><b class="green">$31,520</b></div>
+                  <div class="kpi-line"><span>结算税费</span><b class="green">$1,000</b></div>
+                  <div class="kpi-line"><span>结算净额</span><b class="green">$420,860</b></div>
+                  <div class="kpi-line"><span>延迟发放</span><b class="green">$28,800</b></div>
                 </div>
               </article>
 
@@ -1764,7 +1779,7 @@
           <article class="panel">
             <div class="panel-header">
               <div class="panel-title"><i data-lucide="bar-chart-3"></i>经营账趋势</div>
-              <span class="subtle">收入 / 利润</span>
+              <span class="subtle">经营净额 / Transfer</span>
             </div>
             <div class="panel-body">
               <div class="chart-shell">
@@ -1776,8 +1791,8 @@
                   <div class="bar-group"><div class="bar-pair"><i style="height:98px"></i><i style="height:46px"></i></div><span class="bar-label">5月</span></div>
                 </div>
                 <div class="legend">
-                  <span><i></i>经营收入</span>
-                  <span><i style="background:#7eb1dd"></i>经营利润</span>
+                  <span><i></i>经营净额</span>
+                  <span><i style="background:#7eb1dd"></i>Transfer</span>
                 </div>
               </div>
             </div>
@@ -2105,7 +2120,6 @@
                     <span>数据来源：Amazon Summary PDF</span>
                   </div>
                 </div>
-                <button class="btn"><i data-lucide="download"></i>导出 Summary 解析</button>
               </div>
               <div class="summary-parse-body">
                 <p class="panel-note">本区块只展示 Summary PDF 的解析结果与系统标准科目映射，不展示 Transaction CSV、交易一览或结算接口的逐项对照；上方核对表负责展示 Summary PDF 与交易一览的汇总差异。</p>
