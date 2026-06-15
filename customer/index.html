@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>资金与结算中心 - 客户原型 V3.10</title>
+  <title>资金与结算中心 - 客户原型 V3.11</title>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <style>
     :root {
@@ -276,7 +276,7 @@
       grid-template-columns:
         minmax(100px, 0.75fr)
         minmax(300px, 1.85fr)
-        repeat(5, minmax(104px, 1fr))
+        repeat(6, minmax(104px, 1fr))
         minmax(260px, 1.45fr)
         auto;
       gap: 10px;
@@ -401,7 +401,7 @@
 
     .kpi-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 12px;
     }
 
@@ -931,6 +931,15 @@
       line-height: 1.45;
     }
 
+    .table-scroll {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .reconcile-table {
+      min-width: 1650px;
+    }
+
     .legend {
       display: flex;
       align-items: center;
@@ -1009,6 +1018,7 @@
     }
 
     .flow-card.settlement .flow-progress span { background: var(--green); }
+    .flow-card.reconcile .flow-progress span { background: var(--amber); }
     .flow-card.cash .flow-progress span { background: #157f3f; }
 
     .reason-cell {
@@ -1767,6 +1777,10 @@
             <select class="control"><option>全部</option><option>已到账</option><option>部分到账</option><option>未到账</option></select>
           </div>
           <div class="field">
+            <label>账期核对状态</label>
+            <select class="control"><option>全部</option><option>一致</option><option>Transfer差异</option><option>跨月</option><option>PDF未上传</option><option>账期缺失</option></select>
+          </div>
+          <div class="field">
             <label>报告获取状态</label>
             <select class="control"><option>全部</option><option>是</option><option>否</option></select>
           </div>
@@ -1799,7 +1813,7 @@
                   <div class="kpi-line"><span>经营支出</span><b class="blue">$239,910</b></div>
                   <div class="kpi-line"><span>经营税费</span><b class="blue">$2,416</b></div>
                   <div class="kpi-line"><span>经营净额</span><b class="blue">$221,756</b></div>
-                  <div class="kpi-line"><span>Transfer</span><b class="blue">$22,874</b></div>
+                  <div class="kpi-line"><span>报告Transfer</span><b class="blue">$402,740</b></div>
                 </div>
               </article>
 
@@ -1819,14 +1833,29 @@
 
               <article class="kpi">
                 <div class="kpi-head">
-                  <div class="kpi-title"><i data-lucide="wallet"></i>资金账</div>
-                  <span class="pill green">API所有结算 + 收款账户</span>
+                  <div class="kpi-title"><i data-lucide="receipt-text"></i>账期核对</div>
+                  <span class="pill green">API所有结算</span>
                 </div>
                 <div class="kpi-lines">
-                  <div class="kpi-line"><span>应到账金额</span><b class="green">$402,740</b></div>
+                  <div class="kpi-line"><span>报告Transfer</span><b class="green">$402,740</b></div>
+                  <div class="kpi-line"><span>账期应收</span><b class="green">$402,740</b></div>
+                  <div class="kpi-line"><span>Transfer差异</span><b class="green">$0</b></div>
+                  <div class="kpi-line"><span>核对通过率</span><b class="green">83.6%</b></div>
+                  <div class="kpi-line"><span>异常店铺</span><b class="amber">164</b></div>
+                </div>
+              </article>
+
+              <article class="kpi">
+                <div class="kpi-head">
+                  <div class="kpi-title"><i data-lucide="wallet"></i>资金到账</div>
+                  <span class="pill green">收款账户</span>
+                </div>
+                <div class="kpi-lines">
+                  <div class="kpi-line"><span>账期应收</span><b class="green">$402,740</b></div>
                   <div class="kpi-line"><span>已到账金额</span><b class="green">$383,920</b></div>
+                  <div class="kpi-line"><span>到账差异</span><b class="amber">$18,820</b></div>
                   <div class="kpi-line"><span>到账率</span><b class="green">95.3%</b></div>
-                  <div class="kpi-line"><span>未到账金额</span><b class="green">$18,820</b></div>
+                  <div class="kpi-line"><span>超7天未到账</span><b class="amber">$12,480</b></div>
                 </div>
               </article>
 
@@ -1836,9 +1865,11 @@
                   <span class="pill gray">异常识别</span>
                 </div>
                 <div class="kpi-lines">
-                  <div class="kpi-line"><span>存在差异店铺</span><b class="amber">6</b></div>
-                  <div class="kpi-line"><span>超7天未到账金额</span><b class="amber">$12,480</b></div>
-                  <div class="kpi-line"><span>异常店铺数量</span><b class="amber">3</b></div>
+                  <div class="kpi-line"><span>Transfer异常店铺</span><b class="amber">92</b></div>
+                  <div class="kpi-line"><span>Transfer差异金额</span><b class="amber">$18,420</b></div>
+                  <div class="kpi-line"><span>跨月账期金额</span><b class="amber">$3,198</b></div>
+                  <div class="kpi-line"><span>PDF未上传店铺</span><b class="amber">41</b></div>
+                  <div class="kpi-line"><span>到账异常店铺</span><b class="amber">123</b></div>
                 </div>
               </article>
             </div>
@@ -1926,16 +1957,16 @@
         <section class="grid-2 view" data-view="dashboard">
           <article class="panel">
             <div class="panel-header">
-              <div class="panel-title"><i data-lucide="layout-list"></i>到账状态分布</div>
-              <span class="subtle">1,000 个店铺，按状态聚合</span>
+              <div class="panel-title"><i data-lucide="layout-list"></i>Transfer账期核对分布</div>
+              <span class="subtle">1,000 个店铺，按 PDF Transfer 与账期应收核对</span>
             </div>
             <div class="panel-body">
               <div class="status-overview">
                 <div class="status-summary">
-                  <div class="status-card"><span>已到账</span><strong>836</strong><small>$128.4万</small></div>
-                  <div class="status-card"><span>部分到账</span><strong>92</strong><small>$18.2万</small></div>
-                  <div class="status-card"><span>未到账</span><strong>31</strong><small>$6.4万</small></div>
-                  <div class="status-card"><span>待回填</span><strong>41</strong><small>$4.1万</small></div>
+                  <div class="status-card"><span>一致</span><strong>836</strong><small>$128.4万</small></div>
+                  <div class="status-card"><span>Transfer差异</span><strong>92</strong><small>$18.2万</small></div>
+                  <div class="status-card"><span>跨月账期</span><strong>31</strong><small>$6.4万</small></div>
+                  <div class="status-card"><span>PDF未上传</span><strong>41</strong><small>$4.1万</small></div>
                 </div>
                 <div class="segment-bar">
                   <span class="segment green" style="width:83.6%"></span>
@@ -1944,15 +1975,15 @@
                   <span class="segment blue" style="width:4.1%"></span>
                 </div>
                 <div class="status-list">
-                  <div class="status-line-row"><span class="pill green">已到账</span><div class="bar"><span style="width:83.6%"></span></div><strong>836 店铺</strong><span class="num">$128.4万</span></div>
-                  <div class="status-line-row"><span class="pill amber">部分到账</span><div class="bar amber"><span style="width:9.2%"></span></div><strong>92 店铺</strong><span class="num">$18.2万</span></div>
-                  <div class="status-line-row"><span class="pill red">未到账</span><div class="bar red"><span style="width:3.1%"></span></div><strong>31 店铺</strong><span class="num">$6.4万</span></div>
-                  <div class="status-line-row"><span class="pill blue">待回填</span><div class="bar"><span style="width:4.1%"></span></div><strong>41 账期</strong><span class="num">$4.1万</span></div>
+                  <div class="status-line-row"><span class="pill green">一致</span><div class="bar"><span style="width:83.6%"></span></div><strong>836 店铺</strong><span class="num">$128.4万</span></div>
+                  <div class="status-line-row"><span class="pill amber">差异</span><div class="bar amber"><span style="width:9.2%"></span></div><strong>92 店铺</strong><span class="num">$18.2万</span></div>
+                  <div class="status-line-row"><span class="pill red">跨月</span><div class="bar red"><span style="width:3.1%"></span></div><strong>31 店铺</strong><span class="num">$6.4万</span></div>
+                  <div class="status-line-row"><span class="pill blue">PDF未传</span><div class="bar"><span style="width:4.1%"></span></div><strong>41 店铺</strong><span class="num">$4.1万</span></div>
                 </div>
                 <div class="drill-actions">
-                  <button class="btn" data-view-target="list" data-drill-label="未到账店铺"><i data-lucide="arrow-right"></i>查看未到账</button>
-                  <button class="btn" data-view-target="list" data-drill-label="待回填 SettlementID / 账期"><i data-lucide="arrow-right"></i>查看待回填</button>
-                  <button class="btn" data-view-target="list" data-drill-label="全部异常店铺"><i data-lucide="arrow-right"></i>查看全部异常</button>
+                  <button class="btn" data-view-target="list" data-drill-label="Transfer核对差异店铺"><i data-lucide="arrow-right"></i>查看Transfer差异</button>
+                  <button class="btn" data-view-target="list" data-drill-label="跨月账期店铺"><i data-lucide="arrow-right"></i>查看跨月账期</button>
+                  <button class="btn" data-view-target="list" data-drill-label="PDF未上传店铺"><i data-lucide="arrow-right"></i>查看PDF未上传</button>
                 </div>
               </div>
             </div>
@@ -1960,19 +1991,19 @@
 
           <article class="panel">
             <div class="panel-header">
-              <div class="panel-title"><i data-lucide="triangle-alert"></i>差异预警 Top 10</div>
-              <span class="subtle">按综合风险排序</span>
+              <div class="panel-title"><i data-lucide="triangle-alert"></i>Transfer差异 Top 10</div>
+              <span class="subtle">按 PDF Transfer 与账期应收差异排序</span>
             </div>
             <div class="panel-body">
               <div class="risk-score-list">
-                <div class="risk-score"><div><strong>D07-JP</strong><span>未到账 12 天</span></div><div class="risk-bar"><i style="width:96%"></i></div><span class="num">6.06%</span></div>
-                <div class="risk-score"><div><strong>B22-DE</strong><span>已转账未匹配</span></div><div class="risk-bar"><i style="width:87%"></i></div><span class="num">5.49%</span></div>
-                <div class="risk-score"><div><strong>A53-IT</strong><span>部分到账</span></div><div class="risk-bar amber"><i style="width:52%"></i></div><span class="num">2.64%</span></div>
-                <div class="risk-score"><div><strong>A51-UK</strong><span>跨月结算</span></div><div class="risk-bar amber"><i style="width:21%"></i></div><span class="num">0.21%</span></div>
-                <div class="risk-score"><div><strong>C18-US</strong><span>轻微差异</span></div><div class="risk-bar amber"><i style="width:8%"></i></div><span class="num">0.04%</span></div>
+                <div class="risk-score"><div><strong>D07-JP</strong><span>PDF Transfer 与账期应收不一致</span></div><div class="risk-bar"><i style="width:96%"></i></div><span class="num">$8,420</span></div>
+                <div class="risk-score"><div><strong>B22-DE</strong><span>部分 SettlementID 未归入本月账期</span></div><div class="risk-bar"><i style="width:87%"></i></div><span class="num">$5,180</span></div>
+                <div class="risk-score"><div><strong>A57-US</strong><span>账期应收低于 PDF Transfer</span></div><div class="risk-bar amber"><i style="width:52%"></i></div><span class="num">$1,094</span></div>
+                <div class="risk-score"><div><strong>A51-UK</strong><span>跨月账期进入 6 月关闭</span></div><div class="risk-bar amber"><i style="width:21%"></i></div><span class="num">£3,198</span></div>
+                <div class="risk-score"><div><strong>C18-US</strong><span>轻微差异，低于阈值</span></div><div class="risk-bar amber"><i style="width:8%"></i></div><span class="num">$42</span></div>
               </div>
               <div class="drill-actions">
-                <button class="btn primary" data-view-target="list" data-drill-label="差异预警 Top 10"><i data-lucide="list-checks"></i>进入异常列表</button>
+                <button class="btn primary" data-view-target="list" data-drill-label="Transfer差异 Top 10"><i data-lucide="list-checks"></i>进入异常列表</button>
                 <button class="btn"><i data-lucide="file-down"></i>导出预警</button>
               </div>
             </div>
@@ -1994,10 +2025,16 @@
                   <div class="flow-progress"><span style="width:100%"></span></div>
                 </div>
                 <div class="flow-card settlement">
-                  <div class="flow-top"><span>结算账</span><span>所有结算</span></div>
+                  <div class="flow-top"><span>结算账</span><span>交易一览</span></div>
                   <strong>$86.2万</strong>
-                  <small>按所有结算统计账期应转与已转账金额，解释平台转账进度。</small>
+                  <small>按交易一览统计已发放与延迟发放，解释结算时间差异。</small>
                   <div class="flow-progress"><span style="width:94.9%"></span></div>
+                </div>
+                <div class="flow-card reconcile">
+                  <div class="flow-top"><span>账期核对</span><span>Summary Transfer vs 所有结算</span></div>
+                  <strong>$40.3万</strong>
+                  <small>用报告 Transfer 与账期应收做批量核对，优先筛出跨月、缺账期或 PDF 未上传店铺。</small>
+                  <div class="flow-progress"><span style="width:83.6%"></span></div>
                 </div>
                 <div class="flow-card cash">
                   <div class="flow-top"><span>资金账</span><span>第三方收款账户</span></div>
@@ -2016,9 +2053,9 @@
             </div>
             <div class="panel-body">
               <div class="explain">
-                <div class="explain-item red">D07-JP 未到账金额占比 6.06%，超过 7 天未匹配第三方收款账户流水，建议优先处理。</div>
-                <div class="explain-item amber">B22-DE 平台已转账但追踪编号未匹配到账流水，需核对银行尾号与到账时间。</div>
-                <div class="explain-item green">836 个店铺已完成到账核对，占全部店铺 83.6%，整体资金到账率 96.8%。</div>
+                <div class="explain-item red">D07-JP 报告 Transfer 与账期应收差异 $8,420，建议先按 SettlementID 排查缺失账期或跨月账期。</div>
+                <div class="explain-item amber">A51-UK 的 PDF Transfer 与 5 月关闭账期应收一致，但存在 1 个 £3,198.58 账期进入 6 月关闭，需在 6 月继续追踪。</div>
+                <div class="explain-item green">836 个店铺的报告 Transfer 与账期应收已对齐，可直接进入第三方收款账户到账核对。</div>
               </div>
             </div>
           </article>
@@ -2034,22 +2071,26 @@
             </div>
           </div>
           <div class="panel-body">
-            <div class="list-filter-hint" id="listFilterHint">当前范围：全部店铺。可从首页“到账状态分布”或“差异预警 Top 10”下钻筛选。</div>
-            <table>
+            <div class="list-filter-hint" id="listFilterHint">当前范围：全部店铺。可从首页“Transfer账期核对分布”或“Transfer差异 Top 10”下钻筛选。</div>
+            <div class="table-scroll">
+            <table class="reconcile-table">
               <thead>
                 <tr>
                   <th style="width:86px">月份</th>
                   <th style="width:100px">店铺</th>
                   <th style="width:70px">币种</th>
-                  <th class="num">经营净额</th>
-                  <th class="num">交易净额</th>
-                  <th class="num">经营差异</th>
-                  <th class="num">已发放</th>
-                  <th class="num">延迟</th>
-                  <th class="num">应转</th>
-                  <th class="num">已到账</th>
-                  <th style="width:96px">状态</th>
-                  <th style="width:180px">差异原因</th>
+                  <th class="num" style="width:108px">经营净额</th>
+                  <th class="num" style="width:108px">交易净额</th>
+                  <th class="num" style="width:96px">经营差异</th>
+                  <th class="num" style="width:104px">已发放</th>
+                  <th class="num" style="width:88px">延迟</th>
+                  <th class="num" style="width:112px">报告Transfer</th>
+                  <th class="num" style="width:110px">账期应收</th>
+                  <th style="width:128px">账期核对</th>
+                  <th class="num" style="width:104px">已到账</th>
+                  <th class="num" style="width:104px">到账差异</th>
+                  <th style="width:96px">到账状态</th>
+                  <th style="width:220px">差异原因</th>
                   <th style="width:110px">操作</th>
                 </tr>
               </thead>
@@ -2064,9 +2105,12 @@
                   <td class="num">23,635.00</td>
                   <td class="num">767.78</td>
                   <td class="num">22,660.23</td>
+                  <td class="num">22,660.23</td>
+                  <td><span class="pill green">一致</span></td>
                   <td class="num">21,934.18</td>
-                  <td><span class="pill amber">需解释</span></td>
-                  <td class="reason-cell">跨月结算 + 部分订单延迟发放</td>
+                  <td class="num">-726.05</td>
+                  <td><span class="pill amber">部分到账</span></td>
+                  <td class="reason-cell">Transfer与5月关闭账期一致；经营差异来自跨月结算 + 部分订单延迟发放</td>
                   <td><button class="btn row-action" data-open-detail><i data-lucide="eye"></i>详情</button></td>
                 </tr>
                 <tr>
@@ -2080,6 +2124,9 @@
                   <td class="num">0.00</td>
                   <td class="num">18,420.50</td>
                   <td class="num">18,420.50</td>
+                  <td><span class="pill green">一致</span></td>
+                  <td class="num">18,420.50</td>
+                  <td class="num">0.00</td>
                   <td><span class="pill green">已到账</span></td>
                   <td class="reason-cell">经营差异低于阈值，资金已到账</td>
                   <td><button class="btn row-action" data-open-detail><i data-lucide="eye"></i>详情</button></td>
@@ -2095,8 +2142,11 @@
                   <td class="num">490.80</td>
                   <td class="num">9,118.60</td>
                   <td class="num">8,024.36</td>
-                  <td><span class="pill amber">在途</span></td>
-                  <td class="reason-cell">平台已转账，第三方收款账户到账在途</td>
+                  <td><span class="pill amber">差异 -1,094.24</span></td>
+                  <td class="num">8,024.36</td>
+                  <td class="num">0.00</td>
+                  <td><span class="pill green">已到账</span></td>
+                  <td class="reason-cell">账期应收低于 PDF Transfer，需按 SettlementID 回溯跨月或缺失账期</td>
                   <td><button class="btn row-action" data-open-detail><i data-lucide="eye"></i>详情</button></td>
                 </tr>
                 <tr>
@@ -2108,14 +2158,18 @@
                   <td class="num"><span class="pill amber">待核算</span></td>
                   <td class="num">11,762.44</td>
                   <td class="num">110.00</td>
+                  <td class="num"><span class="summary-missing">Summary未上传<button class="mini-link" type="button" data-open-upload data-upload-store="A53-IT" data-upload-month="2026-05" data-upload-currency="EUR">上传</button></span></td>
                   <td class="num">6,950.72</td>
+                  <td><span class="pill blue">PDF未传</span></td>
                   <td class="num">4,309.45</td>
+                  <td class="num">-2,641.27</td>
                   <td><span class="pill red">未到账</span></td>
                   <td class="reason-cell">已转账未匹配第三方收款账户流水</td>
                   <td><button class="btn row-action" data-open-detail><i data-lucide="eye"></i>详情</button></td>
                 </tr>
               </tbody>
             </table>
+            </div>
           </div>
         </section>
 
@@ -2154,7 +2208,7 @@
                   <strong>£24,985.17</strong>
                 </div>
                 <div class="summary-box"><span>交易一览经营净额</span><strong>£24,402.76</strong></div>
-                <div class="summary-box"><span>5月关闭账期应转</span><strong>£22,660.23</strong></div>
+                <div class="summary-box"><span>PDF Transfer / 账期应收</span><strong>£22,660.23 / £22,660.23</strong></div>
                 <div class="summary-box"><span>第三方收款账户已到账</span><strong>£21,934.18</strong></div>
               </div>
             </div>
@@ -2311,7 +2365,18 @@
           </div>
 
           <div class="detail-tab-panel" data-detail-panel="settlements" hidden>
-            <p class="panel-note">结算账期来自付款结算-所有结算，按“结算关闭时间 = 2026-05”查询；如 SettlementID 尚未回填，先展示系统结算编号与待回填状态。</p>
+            <p class="panel-note">结算账期来自付款结算-所有结算，按“结算关闭时间 = 2026-05”查询；本页先核对 PDF Transfer 与本月账期应收是否一致，再继续核对平台转账与第三方收款账户到账。</p>
+            <table>
+              <thead>
+                <tr><th>核对项</th><th class="num">金额 GBP</th><th>状态</th><th>说明</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>PDF Transfer（取绝对值）</td><td class="num">£22,660.23</td><td><span class="pill gray">Summary PDF</span></td><td>来自 Summary PDF Transfers 汇总项。</td></tr>
+                <tr><td>5月关闭账期应收</td><td class="num">£22,660.23</td><td><span class="pill green">一致</span></td><td>按结算关闭时间筛选所有结算，应收金额与 PDF Transfer 对齐。</td></tr>
+                <tr><td>Transfer差异</td><td class="num">£0.00</td><td><span class="pill green">已对齐</span></td><td>差异为 0，可继续进入到账核对。</td></tr>
+                <tr><td>跨月账期提示</td><td class="num">£3,198.58</td><td><span class="pill amber">入6月</span></td><td>该账期在 6 月关闭，不计入 5 月资金核对，可在 6 月列表中追踪。</td></tr>
+              </tbody>
+            </table>
             <table>
               <thead>
                 <tr><th>SettlementID</th><th>结算打开时间</th><th>结算关闭时间</th><th class="num">应收金额</th><th class="num">转账金额</th><th>转账状态</th></tr>
@@ -2619,7 +2684,7 @@
       if (!hint) return;
       hint.textContent = label
         ? `当前范围：${label}。已从首页聚合看板下钻，列表中展示对应店铺或账期明细。`
-        : '当前范围：全部店铺。可从首页“到账状态分布”或“差异预警 Top 10”下钻筛选。';
+        : '当前范围：全部店铺。可从首页“Transfer账期核对分布”或“Transfer差异 Top 10”下钻筛选。';
     }
 
     function openDetailDrawer() {
