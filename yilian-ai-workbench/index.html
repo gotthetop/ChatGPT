@@ -262,6 +262,136 @@
     .metric label { color: var(--muted); font-weight: 800; display: flex; justify-content: space-between; gap: 8px; }
     .metric strong { font-size: 24px; line-height: 1; font-weight: 850; }
     .metric small { color: var(--muted); line-height: 1.45; }
+
+    .analysis-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
+    .analysis-grid.two { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .analysis-grid.four { grid-template-columns: repeat(4, minmax(0,1fr)); }
+    .chart-card {
+      min-height: 248px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      overflow: hidden;
+      box-shadow: 0 8px 22px rgba(31,41,55,.04);
+      display: grid;
+      grid-template-rows: auto minmax(0,1fr);
+    }
+    .chart-card.wide { grid-column: span 2; }
+    .chart-head {
+      min-height: 58px;
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .chart-head h2 { font-size: 14px; font-weight: 900; }
+    .chart-head span { display: block; margin-top: 4px; color: var(--muted); line-height: 1.4; font-size: 12px; }
+    .chart-body { padding: 14px; display: grid; gap: 12px; align-content: stretch; min-width: 0; }
+    .icon-btn.small { width: 30px; height: 30px; border-radius: 8px; }
+    .line-chart { width: 100%; height: 150px; display: block; overflow: visible; }
+    .line-chart .grid-line { stroke: #e8eef6; stroke-width: 1; }
+    .line-chart .area { fill: rgba(52,120,246,.10); }
+    .line-chart .line { fill: none; stroke: var(--primary); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .line-chart .line.alt { stroke: var(--green); }
+    .line-chart .point { fill: #fff; stroke: var(--primary); stroke-width: 2; }
+    .chart-axis { display: grid; grid-template-columns: repeat(var(--cols, 6), minmax(0,1fr)); gap: 4px; color: var(--subtle); font-size: 11px; text-align: center; }
+    .bar-list, .funnel-list { display: grid; gap: 10px; }
+    .bar-row, .funnel-row {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 96px minmax(0,1fr) 44px;
+      align-items: center;
+      gap: 10px;
+      text-align: left;
+      color: var(--text);
+    }
+    .bar-name, .funnel-name { color: var(--muted); font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bar-track, .funnel-track { height: 10px; border-radius: 999px; background: #eef2f7; overflow: hidden; }
+    .bar-track i, .funnel-track i { display: block; width: var(--w); height: 100%; border-radius: inherit; background: var(--c, var(--primary)); }
+    .bar-row strong, .funnel-row strong { text-align: right; font-weight: 900; }
+    .column-chart {
+      height: 154px;
+      display: grid;
+      grid-template-columns: repeat(var(--cols, 6), minmax(0,1fr));
+      align-items: end;
+      gap: 8px;
+      padding-top: 6px;
+      border-bottom: 1px solid var(--line);
+    }
+    .column {
+      height: 100%;
+      min-width: 0;
+      border: 0;
+      background: transparent;
+      display: grid;
+      align-items: end;
+      justify-items: center;
+      padding: 0;
+      color: var(--text);
+    }
+    .column i {
+      width: 100%;
+      min-height: 8px;
+      height: var(--h);
+      border-radius: 8px 8px 0 0;
+      background: linear-gradient(180deg, var(--c, var(--primary)), rgba(52,120,246,.50));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.28);
+    }
+    .donut-wrap { display: grid; grid-template-columns: 132px minmax(0,1fr); gap: 14px; align-items: center; }
+    .donut {
+      width: 132px;
+      height: 132px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      position: relative;
+      background: conic-gradient(var(--segments));
+      box-shadow: inset 0 0 0 1px var(--line);
+    }
+    .donut::after { content: ""; position: absolute; width: 78px; height: 78px; border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 1px var(--line); }
+    .donut strong { position: relative; z-index: 1; font-size: 20px; }
+    .legend { display: grid; gap: 8px; }
+    .legend-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; color: var(--muted); line-height: 1.35; }
+    .legend-row span:first-child { display: inline-flex; align-items: center; gap: 7px; min-width: 0; }
+    .legend-dot { width: 9px; height: 9px; border-radius: 2px; background: var(--c); flex: 0 0 9px; }
+    .matrix {
+      min-height: 158px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+    }
+    .matrix-cell {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fbfdff;
+      padding: 10px;
+      display: grid;
+      gap: 6px;
+      align-content: space-between;
+    }
+    .matrix-cell strong { font-size: 17px; }
+    .matrix-cell span { color: var(--muted); line-height: 1.35; }
+    .insight-list { display: grid; gap: 9px; }
+    .insight {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fbfdff;
+      padding: 10px;
+      display: grid;
+      gap: 5px;
+    }
+    .insight strong { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .insight span { color: var(--muted); line-height: 1.42; }
+    .sparkline-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: center; }
+    .mini-kpis { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; }
+    .mini-kpi { border: 1px solid var(--line); border-radius: 10px; background: #f8fbff; padding: 10px; display: grid; gap: 4px; }
+    .mini-kpi label { color: var(--muted); font-size: 12px; font-weight: 850; }
+    .mini-kpi strong { font-size: 17px; }
     .status {
       min-height: 24px;
       border-radius: 6px;
@@ -458,7 +588,9 @@
       .nav-btn { width: auto; flex: 0 0 auto; }
       .topbar { position: relative; flex-wrap: wrap; padding: 12px; }
       .main { padding: 14px; }
-      .grid-2, .grid-3, .grid-4, .grid-5, .grid-6, .goal-layout, .layout-detail, .form-grid { grid-template-columns: 1fr; }
+      .grid-2, .grid-3, .grid-4, .grid-5, .grid-6, .goal-layout, .layout-detail, .form-grid, .analysis-grid, .analysis-grid.two, .analysis-grid.four { grid-template-columns: 1fr; }
+      .chart-card.wide { grid-column: auto; }
+      .donut-wrap, .sparkline-row { grid-template-columns: 1fr; }
       .asset-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
       .detail-panel { position: static; }
       .search { width: 100%; }
@@ -797,6 +929,577 @@
       `).join("")}</div>`;
     }
 
+    const chartColors = ["#3478f6", "#13966a", "#d97706", "#dc4c45", "#6b59b5", "#64748b", "#12c7b7"];
+    const clamp = (value, min = 0, max = 100) => Math.max(min, Math.min(max, value));
+    const numeric = value => Number(String(value ?? 0).replace(/[^\d.-]/g, "")) || 0;
+
+    function chartCard(title, desc, body, insight = "点击图表项可进入对应模块，点击信息按钮查看分析口径。", cls = "") {
+      return `
+        <section class="chart-card ${cls}">
+          <div class="chart-head">
+            <div><h2>${escapeHtml(title)}</h2><span>${escapeHtml(desc)}</span></div>
+            <button class="icon-btn small" data-action="openChartInsight" data-title="${escapeHtml(title)}" data-insight="${escapeHtml(insight)}" aria-label="查看图表说明"><i data-lucide="info"></i></button>
+          </div>
+          <div class="chart-body">${body}</div>
+        </section>
+      `;
+    }
+
+    function lineChart(values, labels, opts = {}) {
+      const width = 360;
+      const height = 138;
+      const pad = 10;
+      const max = Math.max(...values, 1);
+      const min = Math.min(...values, 0);
+      const range = max - min || 1;
+      const points = values.map((value, index) => {
+        const x = pad + (index * (width - pad * 2)) / Math.max(values.length - 1, 1);
+        const y = height - pad - ((value - min) / range) * (height - pad * 2);
+        return [Number(x.toFixed(1)), Number(y.toFixed(1))];
+      });
+      const path = points.map(point => point.join(",")).join(" ");
+      const area = `${points[0][0]},${height - pad} ${path} ${points.at(-1)[0]},${height - pad}`;
+      return `
+        <svg class="line-chart" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+          <line class="grid-line" x1="0" y1="${height - pad}" x2="${width}" y2="${height - pad}"></line>
+          <line class="grid-line" x1="0" y1="${height / 2}" x2="${width}" y2="${height / 2}"></line>
+          <line class="grid-line" x1="0" y1="${pad}" x2="${width}" y2="${pad}"></line>
+          <polygon class="area" points="${area}"></polygon>
+          <polyline class="line ${opts.alt ? "alt" : ""}" points="${path}"></polyline>
+          ${points.map(([x,y]) => `<circle class="point" cx="${x}" cy="${y}" r="3.5"></circle>`).join("")}
+        </svg>
+        <div class="chart-axis" style="--cols:${labels.length}">${labels.map(label => `<span>${escapeHtml(label)}</span>`).join("")}</div>
+      `;
+    }
+
+    function barChart(items) {
+      const max = Math.max(...items.map(item => numeric(item.value)), 1);
+      return `<div class="bar-list">${items.map((item, index) => {
+        const value = numeric(item.value);
+        return `
+          <button class="bar-row" data-view="${item.view || state.view}">
+            <span class="bar-name">${escapeHtml(item.label)}</span>
+            <span class="bar-track"><i style="--w:${clamp(value / max * 100)}%;--c:${item.color || chartColors[index % chartColors.length]}"></i></span>
+            <strong>${escapeHtml(item.value)}</strong>
+          </button>
+        `;
+      }).join("")}</div>`;
+    }
+
+    function columnChart(items) {
+      const max = Math.max(...items.map(item => numeric(item.value)), 1);
+      return `
+        <div class="column-chart" style="--cols:${items.length}">
+          ${items.map((item, index) => `<button class="column" data-view="${item.view || state.view}" title="${escapeHtml(item.label + " " + item.value)}"><i style="--h:${clamp(numeric(item.value) / max * 100)}%;--c:${item.color || chartColors[index % chartColors.length]}"></i></button>`).join("")}
+        </div>
+        <div class="chart-axis" style="--cols:${items.length}">${items.map(item => `<span>${escapeHtml(item.label)}</span>`).join("")}</div>
+      `;
+    }
+
+    function funnelChart(items) {
+      const max = Math.max(...items.map(item => numeric(item.value)), 1);
+      return `<div class="funnel-list">${items.map((item, index) => `
+        <button class="funnel-row" data-view="${item.view || state.view}">
+          <span class="funnel-name">${escapeHtml(item.label)}</span>
+          <span class="funnel-track"><i style="--w:${clamp(numeric(item.value) / max * 100)}%;--c:${item.color || chartColors[index % chartColors.length]}"></i></span>
+          <strong>${escapeHtml(item.value)}</strong>
+        </button>
+      `).join("")}</div>`;
+    }
+
+    function donutChart(items, center) {
+      const total = items.reduce((sum, item) => sum + numeric(item.value), 0) || 1;
+      let cursor = 0;
+      const segments = items.map((item, index) => {
+        const start = cursor;
+        cursor += numeric(item.value) / total * 360;
+        return `${item.color || chartColors[index % chartColors.length]} ${start.toFixed(1)}deg ${cursor.toFixed(1)}deg`;
+      }).join(", ");
+      return `
+        <div class="donut-wrap">
+          <div class="donut" style="--segments:${segments}"><strong>${escapeHtml(center || total)}</strong></div>
+          <div class="legend">${items.map((item, index) => `
+            <div class="legend-row"><span><i class="legend-dot" style="--c:${item.color || chartColors[index % chartColors.length]}"></i>${escapeHtml(item.label)}</span><strong>${escapeHtml(item.value)}</strong></div>
+          `).join("")}</div>
+        </div>
+      `;
+    }
+
+    function matrixChart(items) {
+      return `<div class="matrix">${items.map((item, index) => `
+        <button class="matrix-cell" data-view="${item.view || state.view}" style="border-color:${item.color || chartColors[index % chartColors.length]}33">
+          <span>${escapeHtml(item.label)}</span>
+          <strong>${escapeHtml(item.value)}</strong>
+          <span>${escapeHtml(item.note)}</span>
+        </button>
+      `).join("")}</div>`;
+    }
+
+    function insightList(items) {
+      return `<div class="insight-list">${items.map(item => `
+        <div class="insight"><strong>${escapeHtml(item.title)} ${item.badge ? status(item.badge) : ""}</strong><span>${escapeHtml(item.text)}</span></div>
+      `).join("")}</div>`;
+    }
+
+    function miniKpis(items) {
+      return `<div class="mini-kpis">${items.map(item => `
+        <div class="mini-kpi"><label>${escapeHtml(item.label)}</label><strong>${escapeHtml(item.value)}</strong><span class="meta">${escapeHtml(item.note || "")}</span></div>
+      `).join("")}</div>`;
+    }
+
+    function dashboardAnalytics() {
+      return `
+        <div class="analysis-grid">
+          ${chartCard("全链路任务漏斗", "从输入到审核通过的经营闭环", funnelChart([
+            {label:"目标输入", value:156, view:"tasks"},
+            {label:"AI 执行", value:86, view:"tasks"},
+            {label:"进入审核", value:34, view:"reviews"},
+            {label:"通过沉淀", value:24, view:"library"}
+          ]), "用于判断 AI 工作台是不是只在生成内容，还是已经形成可审核、可沉淀、可追踪的经营产出。")}
+          ${chartCard("7 日经营风险趋势", "异常、清货、断货风险综合指数", lineChart([24,31,28,37,42,36,29], ["07-02","07-03","07-04","07-05","07-06","07-07","今天"]), "风险指数来自异常队列优先级、库存覆盖、广告利润和新品测试节点。")}
+          ${chartCard("生命周期 SKU 分布", "看清产品池当前结构", donutChart([
+            {label:"机会/立项", value:170},
+            {label:"内容/待刊登", value:38},
+            {label:"新品测试", value:31},
+            {label:"常规/老品", value:240},
+            {label:"清货/归档", value:32}
+          ], "511"), "用于判断工作台是否覆盖新品开发、在售经营和失败复盘，而不是只做单点工具。")}
+        </div>
+      `;
+    }
+
+    function tasksAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("任务状态分布", "执行、审核、完成、暂停一屏掌握", donutChart([
+          {label:"执行中", value:tasks.filter(t=>t.status==="执行中").length},
+          {label:"待审核", value:tasks.filter(t=>t.status==="待审核").length},
+          {label:"已完成", value:tasks.filter(t=>t.status==="已完成").length},
+          {label:"已暂停", value:tasks.filter(t=>t.status==="已暂停").length}
+        ], tasks.length), "用于管理后台任务，不让 AI 执行变成黑盒。")}
+        ${chartCard("积分消耗趋势", "按任务类型跟踪成本", columnChart([
+          {label:"选品", value:128},
+          {label:"图片", value:48},
+          {label:"Listing", value:28},
+          {label:"生命周期", value:64},
+          {label:"清货", value:58}
+        ]), "帮助判断哪些 AI 能力最消耗积分，并与实际产出质量联动。")}
+        ${chartCard("任务阻塞点", "下一步处理压力分布", barChart([
+          {label:"待审核", value:3, view:"reviews"},
+          {label:"需补资料", value:2, view:"briefs"},
+          {label:"异常处置", value:2, view:"exceptions"},
+          {label:"复盘沉淀", value:1, view:"quality"}
+        ]), "把 AI 任务从纯进度条升级为运营可处理的阻塞队列。")}
+      </div>`;
+    }
+
+    function reviewAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("审核类型分布", "看清今天谁在等人工确认", barChart([
+          {label:"候选品", value:1, view:"opportunities"},
+          {label:"图片", value:1, view:"images"},
+          {label:"Listing", value:1, view:"listings"},
+          {label:"新品处置", value:1, view:"newProducts"},
+          {label:"补货/清货", value:2, view:"inventory"}
+        ]), "审核中心的价值是把风险动作拦住，而不是让 AI 直接写入 ERP 或广告。")}
+        ${chartCard("SLA 压力", "今天必须处理的审核量", donutChart([
+          {label:"今天到期", value:4, color:"#dc4c45"},
+          {label:"明天到期", value:2, color:"#d97706"},
+          {label:"本周内", value:3, color:"#3478f6"}
+        ], "4"), "用于提醒运营主管优先处理会阻断刊登、补货和清货的审核。")}
+        ${chartCard("审核通过质量", "通过率与驳回原因趋势", lineChart([62,68,71,69,73,76,74], ["D-6","D-5","D-4","D-3","D-2","D-1","今天"], {alt:true}), "通过率不是越高越好，需要结合上线后的 CTR、CVR、ACOS 和动销质量回流。")}
+      </div>`;
+    }
+
+    function opportunityAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("AI 选品漏斗", "硬规则、利润、供应商、机会评级逐层过滤", funnelChart([
+          {label:"候选输入", value:128},
+          {label:"硬规则通过", value:64},
+          {label:"利润成立", value:38},
+          {label:"供应商匹配", value:24},
+          {label:"A 类机会", value:6}
+        ]), "把选品过程从一个结果表变成可解释漏斗，方便复核每层淘汰原因。")}
+        ${chartCard("机会等级分布", "A/B/C 机会结构", donutChart([
+          {label:"A 类", value:6, color:"#13966a"},
+          {label:"B 类", value:18, color:"#d97706"},
+          {label:"C 类", value:40, color:"#dc4c45"}
+        ], "64"), "用于控制产品开发推进节奏，避免低质量候选进入内容生成。")}
+        ${chartCard("淘汰原因 Top5", "沉淀成下一轮规则", barChart([
+          {label:"合规风险", value:21},
+          {label:"利润不足", value:18},
+          {label:"广告过贵", value:16},
+          {label:"供应链弱", value:13},
+          {label:"评论壁垒", value:11}
+        ]), "淘汰原因会回流规则中心，而不是只丢弃候选品。")}
+      </div>`;
+    }
+
+    function briefAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("Brief 完整度分布", "内容生成前的资料健康度", columnChart(briefs.map(b=>({label:b.sku.replace("YL-",""), value:b.completeness, view:"briefs"}))), "Brief 是后续图片、Listing、刊登和新品测试的共同上下文。")}
+        ${chartCard("下游阻断项", "缺字段会影响哪些环节", barChart([
+          {label:"包装/FBA", value:3, view:"supply"},
+          {label:"卖点依据", value:2, view:"listings"},
+          {label:"生命周期计划", value:2, view:"newProducts"},
+          {label:"供应商证明", value:1, view:"supply"}
+        ]), "让运营知道补哪类字段能最快解除下游阻塞。")}
+        ${chartCard("Brief 到成果转化", "立项后产出沉淀情况", funnelChart([
+          {label:"已立项", value:42},
+          {label:"内容包", value:26},
+          {label:"刊登草稿", value:12},
+          {label:"测试计划", value:9},
+          {label:"成果沉淀", value:7}
+        ]), "用于判断立项是否真的走到可刊登和可测试。")}
+      </div>`;
+    }
+
+    function supplyAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("利润安全带", "采购价与最高可接受成本对比", barChart(supply.map(s=>({label:s.sku.replace("YL-",""), value:Math.round(numeric(s.purchase) / Math.max(numeric(s.maxCost), .1) * 100)}))), "百分比越低，采购价越安全；越接近 100 越容易被广告和物流吞掉利润。")}
+        ${chartCard("供应商置信度", "1688 匹配和规格一致性", columnChart(supply.map(s=>({label:s.supplier.slice(0,4), value:numeric(s.confidence)}))), "供应商置信度低的商品不能直接进入大货，只能走小批量验证。")}
+        ${chartCard("交期风险矩阵", "交期、MOQ、利润共同判断", matrixChart([
+          {label:"低交期高利润", value:"1 个", note:"可进入小批量补货", color:"#13966a", view:"inventory"},
+          {label:"低交期低利润", value:"1 个", note:"需压采购价", color:"#d97706", view:"supply"},
+          {label:"高交期高利润", value:"0 个", note:"适合提前备货", color:"#3478f6", view:"inventory"},
+          {label:"高交期低利润", value:"1 个", note:"建议谨慎推进", color:"#dc4c45", view:"exceptions"}
+        ]), "供应链看板必须服务补货决策，而不是只展示供应商字段。")}
+      </div>`;
+    }
+
+    function contentAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("内容资产状态", "图片、Listing、A+、视频脚本生产进度", donutChart([
+          {label:"审核中", value:1},
+          {label:"已沉淀", value:1},
+          {label:"待生成", value:1}
+        ], contentAssets.length), "内容资产中心应该像工厂看板，知道每个商品包卡在哪。")}
+        ${chartCard("素材通过率趋势", "人工审核和规则校验共同计算", lineChart([58,63,61,67,70,72,71], ["D-6","D-5","D-4","D-3","D-2","D-1","今天"], {alt:true}), "通过率要结合上线后的 CTR/CVR，避免只追求审核通过。")}
+        ${chartCard("资产缺口", "影响刊登的主要缺项", barChart([
+          {label:"图片待审", value:1, view:"images"},
+          {label:"Listing待审", value:1, view:"listings"},
+          {label:"A+未生成", value:2, view:"content"},
+          {label:"视频脚本", value:2, view:"content"}
+        ]), "让运营能从资产缺口直接切到生成或审核动作。")}
+      </div>`;
+    }
+
+    function imageAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("图片规则校验", "主图、场景、尺寸图合规状态", donutChart([
+          {label:"通过", value:3, color:"#13966a"},
+          {label:"建议优化", value:1, color:"#d97706"},
+          {label:"异常", value:1, color:"#dc4c45"}
+        ], "5"), "图片不是只看生成数量，要看合规和可转化。")}
+        ${chartCard("图片类型覆盖", "套图结构是否完整", columnChart([
+          {label:"主图", value:1},
+          {label:"场景", value:2},
+          {label:"尺寸", value:1},
+          {label:"对比", value:1},
+          {label:"A+", value:0}
+        ]), "跨境电商图片需要覆盖白底、场景、尺寸、卖点和对比，不只是好看。")}
+        ${chartCard("驳回原因", "Prompt 和规则可优化方向", barChart([
+          {label:"单位缺失", value:1},
+          {label:"构图待优化", value:1},
+          {label:"主体占比", value:0},
+          {label:"文字过多", value:0}
+        ]), "驳回原因会进入质量反馈中心，下一轮生成自动减少同类问题。")}
+      </div>`;
+    }
+
+    function listingAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("Listing 版本评分", "SEO、转化、本地化多版本对比", columnChart([
+          {label:"SEO", value:86},
+          {label:"转化", value:78},
+          {label:"德语", value:72}
+        ]), "版本评分综合关键词覆盖、合规、可读性和本地化表达。")}
+        ${chartCard("关键词覆盖", "核心词、长尾词、场景词覆盖情况", donutChart([
+          {label:"核心词", value:86, color:"#3478f6"},
+          {label:"长尾词", value:72, color:"#13966a"},
+          {label:"场景词", value:64, color:"#d97706"}
+        ], "86%"), "关键词不是越多越好，需要控制标题自然度和平台规则风险。")}
+        ${chartCard("校验问题分布", "进入审核前先自检", barChart([
+          {label:"标题长度", value:0},
+          {label:"敏感词", value:0},
+          {label:"重复表达", value:1},
+          {label:"尺寸缺失", value:1},
+          {label:"材质证明", value:1}
+        ]), "Listing 工厂需要把待人工确认项前置，而不是让审核人从长文本里找问题。")}
+      </div>`;
+    }
+
+    function draftAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("刊登完整度", "草稿字段、图片、Listing、属性、供应链", columnChart(drafts.map(d=>({label:d.sku.replace("YL-",""), value:numeric(d.draft)}))), "用于判断哪些草稿可以提交审核，哪些还缺字段。")}
+        ${chartCard("字段缺失热区", "高频阻断字段", barChart([
+          {label:"类目属性", value:4},
+          {label:"包装尺寸", value:3},
+          {label:"供应链字段", value:2},
+          {label:"图片资产", value:1}
+        ]), "刊登草稿看板要明确缺什么，不只显示完整度。")}
+        ${chartCard("发布风险等级", "提交前风险扫描", donutChart([
+          {label:"低风险", value:1, color:"#13966a"},
+          {label:"中风险", value:1, color:"#d97706"},
+          {label:"高风险", value:1, color:"#dc4c45"}
+        ], "3"), "高风险草稿必须人工复核后才能推送 ERP 或平台。")}
+      </div>`;
+    }
+
+    function lifecycleAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("D7/D15/D23/D30 分布", "新品测试节点压力", donutChart([
+          {label:"D7", value:8},
+          {label:"D15", value:6},
+          {label:"D23", value:4},
+          {label:"D30", value:5},
+          {label:"阻断", value:2, color:"#dc4c45"}
+        ], "25"), "新品测试看板要把节点压力和动作建议关联起来。")}
+        ${chartCard("新品销量趋势", "销量、曝光、点击共同判断", lineChart([2,5,9,14,18,26,42], ["D1","D5","D10","D15","D20","D25","D30"], {alt:true}), "不能只用销量判断，需同时看曝光、点击、广告和基础销售条件。")}
+        ${chartCard("处置建议分布", "补货、清仓、黑名单、阻断修复", barChart([
+          {label:"允许补货", value:1, view:"inventory"},
+          {label:"清仓模式", value:1, view:"clearance"},
+          {label:"黑名单", value:1, view:"inactive"},
+          {label:"先修复", value:1, view:"exceptions"}
+        ]), "D30 不只是判死刑，要明确是补货、清仓、黑名单还是基础条件阻断。")}
+      </div>`;
+    }
+
+    function healthAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("在售健康风险矩阵", "销量趋势与利润状态交叉判断", matrixChart([
+          {label:"增长且盈利", value:"1 个", note:"可关注补货", color:"#13966a", view:"inventory"},
+          {label:"增长但亏损", value:"0 个", note:"优先看广告成本", color:"#d97706", view:"ads"},
+          {label:"下滑但盈利", value:"1 个", note:"暂停补货观察", color:"#3478f6", view:"health"},
+          {label:"下滑且亏损", value:"1 个", note:"进入异常处理", color:"#dc4c45", view:"exceptions"}
+        ]), "老品健康不能套新品 D15/D30 规则，要看趋势、利润、库存和广告。")}
+        ${chartCard("销售健康趋势", "30 日销量指数", lineChart([82,88,91,76,69,64,58], ["D-6","D-5","D-4","D-3","D-2","D-1","今天"]), "下滑要区分自然需求下降、广告效率下降和库存/Listing 问题。")}
+        ${chartCard("健康等级分布", "良好、需关注、高风险", donutChart([
+          {label:"良好", value:1, color:"#13966a"},
+          {label:"需关注", value:1, color:"#d97706"},
+          {label:"高风险", value:1, color:"#dc4c45"}
+        ], "3"), "给运营一个优先级视角，而不是只看 SKU 表格。")}
+      </div>`;
+    }
+
+    function adsAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("ACOS / TACoS 趋势", "广告效率与整体利润联动", lineChart([22,26,31,34,42,37,28], ["D-6","D-5","D-4","D-3","D-2","D-1","今天"]), "广告看板必须结合生命周期、库存和利润，避免盲目放量。")}
+        ${chartCard("广告动作建议", "放大、收缩、暂停、重建", donutChart([
+          {label:"放大", value:1, color:"#13966a"},
+          {label:"收缩", value:1, color:"#d97706"},
+          {label:"暂停", value:1, color:"#dc4c45"},
+          {label:"重建", value:1, color:"#3478f6"}
+        ], "4"), "广告建议需要进入审批和动作日志，形成可复查闭环。")}
+        ${chartCard("异常原因", "高花费低转化、库存风险、清货期误投", barChart([
+          {label:"高花费低转化", value:1},
+          {label:"清货期误投", value:1},
+          {label:"库存风险", value:1},
+          {label:"利润转负", value:1}
+        ]), "广告健康不是广告人员单独看，需要和库存、利润、清货联动。")}
+      </div>`;
+    }
+
+    function inventoryAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("库存覆盖分布", "断货、健康、积压三类风险", donutChart([
+          {label:"断货风险", value:1, color:"#dc4c45"},
+          {label:"健康覆盖", value:1, color:"#13966a"},
+          {label:"积压风险", value:1, color:"#d97706"}
+        ], "3"), "库存覆盖要和供应商交期、物流时效共同判断。")}
+        ${chartCard("补货建议量", "按 SKU 汇总建议采购", columnChart(replenishment.map(r=>({label:r.sku.replace("YL-",""), value:r.qty, view:"inventory"}))), "建议量为 0 不代表没事，可能是广告利润或积压风险阻断。")}
+        ${chartCard("补货决策矩阵", "利润与覆盖天数交叉", matrixChart([
+          {label:"高利润低库存", value:"1 个", note:"进入补货审核", color:"#13966a", view:"reviews"},
+          {label:"高利润高库存", value:"1 个", note:"暂停观察", color:"#3478f6", view:"health"},
+          {label:"低利润低库存", value:"1 个", note:"先修复利润", color:"#d97706", view:"ads"},
+          {label:"低利润高库存", value:"0 个", note:"清货优先", color:"#dc4c45", view:"clearance"}
+        ]), "补货看板的核心是避免断货和避免压货同时发生。")}
+      </div>`;
+    }
+
+    function clearanceAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("清货等级分布", "清仓、黑名单、季节尾声", donutChart([
+          {label:"黑名单候选", value:1, color:"#dc4c45"},
+          {label:"清仓模式", value:1, color:"#d97706"},
+          {label:"最终折扣", value:1, color:"#3478f6"}
+        ], "3"), "清货不是简单降价，要区分失败原因和后续规则回流。")}
+        ${chartCard("失败原因沉淀", "复盘后回流规则中心", barChart([
+          {label:"Listing 转化差", value:1},
+          {label:"季节性误判", value:1},
+          {label:"待填写", value:1},
+          {label:"广告误投", value:1}
+        ]), "必须把失败原因结构化，否则下一轮选品和广告还会重复踩坑。")}
+        ${chartCard("清货动作效果", "降价、停广告、折扣、移除", lineChart([18,17,15,12,10,8,6], ["D1","D3","D5","D7","D10","D14","D20"], {alt:true}), "趋势越快下降代表库存消化越快，但要同时看利润损失。")}
+      </div>`;
+    }
+
+    function exceptionAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("异常优先级分布", "P0/P1/P2 处理压力", donutChart([
+          {label:"P0", value:2, color:"#dc4c45"},
+          {label:"P1", value:1, color:"#d97706"},
+          {label:"P2", value:1, color:"#3478f6"}
+        ], exceptions.length), "P0 异常需要在首页和通知里置顶，避免错过补货或清货窗口。")}
+        ${chartCard("异常类型 Top", "库存、广告、Listing、新品测试", barChart([
+          {label:"D15 弱动销", value:1, view:"newProducts"},
+          {label:"库存预警", value:1, view:"inventory"},
+          {label:"广告异常", value:1, view:"ads"},
+          {label:"Listing 异常", value:1, view:"listings"}
+        ]), "异常类型分布能反推系统下一步重点优化哪块能力。")}
+        ${chartCard("处理时效", "到期压力和负责人协同", columnChart([
+          {label:"今天", value:2},
+          {label:"明天", value:2},
+          {label:"本周", value:1},
+          {label:"超期", value:0}
+        ]), "异常队列要有 SLA，不然只会变成另一个待办列表。")}
+      </div>`;
+    }
+
+    function inactiveAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("处置等级", "补货候选、清仓、黑名单", donutChart([
+          {label:"补货候选", value:1, color:"#13966a"},
+          {label:"清仓", value:1, color:"#d97706"},
+          {label:"黑名单", value:1, color:"#dc4c45"}
+        ], "3"), "不动销队列把新品测试的处置动作集中管理。")}
+        ${chartCard("处置动作覆盖", "价格、广告、补货、清货", barChart([
+          {label:"调价", value:2},
+          {label:"停广告", value:2},
+          {label:"不补货", value:2},
+          {label:"强制复盘", value:1}
+        ]), "每条处置都要落到具体动作，不只是给一个建议。")}
+        ${chartCard("失败原因填写", "黑名单前必须结构化原因", donutChart([
+          {label:"已填写", value:2, color:"#13966a"},
+          {label:"待填写", value:1, color:"#dc4c45"}
+        ], "67%"), "失败原因是下一轮规则优化的核心数据。")}
+      </div>`;
+    }
+
+    function logsAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("动作类型分布", "降价、广告、内容修改", donutChart([
+          {label:"广告动作", value:1},
+          {label:"价格动作", value:1},
+          {label:"内容动作", value:1}
+        ], logs.length), "动作日志让每个 AI 建议有执行证据和复查结果。")}
+        ${chartCard("复查结果趋势", "动作后是否有效", lineChart([42,45,48,51,55,58,61], ["D-6","D-5","D-4","D-3","D-2","D-1","今天"], {alt:true}), "后续可以把复查结果直接回流到质量反馈和规则中心。")}
+        ${chartCard("动作来源", "异常、审核、不动销的动作占比", barChart([
+          {label:"异常", value:1, view:"exceptions"},
+          {label:"不动销", value:1, view:"inactive"},
+          {label:"审核", value:1, view:"reviews"}
+        ]), "看清动作来自哪里，才知道哪个模块真正驱动运营改变。")}
+      </div>`;
+    }
+
+    function rulesAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("规则启用状态", "启用、禁用、待审核建议", donutChart([
+          {label:"启用", value:rules.filter(r=>r.enabled).length, color:"#13966a"},
+          {label:"禁用", value:rules.filter(r=>!r.enabled).length, color:"#64748b"},
+          {label:"待审核建议", value:4, color:"#d97706"}
+        ], rules.length), "规则中心是 AI 工作台长期壁垒，决定系统越用越懂业务。")}
+        ${chartCard("规则类型覆盖", "选品、生命周期、广告、图片、审核", barChart([
+          {label:"选品", value:1},
+          {label:"新品测试", value:1},
+          {label:"广告", value:1},
+          {label:"图片", value:1},
+          {label:"审核", value:1}
+        ]), "规则覆盖应跟业务链路一致，不能只覆盖内容生成。")}
+        ${chartCard("规则命中趋势", "近 7 日触发频次", lineChart([18,22,19,31,35,42,39], ["D-6","D-5","D-4","D-3","D-2","D-1","今天"]), "命中频次异常升高时，需要检查阈值是否过严或业务问题集中爆发。")}
+      </div>`;
+    }
+
+    function qualityAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("人工通过率对比", "各模块产出质量横向比较", columnChart(quality.map(q=>({label:q.module.slice(0,3), value:numeric(q.pass)}))), "质量中心不只是评价 AI，而是告诉产品和研发下一步优化哪里。")}
+        ${chartCard("驳回率 Top", "问题最高的模块优先优化", barChart(quality.map(q=>({label:q.module, value:numeric(q.reject)})).sort((a,b)=>b.value-a.value).slice(0,5)), "驳回原因要结构化，否则无法转成可执行的规则或 Prompt 优化。")}
+        ${chartCard("经营效果回流", "CTR、CVR、ACOS、断货率、清货天数", insightList([
+          {title:"图片上线后 CTR", text:"平均提升 9%，尺寸图问题仍需模板约束。", badge:"+9%"},
+          {title:"广告建议效果", text:"采纳后 ACOS 平均下降 4.2%。", badge:"有效"},
+          {title:"补货建议效果", text:"断货率下降 8%，但促销冲量仍需衰减系数。", badge:"需优化"}
+        ]), "把上线后经营表现回填，AI 工作台才有长期学习能力。")}
+      </div>`;
+    }
+
+    function libraryAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("成果类型分布", "Brief、图片、复盘、规则建议", donutChart([
+          {label:"商品 Brief", value:1},
+          {label:"图片套图", value:1},
+          {label:"复盘报告", value:1},
+          {label:"规则建议", value:1}
+        ], library.length), "成果库让 AI 产出可以复用、追踪和沉淀。")}
+        ${chartCard("成果复用位置", "图片、Listing、广告、规则", barChart([
+          {label:"图片/Listing", value:2, view:"content"},
+          {label:"广告", value:1, view:"ads"},
+          {label:"规则中心", value:1, view:"rules"},
+          {label:"复盘", value:1, view:"quality"}
+        ]), "成果不是文件仓库，而是能被下游任务调用的资产。")}
+        ${chartCard("效果沉淀", "产出后对经营指标的贡献", insightList([
+          {title:"D30 允许补货", text:"硅胶沥水篮 Brief 支撑新品测试和补货判断。", badge:"正向"},
+          {title:"CTR 提升", text:"桌面收纳盒德语套图上线后 CTR +7%。", badge:"+7%"},
+          {title:"规则建议待启用", text:"低价 Beauty CPC 风险规则还在审核中。", badge:"待审核"}
+        ]), "成果效果要能回查到来源任务和审核记录。")}
+      </div>`;
+    }
+
+    function creditsAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("积分消耗模块", "哪个能力最耗成本", donutChart([
+          {label:"选品+Brief", value:236},
+          {label:"图片", value:48},
+          {label:"Listing", value:28},
+          {label:"生命周期", value:16}
+        ], "328"), "积分看板要和任务成功率、退回规则和产出质量关联。")}
+        ${chartCard("7 日积分趋势", "每日消耗与任务量联动", lineChart([180,220,168,260,392,310,286], ["D-6","D-5","D-4","D-3","D-2","D-1","今天"]), "消耗异常升高时应能追到具体任务和模块。")}
+        ${chartCard("失败退回", "失败任务积分保护", barChart([
+          {label:"成功扣减", value:328},
+          {label:"失败退回", value:28},
+          {label:"待核查", value:0}
+        ]), "给客户可解释的积分账，减少对 AI 成本的不信任。")}
+      </div>`;
+    }
+
+    function settingsAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("数据连接健康", "ERP、广告、1688、通知", donutChart([
+          {label:"在线", value:4, color:"#13966a"},
+          {label:"延迟", value:0, color:"#d97706"},
+          {label:"异常", value:0, color:"#dc4c45"}
+        ], "4/4"), "数据连接看板直接影响 AI 结论可信度。")}
+        ${chartCard("角色权限覆盖", "老板、主管、运营、产品、广告、管理员", columnChart([
+          {label:"老板", value:6},
+          {label:"主管", value:6},
+          {label:"运营", value:4},
+          {label:"产品", value:3},
+          {label:"广告", value:3},
+          {label:"管理", value:6}
+        ]), "权限要匹配高风险动作，尤其 ERP 写入、广告预算和补货审批。")}
+        ${chartCard("审计留痕", "关键动作不可删除", insightList([
+          {title:"审核记录", text:"只允许作废，不允许物理删除。", badge:"已启用"},
+          {title:"动作日志", text:"记录操作人、时间、执行前后和复查结果。", badge:"在线"},
+          {title:"客户数据", text:"仅用于客户自身业务任务。", badge:"受控"}
+        ]), "安全与审计是 B 端 AI 工作台必须具备的基础能力。")}
+      </div>`;
+    }
+
+    function detailAnalytics(row) {
+      const title = row.sku || row.id || "当前对象";
+      return `
+        <div class="card">
+          <div class="card-top"><strong>${escapeHtml(title)} 单品趋势</strong>${status("分析看板")}</div>
+          <div class="sparkline-row">
+            <div>${lineChart([3,6,9,8,12,18,24], ["D-6","D-5","D-4","D-3","D-2","D-1","今天"], {alt:true})}</div>
+            ${miniKpis([
+              {label:"销量趋势", value:row.trend || "增长", note:"结合近 7 / 30 日"},
+              {label:"广告效率", value:row.tacos || row.acos || "22%", note:"ACOS / TACoS"},
+              {label:"库存覆盖", value:row.cover || row.stock || "34 天", note:"与供应链周期对比"}
+            ])}
+          </div>
+        </div>
+      `;
+    }
+
     function table(columns, rows, rowAction = "openRow") {
       return `<div class="table-wrap"><table><thead><tr>${columns.map(col => `<th>${escapeHtml(col.label)}</th>`).join("")}<th>操作</th></tr></thead><tbody>
         ${rows.map(row => `<tr>${columns.map(col => `<td>${cell(row, col)}</td>`).join("")}<td><div class="actions"><button class="btn small" data-action="${rowAction}" data-id="${row.id}">详情</button>${row.quick || ""}</div></td></tr>`).join("") || `<tr><td colspan="${columns.length + 1}"><div class="empty">暂无数据</div></td></tr>`}
@@ -880,6 +1583,7 @@
             </div>
           </div>
         </div>
+        ${dashboardAnalytics()}
         ${metrics([
           {label:"AI 执行中任务", value:tasks.filter(t=>t.status==="执行中").length, note:"3 项即将进入审核", view:"tasks"},
           {label:"待我审核", value:reviews.length, note:"候选品、图片、Listing、处置建议", view:"reviews"},
@@ -951,6 +1655,7 @@
           <button class="btn primary" data-action="openTaskCreate"><i data-lucide="plus"></i>创建 AI 任务</button>
         `)}
         ${metrics([{label:"执行中",value:tasks.filter(t=>t.status==="执行中").length,note:"后台任务不阻塞页面"},{label:"待审核",value:tasks.filter(t=>t.status==="待审核").length,note:"结果可进入审核中心"},{label:"已完成",value:tasks.filter(t=>t.status==="已完成").length,note:"可查看结果和积分"},{label:"今日积分消耗",value:"392",note:"失败任务支持退回"}])}
+        ${tasksAnalytics()}
         <div class="panel">
           <div class="panel-head"><div class="tabs">${["全部","执行中","待审核","已完成"].map(f=>`<button class="tab ${state.filter===f || (state.filter==="all"&&f==="全部") ? "active":""}" data-action="setFilter" data-filter="${f}">${f}</button>`).join("")}</div></div>
           <div class="panel-body">
@@ -967,6 +1672,7 @@
           <button class="btn primary" data-action="bulkApprove"><i data-lucide="check-check"></i>批量通过低风险</button>
         `)}
         ${metrics([{label:"候选品审核",value:1,note:"A/B/C 结论与依据"},{label:"图片 / Listing",value:2,note:"校验项和人工意见"},{label:"生命周期处置",value:1,badge:"高风险",note:"D15 / D30 处理"},{label:"补货 / 清货",value:2,note:"资金与库存风险"}])}
+        ${reviewAnalytics()}
         <div class="panel">
           <div class="panel-head">${filterTabs(["全部","候选品审核","图片审核","Listing 审核","新品测试处置审核","补货建议审核","清货建议审核"])}</div>
           <div class="panel-body">${table([
@@ -992,6 +1698,7 @@
           <button class="btn primary" data-action="runSelection"><i data-lucide="scan-line"></i>运行选品漏斗</button>
         `)}
         ${metrics([{label:"候选输入",value:128,note:"批量关键词 / ASIN"},{label:"通过粗筛",value:24,note:"硬规则和利润过滤"},{label:"A 类机会",value:6,badge:"可立项",note:"可进入 Brief"},{label:"淘汰沉淀",value:89,note:"带淘汰原因"}])}
+        ${opportunityAnalytics()}
         <div class="panel"><div class="panel-head">${filterTabs(["全部","A","B","C"])}</div><div class="panel-body">${table([
           {key:"product",label:"候选品",kind:"product"},{key:"grade",label:"推荐等级",kind:"status"},{key:"score",label:"推荐分"},{key:"profit",label:"基准利润"},{key:"supplier",label:"供应商置信度"},{key:"cpc",label:"CPC"},{key:"status",label:"状态",kind:"status"},{key:"risk",label:"风险"}
         ], filtered(opportunities).map(o=>({...o, quick:`<button class="btn small success" data-action="approveOpportunity" data-id="${o.id}">通过</button><button class="btn small danger" data-action="rejectOpportunity" data-id="${o.id}">淘汰</button>`})), "openOpportunity")}</div></div>
@@ -1004,6 +1711,7 @@
           <button class="btn" data-action="createBrief"><i data-lucide="plus"></i>新建 Brief</button>
           <button class="btn primary" data-action="submitBriefReview"><i data-lucide="send"></i>提交审核</button>
         `)}
+        ${briefAnalytics()}
         <div class="layout-detail">
           <div class="panel"><div class="panel-head"><h2>商品 Brief 列表</h2>${status("完整度自动计算")}</div><div class="panel-body">${table([
             {key:"name",label:"商品",kind:"product"},{key:"completeness",label:"完整度"},{key:"image",label:"图片状态",kind:"status"},{key:"listing",label:"Listing 状态",kind:"status"},{key:"erp",label:"ERP 建档",kind:"status"},{key:"draft",label:"刊登状态",kind:"status"},{key:"status",label:"审核状态",kind:"status"}
@@ -1030,13 +1738,13 @@
     function renderSupply() {
       return moduleTable("供应链与利润测算", "将 1688 匹配、采购价、MOQ、交期、FBA、头程、广告生存能力统一计算，输出可解释利润结论。", supply, [
         {key:"sku",label:"SKU"},{key:"supplier",label:"供应商"},{key:"purchase",label:"采购价"},{key:"moq",label:"MOQ"},{key:"lead",label:"交期"},{key:"confidence",label:"匹配置信度"},{key:"maxCost",label:"最高可接受采购价"},{key:"verdict",label:"AI 结论",kind:"status"},{key:"risk",label:"风险"}
-      ], `<button class="btn" data-action="recalcProfit"><i data-lucide="calculator"></i>重新测算</button><button class="btn primary" data-action="pushSupplyToBrief"><i data-lucide="send"></i>写入 Brief</button>`);
+      ], `<button class="btn" data-action="recalcProfit"><i data-lucide="calculator"></i>重新测算</button><button class="btn primary" data-action="pushSupplyToBrief"><i data-lucide="send"></i>写入 Brief</button>`, supplyAnalytics());
     }
 
     function renderContent() {
       return moduleTable("内容资产中心", "统一管理商品 Brief、图片、Listing、A+、视频脚本、审核状态和上线状态。", contentAssets, [
         {key:"name",label:"资产包",kind:"product"},{key:"image",label:"图片状态",kind:"status"},{key:"listing",label:"Listing 状态",kind:"status"},{key:"aplus",label:"A+ 状态",kind:"status"},{key:"video",label:"视频脚本"},{key:"online",label:"上线状态",kind:"status"},{key:"status",label:"审核状态",kind:"status"}
-      ], `<button class="btn" data-action="generateAssetPack"><i data-lucide="package-plus"></i>生成内容包</button><button class="btn primary" data-action="addToLibrary"><i data-lucide="database"></i>加入成果库</button>`);
+      ], `<button class="btn" data-action="generateAssetPack"><i data-lucide="package-plus"></i>生成内容包</button><button class="btn primary" data-action="addToLibrary"><i data-lucide="database"></i>加入成果库</button>`, contentAnalytics());
     }
 
     function renderImages() {
@@ -1046,6 +1754,7 @@
           <button class="btn primary" data-action="approveImages"><i data-lucide="check"></i>通过所选图片</button>
         `)}
         ${metrics([{label:"待审核图片",value:imageAssets.length,note:"每张可通过或驳回"},{label:"已选图片",value:state.selectedImages.size,note:"通过后加入商品资产"},{label:"AI 校验异常",value:2,badge:"需处理",note:"单位缺失、构图待优化"},{label:"消耗积分",value:40,note:"失败可退回"}])}
+        ${imageAnalytics()}
         <div class="panel"><div class="panel-head"><h2>图片矩阵</h2>${status("人工审核中")}</div><div class="panel-body"><div class="asset-grid">${imageAssets.map(img => `
           <button class="asset-card ${state.selectedImages.has(img.id) ? "selected" : ""}" data-action="toggleImage" data-id="${img.id}">
             <div class="asset-preview ${img.style}"></div>
@@ -1061,6 +1770,7 @@
           <button class="btn" data-action="checkListing"><i data-lucide="shield-check"></i>规则校验</button>
           <button class="btn primary" data-action="submitListingReview"><i data-lucide="send"></i>进入审核</button>
         `)}
+        ${listingAnalytics()}
         <div class="grid-2">
           <div class="panel"><div class="panel-head"><div class="tabs">${Object.keys(listingVersions).map(v=>`<button class="tab ${state.listingVersion===v?"active":""}" data-action="setListingVersion" data-version="${v}">${v}</button>`).join("")}</div></div><div class="panel-body"><textarea class="textarea" style="min-height:390px" id="listingEditor">${escapeHtml(listingVersions[state.listingVersion])}</textarea><div class="actions" style="justify-content:flex-end;margin-top:10px"><button class="btn" data-action="saveListing">保存修改</button><button class="btn primary" data-action="submitListingReview">提交审核</button></div></div></div>
           <div class="panel"><div class="panel-head"><h2>右侧规则校验</h2>${status("校验完成")}</div><div class="panel-body card-list">
@@ -1074,7 +1784,7 @@
     function renderDrafts() {
       return moduleTable("ERP 建档 / 刊登草稿", "把商品 Brief、审核通过图片、Listing、供应链和平台字段规则自动转成 ERP 产品资料与刊登草稿。", drafts, [
         {key:"product",label:"草稿",kind:"product"},{key:"site",label:"站点"},{key:"draft",label:"刊登完整度",kind:"progress"},{key:"image",label:"图片完整度",kind:"progress"},{key:"listing",label:"Listing 完整度",kind:"progress"},{key:"attr",label:"类目属性",kind:"progress"},{key:"supply",label:"供应链字段",kind:"progress"},{key:"risk",label:"风险项"},{key:"status",label:"状态",kind:"status"}
-      ], `<button class="btn" data-action="validateDrafts"><i data-lucide="shield-check"></i>重新校验</button><button class="btn primary" data-action="submitDraftReview"><i data-lucide="send"></i>提交审核</button>`);
+      ], `<button class="btn" data-action="validateDrafts"><i data-lucide="shield-check"></i>重新校验</button><button class="btn primary" data-action="submitDraftReview"><i data-lucide="send"></i>提交审核</button>`, draftAnalytics());
     }
 
     function renderNewProducts() {
@@ -1084,6 +1794,7 @@
           <button class="btn primary" data-action="generateLifecycleExceptions"><i data-lucide="octagon-alert"></i>生成异常 / 处置任务</button>
         `)}
         ${metrics([{label:"新品测试中",value:31,note:"自动监控 D7/D15/D23/D30"},{label:"D7 待处理",value:8,note:"无流量 / 不转化 / 弱动销"},{label:"D15 待处理",value:6,note:"补货候选 / 清仓模式"},{label:"D23 加速清仓",value:4,note:"库存较多"},{label:"D30 决策",value:5,badge:"待处理",note:"补货、清仓、黑名单"},{label:"黑名单候选",value:2,badge:"高风险",note:"必须填写失败原因"}], "grid-6")}
+        ${lifecycleAnalytics()}
         <div class="panel"><div class="panel-head">${filterTabs(["全部","D7","D15","D23","D30","阻断"])}</div><div class="panel-body">${table([
           {key:"sku",label:"SKU"},{key:"asin",label:"ASIN"},{key:"node",label:"当前节点",kind:"status"},{key:"sales7",label:"7日销量"},{key:"sales15",label:"15日销量"},{key:"sales30",label:"30日销量"},{key:"stock",label:"库存"},{key:"ad",label:"广告花费"},{key:"profit",label:"平均利润"},{key:"listing",label:"Listing",kind:"status"},{key:"buybox",label:"Buy Box",kind:"status"},{key:"baseAd",label:"基础广告",kind:"status"},{key:"suggestion",label:"系统建议"},{key:"status",label:"处理状态",kind:"status"}
         ], filtered(newProducts).map(r=>({...r, quick:`<button class="btn small success" data-action="confirmLifecycleAction" data-id="${r.id}">确认执行</button><button class="btn small" data-action="adjustLifecycleAction" data-id="${r.id}">调整建议</button>`})), "openLifecycle")}</div></div>
@@ -1093,25 +1804,25 @@
     function renderHealth() {
       return moduleTable("在售经营健康", "管理常规运营期和老品留存期 ASIN 健康，不走新品 D7/D15/D30 强制清仓逻辑，而是进入老品异常管理。", healthRows, [
         {key:"sku",label:"SKU"},{key:"stage",label:"生命周期",kind:"status"},{key:"sales30",label:"30日销量"},{key:"sales7",label:"7日销量"},{key:"trend",label:"销量趋势",kind:"status"},{key:"stock",label:"库存覆盖"},{key:"tacos",label:"TACoS"},{key:"profit",label:"利润/单"},{key:"ad",label:"广告",kind:"status"},{key:"listing",label:"Listing",kind:"status"},{key:"buybox",label:"Buy Box",kind:"status"},{key:"level",label:"健康等级",kind:"status"},{key:"action",label:"AI 建议"},{key:"status",label:"处理状态",kind:"status"}
-      ], `<button class="btn" data-action="runHealthScan"><i data-lucide="activity"></i>重新诊断</button><button class="btn primary" data-action="createExceptionFromHealth"><i data-lucide="plus"></i>生成异常</button>`);
+      ], `<button class="btn" data-action="runHealthScan"><i data-lucide="activity"></i>重新诊断</button><button class="btn primary" data-action="createExceptionFromHealth"><i data-lucide="plus"></i>生成异常</button>`, healthAnalytics());
     }
 
     function renderAds() {
       return moduleTable("广告健康", "结合生命周期、利润、库存和销售状态判断广告该放大、收缩、暂停还是配合清货。", adRows, [
         {key:"sku",label:"SKU"},{key:"campaign",label:"广告活动"},{key:"stage",label:"生命周期",kind:"status"},{key:"spend",label:"广告花费"},{key:"acos",label:"ACOS",kind:"status"},{key:"tacos",label:"TACoS"},{key:"cpc",label:"CPC"},{key:"ctr",label:"CTR"},{key:"cvr",label:"CVR"},{key:"natural",label:"自然单占比"},{key:"stock",label:"库存覆盖"},{key:"profit",label:"利润/单"},{key:"diagnosis",label:"AI 诊断",kind:"status"},{key:"action",label:"建议动作"},{key:"status",label:"处理状态",kind:"status"}
-      ], `<button class="btn" data-action="pullAds"><i data-lucide="download-cloud"></i>拉取广告数据</button><button class="btn primary" data-action="approveAdActions"><i data-lucide="check"></i>审批建议动作</button>`);
+      ], `<button class="btn" data-action="pullAds"><i data-lucide="download-cloud"></i>拉取广告数据</button><button class="btn primary" data-action="approveAdActions"><i data-lucide="check"></i>审批建议动作</button>`, adsAnalytics());
     }
 
     function renderInventory() {
       return moduleTable("库存与补货决策", "综合销量趋势、生命周期、广告、利润、供应商交期和物流时效，判断该补、不补还是暂停。", replenishment, [
         {key:"sku",label:"SKU"},{key:"stage",label:"生命周期",kind:"status"},{key:"stock",label:"当前库存"},{key:"inbound",label:"在途"},{key:"sales7",label:"7日销量"},{key:"trend",label:"趋势",kind:"status"},{key:"cover",label:"库存覆盖"},{key:"lead",label:"供应商交期"},{key:"logistics",label:"物流时效"},{key:"profit",label:"利润/单"},{key:"tacos",label:"TACoS"},{key:"qty",label:"建议量"},{key:"orderDate",label:"建议下单"},{key:"advice",label:"AI 建议"},{key:"risk",label:"风险",kind:"status"},{key:"status",label:"状态",kind:"status"}
-      ], `<button class="btn" data-action="refreshReplenish"><i data-lucide="refresh-cw"></i>刷新建议</button><button class="btn primary" data-action="approveReplenish"><i data-lucide="package-plus"></i>确认补货建议</button>`);
+      ], `<button class="btn" data-action="refreshReplenish"><i data-lucide="refresh-cw"></i>刷新建议</button><button class="btn primary" data-action="approveReplenish"><i data-lucide="package-plus"></i>确认补货建议</button>`, inventoryAnalytics());
     }
 
     function renderClearance() {
       return moduleTable("清货与复盘", "把失败产品及时止损，并把失败原因沉淀为下一轮选品、图片、Listing、广告和补货规则。", clearance, [
         {key:"sku",label:"SKU"},{key:"stage",label:"生命周期",kind:"status"},{key:"stock",label:"剩余库存"},{key:"days",label:"预计清完"},{key:"sales",label:"累计销量"},{key:"profit",label:"利润/单"},{key:"adSpend",label:"广告花费"},{key:"level",label:"清仓等级",kind:"status"},{key:"price",label:"价格建议"},{key:"ad",label:"广告建议"},{key:"replenish",label:"补货建议"},{key:"failure",label:"失败原因",kind:"status"},{key:"status",label:"状态",kind:"status"}
-      ], `<button class="btn" data-action="generateReviewReport"><i data-lucide="file-text"></i>生成复盘报告</button><button class="btn primary" data-action="feedbackRule"><i data-lucide="repeat"></i>生成规则回流</button>`);
+      ], `<button class="btn" data-action="generateReviewReport"><i data-lucide="file-text"></i>生成复盘报告</button><button class="btn primary" data-action="feedbackRule"><i data-lucide="repeat"></i>生成规则回流</button>`, clearanceAnalytics());
     }
 
     function renderExceptions() {
@@ -1121,6 +1832,7 @@
           <button class="btn primary" data-action="createException"><i data-lucide="plus"></i>新增异常</button>
         `)}
         ${metrics([{label:"P0 异常",value:2,badge:"今日必处理",note:"库存预警、D15 弱动销"},{label:"处理中",value:1,note:"已分配负责人"},{label:"待忽略原因",value:0,note:"已忽略必须填原因"},{label:"关联动作日志",value:logs.length,note:"可追溯"}])}
+        ${exceptionAnalytics()}
         <div class="layout-detail">
           <div class="panel"><div class="panel-head">${filterTabs(["全部","P0","P1","D15 弱动销","库存预警","老品广告异常","Listing 异常"])}</div><div class="panel-body">${table([
             {key:"id",label:"异常编号"},{key:"type",label:"异常类型",kind:"status"},{key:"priority",label:"优先级",kind:"priority"},{key:"sku",label:"SKU"},{key:"stage",label:"生命周期",kind:"status"},{key:"rule",label:"触发规则"},{key:"desc",label:"异常说明"},{key:"action",label:"AI 建议"},{key:"owner",label:"负责人"},{key:"status",label:"处理状态",kind:"status"},{key:"due",label:"最晚处理"}
@@ -1142,13 +1854,13 @@
     function renderInactive() {
       return moduleTable("不动销处置队列", "专门处理新品 D7/D15/D23/D30 不动销、清货、强制清仓、补货候选和黑名单。", inactive, [
         {key:"id",label:"处置编号"},{key:"sku",label:"SKU"},{key:"node",label:"处置阶段",kind:"status"},{key:"level",label:"处置等级",kind:"status"},{key:"price",label:"价格建议"},{key:"ad",label:"广告建议"},{key:"replenish",label:"补货建议"},{key:"clearance",label:"清仓建议"},{key:"failure",label:"失败原因",kind:"status"},{key:"owner",label:"负责人"},{key:"status",label:"状态",kind:"status"},{key:"due",label:"最晚处理"}
-      ], `<button class="btn" data-action="requireFailureReason"><i data-lucide="message-square-warning"></i>检查失败原因</button><button class="btn primary" data-action="completeInactive"><i data-lucide="check"></i>完成处置并记录日志</button>`);
+      ], `<button class="btn" data-action="requireFailureReason"><i data-lucide="message-square-warning"></i>检查失败原因</button><button class="btn primary" data-action="completeInactive"><i data-lucide="check"></i>完成处置并记录日志</button>`, inactiveAnalytics());
     }
 
     function renderLogs() {
       return moduleTable("动作日志", "记录降价、开券、停广告、否词、补货、清货、修改内容等关键动作，用于复盘和责任追踪。", logs, [
         {key:"id",label:"动作编号"},{key:"related",label:"关联编号"},{key:"sku",label:"SKU"},{key:"type",label:"动作类型",kind:"status"},{key:"content",label:"动作内容"},{key:"user",label:"执行人"},{key:"time",label:"执行时间"},{key:"before",label:"执行前"},{key:"after",label:"执行后"},{key:"review",label:"复查时间"},{key:"result",label:"复查结果",kind:"status"}
-      ], `<button class="btn primary" data-action="addLog"><i data-lucide="plus"></i>新增动作日志</button>`);
+      ], `<button class="btn primary" data-action="addLog"><i data-lucide="plus"></i>新增动作日志</button>`, logsAnalytics());
     }
 
     function renderRules() {
@@ -1158,6 +1870,7 @@
           <button class="btn primary" data-action="saveRules"><i data-lucide="save"></i>保存规则</button>
         `)}
         ${metrics([{label:"启用规则",value:rules.filter(r=>r.enabled).length,note:"被 AI Agent 调用"},{label:"生命周期规则",value:1,note:"D7/D15/D23/D30"},{label:"规则建议",value:4,badge:"待审核",note:"来自质量反馈中心"},{label:"禁用规则",value:rules.filter(r=>!r.enabled).length,note:"不再触发新异常"}])}
+        ${rulesAnalytics()}
         <div class="panel"><div class="panel-head">${filterTabs(["全部","选品规则","新品测试规则","广告规则","图片规则","审核规则"])}</div><div class="panel-body">${table([
           {key:"id",label:"规则编号"},{key:"name",label:"规则名称"},{key:"type",label:"规则类型",kind:"status"},{key:"scope",label:"适用范围"},{key:"condition",label:"触发条件"},{key:"action",label:"处理建议"},{key:"risk",label:"风险",kind:"status"},{key:"enabledText",label:"是否启用",kind:"status"},{key:"updated",label:"更新时间"}
         ], filtered(rules.map(r=>({...r, enabledText:r.enabled?"已启用":"已禁用", quick:`<button class="btn small" data-action="editRule" data-id="${r.id}">编辑</button><button class="btn small" data-action="toggleRule" data-id="${r.id}">${r.enabled?"禁用":"启用"}</button>`}))), "openRule")}</div></div>
@@ -1171,6 +1884,7 @@
           <button class="btn primary" data-action="applyQualitySuggestions"><i data-lucide="repeat"></i>应用规则优化建议</button>
         `)}
         ${metrics([{label:"AI 结果平均通过率",value:"70.7%",note:"选品、图片、Listing、广告等"},{label:"平均驳回率",value:"15.2%",note:"结构化驳回原因"},{label:"经营回流指标",value:"6 类",note:"CTR、CVR、ACOS、动销率等"},{label:"优化建议",value:quality.length,note:"可转规则审核"}])}
+        ${qualityAnalytics()}
         <div class="panel"><div class="panel-head"><h2>质量反馈统计</h2>${status("可回流规则中心")}</div><div class="panel-body">${table([
           {key:"module",label:"模块",kind:"status"},{key:"pass",label:"人工通过率"},{key:"reject",label:"驳回率"},{key:"business",label:"上线后质量回流"},{key:"issue",label:"主要问题"},{key:"suggestion",label:"系统优化建议"}
         ], quality.map((q,i)=>({...q,id:`QLT-${i+1}`,quick:`<button class="btn small primary" data-action="createRuleFromQuality" data-id="QLT-${i+1}">转规则建议</button>`})), "openQuality")}</div></div>
@@ -1180,13 +1894,13 @@
     function renderLibrary() {
       return moduleTable("成果库", "沉淀 AI 产出的 Brief、图片、Listing、A+、广告建议、补货建议、复盘报告和规则建议。", library, [
         {key:"id",label:"成果编号"},{key:"type",label:"成果类型",kind:"status"},{key:"sku",label:"关联对象"},{key:"title",label:"成果名称"},{key:"source",label:"来源"},{key:"review",label:"审核状态",kind:"status"},{key:"used",label:"使用位置"},{key:"effect",label:"效果"},{key:"time",label:"创建时间"}
-      ], `<button class="btn" data-action="reuseAsset"><i data-lucide="copy"></i>复用成果</button><button class="btn primary" data-action="exportAsset"><i data-lucide="file-down"></i>导出成果</button>`);
+      ], `<button class="btn" data-action="reuseAsset"><i data-lucide="copy"></i>复用成果</button><button class="btn primary" data-action="exportAsset"><i data-lucide="file-down"></i>导出成果</button>`, libraryAnalytics());
     }
 
     function renderCredits() {
       return moduleTable("积分与任务记录", "记录每次 AI 调用的任务、模块、消耗积分、成功失败、失败是否退回。", credits, [
         {key:"id",label:"记录编号"},{key:"task",label:"任务名称"},{key:"type",label:"任务类型",kind:"status"},{key:"module",label:"消耗模块"},{key:"credits",label:"消耗积分"},{key:"status",label:"状态",kind:"status"},{key:"refund",label:"失败是否退回",kind:"status"},{key:"time",label:"时间"}
-      ], `<button class="btn" data-action="creditRecharge"><i data-lucide="plus"></i>充值记录</button><button class="btn primary" data-action="exportCredits"><i data-lucide="file-down"></i>导出明细</button>`);
+      ], `<button class="btn" data-action="creditRecharge"><i data-lucide="plus"></i>充值记录</button><button class="btn primary" data-action="exportCredits"><i data-lucide="file-down"></i>导出明细</button>`, creditsAnalytics());
     }
 
     function renderSettings() {
@@ -1196,6 +1910,7 @@
           <button class="btn primary" data-action="saveSettings"><i data-lucide="save"></i>保存设置</button>
         `)}
         ${metrics([{label:"ERP 数据",value:"在线",note:"商品、订单、库存、采购"},{label:"广告数据",value:"在线",note:"Amazon Ads 已同步"},{label:"1688 / 供应商",value:"在线",note:"图片搜索和规格匹配"},{label:"通知渠道",value:"飞书",note:"P0 异常推负责人和主管"}])}
+        ${settingsAnalytics()}
         <div class="grid-2">
           <div class="panel"><div class="panel-head"><h2>角色权限</h2></div><div class="panel-body card-list">${["老板 / 高管：查看全部数据、审批高风险建议","运营主管：创建任务、审核、分配异常、调整部分规则","运营：补充资料、审核图片/Listing、处理异常","产品开发：确认供应商、采购价、失败原因","广告人员：处理广告异常、记录广告动作","管理员：配置数据连接、规则、权限、通知、积分"].map(x=>`<div class="card"><strong>${x}</strong></div>`).join("")}</div></div>
           <div class="panel"><div class="panel-head"><h2>安全与审计</h2>${status("审核记录不可删除")}</div><div class="panel-body card-list">${["所有关键动作记录操作人、时间和结果","ERP 写入、发布、预算、补货必须人工确认","审核记录只允许作废，不允许物理删除","客户数据只用于客户自身业务任务"].map(x=>`<div class="card"><strong>${x}</strong></div>`).join("")}</div></div>
@@ -1203,9 +1918,10 @@
       `;
     }
 
-    function moduleTable(title, desc, rows, columns, actions) {
+    function moduleTable(title, desc, rows, columns, actions, analytics = "") {
       return `
         ${pageShell(title, desc, actions)}
+        ${analytics}
         <div class="panel"><div class="panel-head">${filterTabs(["全部","待处理","待审核","已完成","高风险"])}</div><div class="panel-body">${table(columns, filtered(rows).map(row => ({...row, quick: genericQuick(row)})), "openRow")}</div></div>
       `;
     }
@@ -1297,6 +2013,7 @@
       const entries = Object.entries(row).filter(([key]) => key !== "quick" && key !== "steps");
       openDrawer(row.name || row.product || row.title || row.type || row.id, `
         <div class="kv">${entries.slice(0,8).map(([k,v])=>`<div class="kv-item"><label>${escapeHtml(k)}</label><strong>${escapeHtml(v)}</strong></div>`).join("")}</div>
+        ${detailAnalytics(row)}
         <div class="card"><strong>AI 结论</strong><div class="meta">${escapeHtml(row.conclusion || row.action || row.suggestion || row.advice || row.verdict || "系统已基于 ERP 数据、企业规则和生命周期状态给出当前处理建议。")}</div></div>
         <div class="card"><strong>判断依据</strong><ul class="reason-list"><li><span class="dot"></span><span>调用商品、库存、广告、利润、供应链与历史结果。</span></li><li><span class="dot"></span><span>命中对应业务规则后进入审核、异常或处置队列。</span></li><li><span class="dot"></span><span>处理结果会写入动作日志并回流质量反馈中心。</span></li></ul></div>
       `, `<button class="btn" data-action="addLogFor" data-id="${id}">记录动作</button><button class="btn success" data-action="markDone" data-id="${id}">标记完成</button><button class="btn primary" data-action="closeDrawer">关闭</button>`);
@@ -1441,6 +2158,17 @@
       markDone(el){ const id=el.dataset.id; [drafts, newProducts, healthRows, adRows, replenishment, clearance, inactive].flat().forEach(row=>{ if(row.id===id) row.status="已完成"; }); closeDrawer(); render(); toast("状态已更新", "已完成并可关联动作日志。"); },
       openSearch,
       openNotifications,
+      openChartInsight(el){
+        openModal(el.dataset.title || "分析看板说明", `
+          <div class="card"><strong>分析口径</strong><div class="meta">${escapeHtml(el.dataset.insight || "该图表基于当前原型中的任务、商品、审核、异常、广告、库存和质量回流数据生成。")}</div></div>
+          <div class="grid-3">
+            <div class="kv-item"><label>数据来源</label><strong>ERP / Ads / 1688 / 审核</strong></div>
+            <div class="kv-item"><label>刷新方式</label><strong>点击同步</strong></div>
+            <div class="kv-item"><label>交互方式</label><strong>图表项可跳转</strong></div>
+          </div>
+          <div class="card"><strong>产品含义</strong><div class="meta">看板用于让运营先看趋势和结构，再进入表格处理具体对象，最后把动作写入日志和质量反馈。</div></div>
+        `, `<button class="btn primary" data-action="closeModal">知道了</button>`);
+      },
       searchOpen(el){ closeModal(); openDetailForAny(el.dataset.id); },
       syncData(){ toast("数据已同步", "ERP、广告、库存、采购、Listing 和生命周期主表已刷新。"); }
     };
