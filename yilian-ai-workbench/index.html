@@ -686,6 +686,7 @@
     const navGroups = [
       { title: "经营中枢", items: [
         ["dashboard", "首页指挥台", "layout-dashboard"],
+        ["product360", "商品 / ASIN 360", "box"],
         ["tasks", "AI 任务中心", "workflow"],
         ["reviews", "待我审核 / 审核中心", "badge-check"],
         ["exceptions", "异常处理队列", "octagon-alert"]
@@ -703,16 +704,21 @@
         ["newProducts", "新品测试", "timer"],
         ["health", "在售经营健康", "activity"],
         ["ads", "广告健康", "megaphone"],
+        ["voice", "评论退货洞察", "message-circle-warning"],
         ["inventory", "库存与补货决策", "package-check"],
+        ["profit", "利润与经营健康", "chart-no-axes-combined"],
+        ["pricing", "价格与促销策略", "badge-percent"],
         ["clearance", "清货与复盘", "archive-x"],
         ["inactive", "不动销处置队列", "list-end"]
       ]},
       { title: "沉淀与管理", items: [
         ["logs", "动作日志", "history"],
+        ["failure", "失败原因库", "archive-restore"],
         ["rules", "规则中心", "sliders-horizontal"],
         ["quality", "质量反馈中心", "message-square-warning"],
         ["library", "成果库", "database"],
         ["credits", "积分与任务记录", "coins"],
+        ["costRules", "成本口径设置", "receipt"],
         ["settings", "数据连接与权限", "settings"]
       ]}
     ];
@@ -821,6 +827,42 @@
       { id:"CLR-001", sku:"YL-BEA-099", asin:"B0BEAU099", stage:"清货期", stock:18, days:"无法预测", sales:0, profit:"-£0.6", adSpend:"£22", level:"黑名单候选", price:"降价 25%-35%", ad:"停广告", replenish:"不允许", failure:"待填写", status:"待处理", owner:"运营主管", due:"今天" },
       { id:"CLR-002", sku:"YL-HOM-033", asin:"B0HOME033", stage:"新品 D15", stock:34, days:"45 天", sales:2, profit:"-£0.2", adSpend:"£39", level:"清仓模式", price:"降价 10%-20%", ad:"停止无效泛词", replenish:"不允许", failure:"Listing 转化差", status:"处理中", owner:"运营", due:"明天" },
       { id:"CLR-003", sku:"YL-SEA-018", asin:"B0SEA018", stage:"季节尾声", stock:62, days:"28 天", sales:18, profit:"£0.1", adSpend:"£12", level:"最终折扣清仓", price:"降价 20%", ad:"保留精准词", replenish:"不允许", failure:"季节性误判", status:"待复盘", owner:"运营主管", due:"本周" }
+    ];
+
+    const profitRows = [
+      { id:"PFT-001", sku:"YL-KIT-042", asin:"B0KITCH42", product:"可折叠硅胶沥水篮", stage:"新品测试期", revenue:"£378", orders:42, gross:"42%", net:"£105", netRate:"27.8%", adCost:"£48", tacos:"22%", refund:"2.1%", fba:"£72", storage:"£6", profitStatus:"健康盈利", reason:"广告可控，采购价安全", ai:"允许小批量补货，价格保持", status:"待确认" },
+      { id:"PFT-002", sku:"YL-ADS-091", asin:"B0ADS091", product:"家居收纳套装", stage:"常规运营期", revenue:"£1,068", orders:120, gross:"31%", net:"-£96", netRate:"-9.0%", adCost:"£128", tacos:"28%", refund:"5.4%", fba:"£216", storage:"£18", profitStatus:"利润转负", reason:"广告花费上涨且自然单占比下降", ai:"收缩高耗低转词，暂停补货", status:"待处理" },
+      { id:"PFT-003", sku:"YL-BEA-099", asin:"B0BEAU099", product:"便携化妆镜", stage:"清货期", revenue:"£0", orders:0, gross:"--", net:"-£33", netRate:"--", adCost:"£22", tacos:"--", refund:"0%", fba:"£0", storage:"£11", profitStatus:"持续亏损", reason:"无销量仍有广告和仓储消耗", ai:"停广告，强制清货并填写失败原因", status:"待处理" },
+      { id:"PFT-004", sku:"YL-HOM-033", asin:"B0HOME033", product:"桌面线缆收纳盒", stage:"新品 D15", revenue:"£17.8", orders:2, gross:"18%", net:"-£8", netRate:"-44.9%", adCost:"£39", tacos:"35%", refund:"0%", fba:"£4.8", storage:"£2", profitStatus:"测试亏损", reason:"点击有但转化弱，广告接近止损线", ai:"降价 10%-20%，停无效泛词", status:"处理中" }
+    ];
+
+    const priceRows = [
+      { id:"PRC-001", sku:"YL-KIT-042", product:"可折叠硅胶沥水篮", current:"£8.99", competitor:"£8.49-£10.99", band:"健康价格带", coupon:"不建议", deal:"否", expected:"利润稳定", ai:"保持价格，补货后观察转化", status:"观察" },
+      { id:"PRC-002", sku:"YL-HOM-033", product:"桌面线缆收纳盒", current:"£8.90", competitor:"£6.99-£8.49", band:"偏高", coupon:"10%", deal:"否", expected:"提升转化", ai:"降价 10%-20%，配合停低效广告", status:"待审批" },
+      { id:"PRC-003", sku:"YL-BEA-099", product:"便携化妆镜", current:"£7.99", competitor:"£5.99-£7.99", band:"清货价", coupon:"25%", deal:"清仓", expected:"减少仓储损失", ai:"最终清仓价，卖不动则移除", status:"待处理" },
+      { id:"PRC-004", sku:"YL-ADS-091", product:"家居收纳套装", current:"£12.99", competitor:"£11.99-£14.99", band:"可涨价", coupon:"取消", deal:"否", expected:"修复利润", ai:"先收广告，再测试 £13.49", status:"待测试" }
+    ];
+
+    const voiceRows = [
+      { id:"VOC-001", sku:"YL-KIT-042", source:"评论", issue:"折叠后尺寸表达不清", sentiment:"中性", count:12, returnRate:"2.1%", impact:"Listing 与尺寸图需优化", ai:"补充折叠后尺寸，图片加单位", status:"待优化" },
+      { id:"VOC-002", sku:"YL-BEA-118", source:"竞品差评", issue:"珍珠容易脱落", sentiment:"负向", count:38, returnRate:"--", impact:"供应商规格复核", ai:"Brief 加牢固度测试要求", status:"已写入 Brief" },
+      { id:"VOC-003", sku:"YL-HOM-033", source:"退货", issue:"实际容量低于预期", sentiment:"负向", count:9, returnRate:"8.4%", impact:"转化和退货风险", ai:"调整主图比例，删除夸大容量", status:"待处理" },
+      { id:"VOC-004", sku:"YL-ADS-091", source:"客服", issue:"配件缺失咨询多", sentiment:"负向", count:17, returnRate:"5.4%", impact:"售后和差评风险", ai:"增加包装清单图，检查供应商质检", status:"处理中" }
+    ];
+
+    const failureReasons = [
+      { id:"FLR-001", sku:"YL-BEA-099", stage:"D30 黑名单", reason:"30 日销量为 0", root:"价格带与竞品无差异，广告未及时收缩", impact:"广告费 £22，仓储继续消耗", rule:"低价 Beauty + 高 CPC 降权", owner:"运营主管", status:"待沉淀" },
+      { id:"FLR-002", sku:"YL-HOM-033", stage:"D15 清仓", reason:"点击有但转化弱", root:"Listing 容量表达偏大，主图转化弱", impact:"测试广告接近止损线", rule:"D15 弱转化触发图片/Listing 复核", owner:"运营", status:"已转规则建议" },
+      { id:"FLR-003", sku:"YL-SEA-018", stage:"季节尾声", reason:"季节性误判", root:"首批测试库存偏高", impact:"库存 62 件进入折扣清仓", rule:"季节品首批库存下调", owner:"产品开发", status:"待复盘" },
+      { id:"FLR-004", sku:"YL-CHD-006", stage:"选品淘汰", reason:"合规风险阻断", root:"儿童用品认证资料不足", impact:"未进入内容生成", rule:"儿童用品合规前置拦截", owner:"产品开发", status:"已沉淀" }
+    ];
+
+    const costRules = [
+      { id:"COST-001", name:"采购成本口径", scope:"SKU / 批次", method:"按最新确认采购价", source:"ERP 采购单", owner:"财务", status:"启用", updated:"2026-07-08" },
+      { id:"COST-002", name:"头程分摊规则", scope:"站点 / 批次", method:"按重量 + 体积分摊", source:"物流账单", owner:"财务", status:"启用", updated:"2026-07-06" },
+      { id:"COST-003", name:"广告费归因", scope:"ASIN / Campaign", method:"按广告活动与 ASIN 绑定", source:"Amazon Ads", owner:"广告人员", status:"启用", updated:"2026-07-05" },
+      { id:"COST-004", name:"退款退货成本", scope:"订单 / ASIN", method:"退款金额 + 不可售损耗", source:"订单售后", owner:"运营主管", status:"待确认", updated:"2026-07-04" },
+      { id:"COST-005", name:"汇率口径", scope:"站点", method:"每日汇率锁定", source:"财务设置", owner:"管理员", status:"启用", updated:"2026-07-08" }
     ];
 
     const exceptions = [
@@ -1483,6 +1525,132 @@
       </div>`;
     }
 
+    function product360Analytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("商品全生命周期路径", "从机会到复盘的对象级链路", funnelChart([
+          {label:"机会发现", value:128, view:"opportunities"},
+          {label:"商品立项", value:42, view:"briefs"},
+          {label:"内容/刊登", value:26, view:"content"},
+          {label:"新品测试", value:31, view:"newProducts"},
+          {label:"经营/复盘", value:18, view:"profit"}
+        ]), "商品 360 的价值是把所有模块收回到一个 SKU/ASIN 对象上。")}
+        ${chartCard("当前商品健康结构", "利润、库存、广告、内容四类状态", matrixChart([
+          {label:"利润健康", value:"1 个", note:"可补货或放量", color:"#13966a", view:"profit"},
+          {label:"广告异常", value:"1 个", note:"需收缩广告", color:"#d97706", view:"ads"},
+          {label:"清货风险", value:"1 个", note:"进入止损", color:"#dc4c45", view:"clearance"},
+          {label:"资料待补", value:"1 个", note:"Brief/供应商复核", color:"#3478f6", view:"briefs"}
+        ]), "适合给产研解释：页面不是信息堆叠，而是商品经营中枢。")}
+        ${chartCard("对象级经营趋势", "销量、利润、广告效率联合观察", lineChart([18,23,31,28,36,42,39], ["D-6","D-5","D-4","D-3","D-2","D-1","今天"], {alt:true}), "后续可以根据 SKU 切换真实趋势。")}
+      </div>`;
+    }
+
+    function profitAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("利润趋势", "销售额增长不代表净利增长", lineChart([18,26,31,24,16,9,22], ["D-6","D-5","D-4","D-3","D-2","D-1","今天"]), "老板看利润，不只看订单；这里重点呈现广告后净利趋势。")}
+        ${chartCard("利润瀑布", "售价到净利的费用扣减路径", barChart([
+          {label:"销售额", value:100, color:"#3478f6"},
+          {label:"平台佣金", value:15, color:"#64748b"},
+          {label:"FBA", value:22, color:"#64748b"},
+          {label:"采购", value:28, color:"#64748b"},
+          {label:"广告", value:18, color:"#d97706"},
+          {label:"净利", value:17, color:"#13966a"}
+        ]), "用于解释为什么同样有销量，商品可能仍然亏损。")}
+        ${chartCard("亏损原因 Top", "AI 诊断利润变差的根因", barChart([
+          {label:"广告吃利", value:3, view:"ads"},
+          {label:"采购偏高", value:2, view:"supply"},
+          {label:"售价偏低", value:2, view:"pricing"},
+          {label:"退货偏高", value:1, view:"voice"},
+          {label:"仓储拖累", value:1, view:"clearance"}
+        ]), "利润驾驶舱要能直接给动作，而不只是财务报表。")}
+      </div>`;
+    }
+
+    function pricingAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("价格带健康", "当前售价与竞品价格带对比", donutChart([
+          {label:"健康", value:1, color:"#13966a"},
+          {label:"偏高", value:1, color:"#d97706"},
+          {label:"清货价", value:1, color:"#dc4c45"},
+          {label:"可涨价", value:1, color:"#3478f6"}
+        ], "4"), "价格策略要和利润、广告、清货联动。")}
+        ${chartCard("调价影响预测", "销量风险与利润修复", columnChart([
+          {label:"降价", value:18, color:"#d97706"},
+          {label:"开券", value:12, color:"#3478f6"},
+          {label:"涨价", value:9, color:"#13966a"},
+          {label:"清仓", value:25, color:"#dc4c45"}
+        ]), "AI 给出调价建议后必须进入人工审核。")}
+        ${chartCard("促销动作建议", "Coupon / Deal / 清货折扣", barChart([
+          {label:"保持价格", value:1},
+          {label:"10% Coupon", value:1},
+          {label:"25% 清仓", value:1},
+          {label:"小幅涨价", value:1}
+        ]), "不是所有促销都为销量服务，有些是为了保护利润或减少仓储损失。")}
+      </div>`;
+    }
+
+    function voiceAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("反馈来源", "评论、退货、客服、竞品差评", donutChart([
+          {label:"评论", value:1},
+          {label:"退货", value:1},
+          {label:"客服", value:1},
+          {label:"竞品差评", value:1}
+        ], "4"), "VOC 让内容、产品和供应链一起优化。")}
+        ${chartCard("问题类型 Top", "影响转化和退货的高频原因", barChart([
+          {label:"尺寸表达", value:12, view:"listings"},
+          {label:"珍珠牢固", value:38, view:"supply"},
+          {label:"容量预期", value:9, view:"content"},
+          {label:"配件缺失", value:17, view:"supply"}
+        ]), "评论退货不是售后孤岛，应反哺 Brief、图片、Listing 和选品规则。")}
+        ${chartCard("退货风险趋势", "售后问题对利润的拖累", lineChart([2,3,3,5,6,8,7], ["D-6","D-5","D-4","D-3","D-2","D-1","今天"]), "退货率高会直接影响利润驾驶舱和清货判断。")}
+      </div>`;
+    }
+
+    function failureAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("失败阶段分布", "选品、D15、D30、季节尾声", donutChart([
+          {label:"选品淘汰", value:1},
+          {label:"D15 清仓", value:1},
+          {label:"D30 黑名单", value:1},
+          {label:"季节尾声", value:1}
+        ], "4"), "失败原因库把清货复盘变成下一轮规则训练数据。")}
+        ${chartCard("失败根因 Top", "最值得沉淀成规则的原因", barChart([
+          {label:"广告未收缩", value:1, view:"ads"},
+          {label:"Listing 转化差", value:1, view:"listings"},
+          {label:"备货过量", value:1, view:"inventory"},
+          {label:"合规阻断", value:1, view:"rules"}
+        ]), "失败不是结束，而是降低下一次试错成本。")}
+        ${chartCard("规则回流状态", "待沉淀、已转建议、已沉淀", donutChart([
+          {label:"待沉淀", value:1, color:"#d97706"},
+          {label:"已转规则建议", value:1, color:"#3478f6"},
+          {label:"待复盘", value:1, color:"#dc4c45"},
+          {label:"已沉淀", value:1, color:"#13966a"}
+        ], "4"), "产研可从这里拆规则中心和质量反馈的真实闭环。")}
+      </div>`;
+    }
+
+    function costRulesAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("成本口径覆盖", "采购、头程、广告、退款、汇率", donutChart([
+          {label:"已启用", value:4, color:"#13966a"},
+          {label:"待确认", value:1, color:"#d97706"}
+        ], "5"), "利润看板可信的前提是成本口径明确。")}
+        ${chartCard("成本来源同步", "ERP、物流、广告、售后、财务", columnChart([
+          {label:"ERP", value:95},
+          {label:"物流", value:88},
+          {label:"Ads", value:96},
+          {label:"售后", value:72},
+          {label:"汇率", value:100}
+        ]), "每个成本口径都要能追溯来源，否则利润诊断不可解释。")}
+        ${chartCard("利润红线设置", "净利率、TACoS、清货止损线", matrixChart([
+          {label:"净利率红线", value:"≥ 8%", note:"低于则预警", color:"#13966a", view:"profit"},
+          {label:"TACoS 红线", value:"≤ 25%", note:"超出收广告", color:"#d97706", view:"ads"},
+          {label:"退款红线", value:"≤ 6%", note:"超出进 VOC", color:"#3478f6", view:"voice"},
+          {label:"清货止损", value:"D30", note:"无销量进黑名单", color:"#dc4c45", view:"failure"}
+        ]), "成本口径设置是利润、补货、清货、价格策略的共同规则底座。")}
+      </div>`;
+    }
+
     function detailAnalytics(row) {
       const title = row.sku || row.id || "当前对象";
       return `
@@ -1523,6 +1691,7 @@
       qs("#creditBadge").textContent = `剩余积分 ${state.credits.toLocaleString()}`;
       const renderers = {
         dashboard: renderDashboard,
+        product360: renderProduct360,
         tasks: renderTasks,
         reviews: renderReviews,
         opportunities: renderOpportunities,
@@ -1535,15 +1704,20 @@
         newProducts: renderNewProducts,
         health: renderHealth,
         ads: renderAds,
+        voice: renderVoice,
         inventory: renderInventory,
+        profit: renderProfit,
+        pricing: renderPricing,
         clearance: renderClearance,
         exceptions: renderExceptions,
         inactive: renderInactive,
         logs: renderLogs,
+        failure: renderFailure,
         rules: renderRules,
         quality: renderQuality,
         library: renderLibrary,
         credits: renderCredits,
+        costRules: renderCostRules,
         settings: renderSettings
       };
       qs("#appView").innerHTML = renderers[state.view]();
@@ -1645,6 +1819,40 @@
           <div class="meta">AI 建议：${row.action}</div>
           <div class="actions"><button class="btn small" data-action="openException" data-id="${row.id}">处理</button><button class="btn small" data-action="addLogFor" data-id="${row.id}">记录动作</button></div>
         </div>
+      `;
+    }
+
+    function renderProduct360() {
+      const selected = products[0];
+      return `
+        ${pageShell("商品 / ASIN 360", "把一个商品从机会发现、立项、供应链、内容、刊登、新品测试、广告、库存、利润、异常、复盘全部聚合到一个对象视图。", `
+          <button class="btn" data-action="syncData"><i data-lucide="refresh-cw"></i>同步商品数据</button>
+          <button class="btn primary" data-action="openSku360" data-id="${selected.id}"><i data-lucide="box"></i>打开当前商品</button>
+        `)}
+        ${product360Analytics()}
+        <div class="layout-detail">
+          <div class="panel"><div class="panel-head"><h2>商品对象列表</h2>${status("按 SKU / ASIN 聚合")}</div><div class="panel-body">${table([
+            {key:"name",label:"商品",kind:"product"},{key:"stage",label:"生命周期",kind:"status"},{key:"profit",label:"利润/单"},{key:"tacos",label:"TACoS"},{key:"stock",label:"库存覆盖"},{key:"status",label:"当前状态",kind:"status"}
+          ], products.map(p=>({...p, sku:p.id, quick:`<button class="btn small primary" data-action="openSku360" data-id="${p.id}">360 详情</button>`})), "openSku360")}</div></div>
+          <aside class="detail-panel">${product360Detail(selected)}</aside>
+        </div>
+      `;
+    }
+
+    function product360Detail(product) {
+      const pft = profitRows.find(row => row.sku === product.id) || profitRows[0];
+      return `
+        <div class="detail-section"><h2>${escapeHtml(product.name)}</h2><div class="meta">${product.id} · ${product.asin} · ${product.stage}</div>${status(product.status)}</div>
+        <div class="detail-section">${miniKpis([
+          {label:"利润状态", value:pft.profitStatus, note:pft.net},
+          {label:"库存覆盖", value:product.stock, note:"与供应链周期联动"},
+          {label:"广告效率", value:product.tacos, note:"TACoS / ACOS"}
+        ])}</div>
+        <div class="detail-section"><strong>生命周期时间轴</strong><div class="timeline">
+          ${["机会发现","商品立项","内容资产","刊登草稿","新品测试","广告/库存","利润健康","复盘沉淀"].map((item,i)=>`<div class="timeline-row"><div class="timeline-dot">${i+1}</div><div class="timeline-content"><strong>${item}</strong><span class="meta">${i < 5 ? "已完成或进行中" : "持续监控"}</span></div></div>`).join("")}
+        </div></div>
+        <div class="detail-section"><strong>AI 下一步建议</strong><p class="muted" style="margin:0;line-height:1.55">${escapeHtml(pft.ai)}</p></div>
+        <div class="detail-section"><div class="actions"><button class="btn" data-view="profit">看利润</button><button class="btn" data-view="voice">看反馈</button><button class="btn primary" data-action="addLogFor" data-id="${product.id}">记录动作</button></div></div>
       `;
     }
 
@@ -1813,10 +2021,28 @@
       ], `<button class="btn" data-action="pullAds"><i data-lucide="download-cloud"></i>拉取广告数据</button><button class="btn primary" data-action="approveAdActions"><i data-lucide="check"></i>审批建议动作</button>`, adsAnalytics());
     }
 
+    function renderVoice() {
+      return moduleTable("评论退货洞察", "把评论、退货、客服咨询和竞品差评沉淀为产品改良、图片/Listing 优化、供应链复核和选品规则。", voiceRows, [
+        {key:"sku",label:"SKU"},{key:"source",label:"来源",kind:"status"},{key:"issue",label:"问题点"},{key:"sentiment",label:"情绪",kind:"status"},{key:"count",label:"次数"},{key:"returnRate",label:"退货率"},{key:"impact",label:"影响环节"},{key:"ai",label:"AI 建议"},{key:"status",label:"状态",kind:"status"}
+      ], `<button class="btn" data-action="syncVoice"><i data-lucide="refresh-cw"></i>同步评论退货</button><button class="btn primary" data-action="voiceToRule"><i data-lucide="repeat"></i>转优化规则</button>`, voiceAnalytics());
+    }
+
     function renderInventory() {
       return moduleTable("库存与补货决策", "综合销量趋势、生命周期、广告、利润、供应商交期和物流时效，判断该补、不补还是暂停。", replenishment, [
         {key:"sku",label:"SKU"},{key:"stage",label:"生命周期",kind:"status"},{key:"stock",label:"当前库存"},{key:"inbound",label:"在途"},{key:"sales7",label:"7日销量"},{key:"trend",label:"趋势",kind:"status"},{key:"cover",label:"库存覆盖"},{key:"lead",label:"供应商交期"},{key:"logistics",label:"物流时效"},{key:"profit",label:"利润/单"},{key:"tacos",label:"TACoS"},{key:"qty",label:"建议量"},{key:"orderDate",label:"建议下单"},{key:"advice",label:"AI 建议"},{key:"risk",label:"风险",kind:"status"},{key:"status",label:"状态",kind:"status"}
       ], `<button class="btn" data-action="refreshReplenish"><i data-lucide="refresh-cw"></i>刷新建议</button><button class="btn primary" data-action="approveReplenish"><i data-lucide="package-plus"></i>确认补货建议</button>`, inventoryAnalytics());
+    }
+
+    function renderProfit() {
+      return moduleTable("利润与经营健康", "老板最该看的经营驾驶舱：判断 SKU / ASIN 是否真正赚钱，利润为什么变差，以及应该调价、收广告、补货还是清货。", profitRows, [
+        {key:"product",label:"商品",kind:"product"},{key:"stage",label:"生命周期",kind:"status"},{key:"revenue",label:"销售额"},{key:"orders",label:"订单"},{key:"gross",label:"毛利率"},{key:"net",label:"净利润"},{key:"netRate",label:"净利率"},{key:"adCost",label:"广告费"},{key:"tacos",label:"TACoS"},{key:"refund",label:"退款率"},{key:"profitStatus",label:"利润状态",kind:"status"},{key:"reason",label:"AI 诊断"},{key:"ai",label:"建议动作"},{key:"status",label:"状态",kind:"status"}
+      ], `<button class="btn" data-action="recalcProfit"><i data-lucide="calculator"></i>重算利润</button><button class="btn" data-action="openCostRules"><i data-lucide="receipt"></i>成本口径</button><button class="btn primary" data-action="generateProfitActions"><i data-lucide="sparkles"></i>生成利润动作</button>`, profitAnalytics());
+    }
+
+    function renderPricing() {
+      return moduleTable("价格与促销策略", "结合竞品价格带、净利率、广告效率、库存覆盖和清货阶段，给出涨价、降价、开券、Deal 或清仓折扣建议。", priceRows, [
+        {key:"product",label:"商品",kind:"product"},{key:"current",label:"当前售价"},{key:"competitor",label:"竞品价格带"},{key:"band",label:"价格带判断",kind:"status"},{key:"coupon",label:"Coupon"},{key:"deal",label:"Deal"},{key:"expected",label:"预期影响"},{key:"ai",label:"AI 建议"},{key:"status",label:"状态",kind:"status"}
+      ], `<button class="btn" data-action="syncCompetitorPrice"><i data-lucide="download-cloud"></i>同步竞品价</button><button class="btn primary" data-action="submitPriceReview"><i data-lucide="send"></i>提交调价审核</button>`, pricingAnalytics());
     }
 
     function renderClearance() {
@@ -1863,6 +2089,12 @@
       ], `<button class="btn primary" data-action="addLog"><i data-lucide="plus"></i>新增动作日志</button>`, logsAnalytics());
     }
 
+    function renderFailure() {
+      return moduleTable("失败原因库", "把选品淘汰、D15 清仓、D30 黑名单、季节性误判、供应链失败和广告亏损沉淀成可复用的规则资产。", failureReasons, [
+        {key:"sku",label:"SKU"},{key:"stage",label:"失败阶段",kind:"status"},{key:"reason",label:"失败原因"},{key:"root",label:"根因分析"},{key:"impact",label:"经营影响"},{key:"rule",label:"建议回流规则"},{key:"owner",label:"负责人"},{key:"status",label:"沉淀状态",kind:"status"}
+      ], `<button class="btn" data-action="importFailureReason"><i data-lucide="upload"></i>导入失败原因</button><button class="btn primary" data-action="failureToRule"><i data-lucide="repeat"></i>批量转规则建议</button>`, failureAnalytics());
+    }
+
     function renderRules() {
       return `
         ${pageShell("规则中心", "沉淀选品、利润、站点、供应商、图片、Listing、广告、补货、清货、生命周期、审核和通知规则。", `
@@ -1901,6 +2133,12 @@
       return moduleTable("积分与任务记录", "记录每次 AI 调用的任务、模块、消耗积分、成功失败、失败是否退回。", credits, [
         {key:"id",label:"记录编号"},{key:"task",label:"任务名称"},{key:"type",label:"任务类型",kind:"status"},{key:"module",label:"消耗模块"},{key:"credits",label:"消耗积分"},{key:"status",label:"状态",kind:"status"},{key:"refund",label:"失败是否退回",kind:"status"},{key:"time",label:"时间"}
       ], `<button class="btn" data-action="creditRecharge"><i data-lucide="plus"></i>充值记录</button><button class="btn primary" data-action="exportCredits"><i data-lucide="file-down"></i>导出明细</button>`, creditsAnalytics());
+    }
+
+    function renderCostRules() {
+      return moduleTable("成本口径设置", "定义利润驾驶舱的计算规则，包括采购成本、头程分摊、FBA、平台佣金、广告费归因、退款退货、仓储费和汇率。", costRules, [
+        {key:"id",label:"口径编号"},{key:"name",label:"成本口径"},{key:"scope",label:"适用范围"},{key:"method",label:"计算方式"},{key:"source",label:"数据来源"},{key:"owner",label:"负责人"},{key:"status",label:"状态",kind:"status"},{key:"updated",label:"更新时间"}
+      ], `<button class="btn" data-action="testCostRules"><i data-lucide="calculator"></i>试算利润</button><button class="btn primary" data-action="saveCostRules"><i data-lucide="save"></i>保存口径</button>`, costRulesAnalytics());
     }
 
     function renderSettings() {
@@ -2007,7 +2245,7 @@
     }
 
     function openDetailForAny(id) {
-      const pools = [tasks, reviews, opportunities, briefs, supply, contentAssets, drafts, newProducts, healthRows, adRows, replenishment, clearance, exceptions, inactive, logs, rules, quality.map((q,i)=>({...q,id:`QLT-${i+1}`})), library, credits];
+      const pools = [tasks, reviews, opportunities, briefs, supply, contentAssets, drafts, newProducts, healthRows, adRows, voiceRows, replenishment, profitRows, priceRows, clearance, exceptions, inactive, logs, failureReasons, rules, quality.map((q,i)=>({...q,id:`QLT-${i+1}`})), library, credits, costRules];
       const row = pools.flat().find(item => item.id === id || item.sku === id);
       if (!row) return;
       const entries = Object.entries(row).filter(([key]) => key !== "quick" && key !== "steps");
@@ -2155,9 +2393,23 @@
       testConnections(){ toast("连接测试完成", "ERP、广告、1688、平台 Listing、通知渠道均可用。"); },
       saveSettings(){ toast("设置已保存", "权限、通知和数据安全策略已更新。"); },
       openRow(el){ openDetailForAny(el.dataset.id); },
-      markDone(el){ const id=el.dataset.id; [drafts, newProducts, healthRows, adRows, replenishment, clearance, inactive].flat().forEach(row=>{ if(row.id===id) row.status="已完成"; }); closeDrawer(); render(); toast("状态已更新", "已完成并可关联动作日志。"); },
+      markDone(el){ const id=el.dataset.id; [drafts, newProducts, healthRows, adRows, voiceRows, replenishment, profitRows, priceRows, clearance, inactive, failureReasons, costRules].flat().forEach(row=>{ if(row.id===id) row.status="已完成"; }); closeDrawer(); render(); toast("状态已更新", "已完成并可关联动作日志。"); },
       openSearch,
       openNotifications,
+      openSku360(el){
+        const product = products.find(item => item.id === el.dataset.id) || products[0];
+        openDrawer(`${product.name} · 商品 360`, product360Detail(product), `<button class="btn" data-view="profit">利润驾驶舱</button><button class="btn" data-view="voice">评论退货</button><button class="btn primary" data-action="addLogFor" data-id="${product.id}">记录动作</button>`);
+      },
+      syncVoice(){ toast("评论退货已同步", "评论、退货、客服和竞品差评已归因到 SKU。"); },
+      voiceToRule(){ rules.unshift({id:`RULE-${Date.now()}`, name:"评论退货反馈规则", type:"质量回流规则", scope:"Amazon / 全站点", condition:"VOC 问题频次或退货率超红线", action:"触发 Brief / 图片 / Listing / 供应链复核", risk:"中", enabled:false, updated:"刚刚"}); setView("rules"); toast("已转规则建议", "VOC 问题已进入规则中心待审核。"); },
+      generateProfitActions(){ reviews.unshift({id:`REV-${Date.now()}`, type:"利润处置审核", sku:"YL-ADS-091", product:"家居收纳套装", task:"利润驾驶舱", conclusion:"建议收缩广告并暂停补货", evidence:"净利为负，TACoS 28%，库存覆盖 18 天", risk:"高", status:"待审核", due:"今天", owner:"运营主管"}); setView("reviews"); toast("利润动作已生成", "高风险动作已进入审核中心。"); },
+      openCostRules(){ setView("costRules"); },
+      syncCompetitorPrice(){ toast("竞品价格已同步", "已更新价格带、Coupon、Deal 和清货价建议。"); },
+      submitPriceReview(){ reviews.unshift({id:`REV-${Date.now()}`, type:"调价策略审核", sku:"YL-HOM-033", product:"桌面线缆收纳盒", task:"价格与促销策略", conclusion:"建议降价 10%-20%，配合停低效广告", evidence:"当前价格偏高，D15 转化弱，广告接近止损线", risk:"中", status:"待审核", due:"今天", owner:"运营主管"}); setView("reviews"); toast("调价建议已提交", "调价、Coupon 或 Deal 将走人工审核。"); },
+      importFailureReason(){ toast("失败原因已导入", "可从清货复盘、不动销处置和选品淘汰自动导入。"); },
+      failureToRule(){ rules.unshift({id:`RULE-${Date.now()}`, name:"失败原因回流规则", type:"选品规则", scope:"Amazon / UK", condition:"命中历史失败根因组合", action:"降低推荐权重或转人工复核", risk:"中", enabled:false, updated:"刚刚"}); setView("rules"); toast("失败原因已转规则", "已生成待审核规则建议。"); },
+      testCostRules(){ toast("利润试算完成", "已按采购、头程、FBA、广告、退款、仓储和汇率口径重算。"); },
+      saveCostRules(){ toast("成本口径已保存", "利润驾驶舱、补货决策和清货止损线将使用新口径。"); },
       openChartInsight(el){
         openModal(el.dataset.title || "分析看板说明", `
           <div class="card"><strong>分析口径</strong><div class="meta">${escapeHtml(el.dataset.insight || "该图表基于当前原型中的任务、商品、审核、异常、广告、库存和质量回流数据生成。")}</div></div>
@@ -2175,7 +2427,7 @@
 
     function openSearch() {
       const query = qs("#globalSearch").value.trim();
-      const rows = [...tasks.map(x=>({id:x.id,type:"任务",title:x.name})), ...products.map(x=>({id:x.id,type:"商品",title:`${x.id} ${x.name}`})), ...exceptions.map(x=>({id:x.id,type:"异常",title:`${x.type} ${x.sku}`})), ...library.map(x=>({id:x.id,type:"成果",title:x.title}))];
+      const rows = [...tasks.map(x=>({id:x.id,type:"任务",title:x.name})), ...products.map(x=>({id:x.id,type:"商品",title:`${x.id} ${x.name}`})), ...profitRows.map(x=>({id:x.id,type:"利润",title:`${x.sku} ${x.profitStatus}`})), ...voiceRows.map(x=>({id:x.id,type:"评论退货",title:`${x.sku} ${x.issue}`})), ...failureReasons.map(x=>({id:x.id,type:"失败原因",title:`${x.sku} ${x.reason}`})), ...exceptions.map(x=>({id:x.id,type:"异常",title:`${x.type} ${x.sku}`})), ...library.map(x=>({id:x.id,type:"成果",title:x.title}))];
       const matched = rows.filter(row => !query || row.title.toLowerCase().includes(query.toLowerCase()) || row.type.includes(query)).slice(0,8);
       openModal("全局搜索", `
         <div class="field" style="width:100%"><label>搜索</label><input id="modalSearchInput" value="${escapeHtml(query)}" placeholder="任务、SKU、ASIN、异常、成果"></div>
