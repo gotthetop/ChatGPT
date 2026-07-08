@@ -692,8 +692,9 @@
         ["exceptions", "异常处理队列", "octagon-alert"]
       ]},
       { title: "开品与内容", items: [
-        ["opportunities", "机会发现 / AI 选品", "scan-search"],
+        ["opportunities", "机会洞察 / AI 选品", "radar"],
         ["briefs", "商品立项 / Brief", "clipboard-list"],
+        ["compliance", "知识产权与合规风控", "shield-alert"],
         ["supply", "供应链与利润测算", "calculator"],
         ["content", "内容资产中心", "folder-kanban"],
         ["images", "AI 套图工厂", "images"],
@@ -732,7 +733,7 @@
     ];
 
     const lifecycle = [
-      ["机会池", 128, "opportunities"], ["已立项", 42, "briefs"], ["内容准备中", 26, "content"], ["待刊登", 12, "drafts"],
+      ["机会池", 128, "opportunities"], ["已立项", 42, "briefs"], ["合规待复核", 7, "compliance"], ["内容准备中", 26, "content"], ["待刊登", 12, "drafts"],
       ["新品测试中", 31, "newProducts"], ["常规运营", 186, "health"], ["老品留存", 54, "health"], ["异常处理中", 27, "exceptions"],
       ["清货中", 14, "clearance"], ["停售归档", 18, "library"]
     ];
@@ -753,11 +754,32 @@
       { id:"YL-BEA-099", asin:"B0BEAU099", name:"便携化妆镜", category:"Beauty", site:"UK", owner:"Ada", stage:"清货期", thumb:"beauty", profit:"-£0.6", tacos:"41%", stock:"82 天", status:"强制清仓" }
     ];
 
+    const opportunitySignals = [
+      { id:"SIG-001", direction:"英国站厨房折叠收纳", site:"UK", category:"Kitchen / Storage", keyword:"foldable colander, collapsible basket", heat:88, growth:"+34%", competition:"中低", price:"£8.99-£15.99", reason:"轻小件、低评新品仍有出单，价格带可承接广告冷启动", risk:"食品接触材质需证明", status:"建议发起选品" },
+      { id:"SIG-002", direction:"英国站派对发饰礼品", site:"UK", category:"Beauty / Hair Accessories", keyword:"pearl headbands, wedding hair band", heat:82, growth:"+21%", competition:"中", price:"£6.99-£12.99", reason:"礼品场景清晰，季节峰值前仍有长尾关键词空位", risk:"配件牢固度和夸大材质表达", status:"加入机会池" },
+      { id:"SIG-003", direction:"德国站桌面线缆整理", site:"DE", category:"Home Office / Cable Management", keyword:"kabelbox, cable organiser", heat:76, growth:"+17%", competition:"中高", price:"€9.99-€18.99", reason:"需求稳定，内容本地化后仍有转化提升空间", risk:"评论门槛偏高，利润压力需复核", status:"观察" },
+      { id:"SIG-004", direction:"英国站儿童安全防护", site:"UK", category:"Baby Safety", keyword:"corner protectors, baby proofing", heat:71, growth:"+29%", competition:"中", price:"£5.99-£10.99", reason:"搜索增长快，但认证和责任风险高", risk:"儿童用品合规阻断概率高", status:"先做合规预检" }
+    ];
+
     const opportunities = [
-      { id:"OPP-001", sku:"YL-KIT-042", product:"可折叠硅胶沥水篮", grade:"A", score:86, profit:"£2.8", supplier:"88%", cpc:"£0.18", status:"可进入 Brief", reason:"低评新品出单，利润和供应链成立", risk:"材质表达需谨慎" },
-      { id:"OPP-002", sku:"YL-BEA-118", product:"珍珠发箍套装", grade:"A", score:82, profit:"£2.3", supplier:"81%", cpc:"£0.16", status:"需复核供应商", reason:"礼品场景明确，价格带健康", risk:"珍珠脱落差评点需规避" },
-      { id:"OPP-003", sku:"YL-HOM-033", product:"桌面线缆收纳盒", grade:"B", score:74, profit:"£1.9", supplier:"76%", cpc:"£0.22", status:"人工复核", reason:"需求稳定但评论门槛偏高", risk:"压力利润接近红线" },
-      { id:"OPP-004", sku:"YL-CHD-006", product:"儿童防撞桌角贴", grade:"C", score:51, profit:"£0.9", supplier:"69%", cpc:"£0.34", status:"不建议推进", reason:"合规风险与广告风险过高", risk:"儿童用品合规阻断" }
+      { id:"OPP-001", sku:"YL-KIT-042", product:"可折叠硅胶沥水篮", direction:"厨房折叠收纳", site:"UK", category:"Kitchen / Storage", keyword:"foldable colander", grade:"A", score:86, demand:"高", competition:"中低", trend:"+34%", profit:"£2.8", margin:"32%", supplier:"88%", cpc:"£0.18", status:"可进入 Brief", reason:"低评新品出单，利润和供应链成立", risk:"材质表达需谨慎", sellerSprite:"月销 300-5000 / 评分 4.0+ / 评论 < 800", nextRule:"带入卖家精灵筛选包" },
+      { id:"OPP-002", sku:"YL-BEA-118", product:"珍珠发箍套装", direction:"派对发饰礼品", site:"UK", category:"Beauty / Hair Accessories", keyword:"pearl headbands", grade:"A", score:82, demand:"中高", competition:"中", trend:"+21%", profit:"£2.3", margin:"29%", supplier:"81%", cpc:"£0.16", status:"需复核供应商", reason:"礼品场景明确，价格带健康", risk:"珍珠脱落差评点需规避", sellerSprite:"价格 £6.99-£12.99 / 评论 < 600 / 排除强品牌", nextRule:"先补供应商规格证明" },
+      { id:"OPP-003", sku:"YL-HOM-033", product:"桌面线缆收纳盒", direction:"桌面线缆整理", site:"DE", category:"Home Office / Cable Management", keyword:"kabelbox", grade:"B", score:74, demand:"稳定", competition:"中高", trend:"+17%", profit:"£1.9", margin:"22%", supplier:"76%", cpc:"£0.22", status:"人工复核", reason:"需求稳定但评论门槛偏高", risk:"压力利润接近红线", sellerSprite:"月销 200-3000 / 评论 < 1200 / CPC < £0.25", nextRule:"复核德语内容差异化" },
+      { id:"OPP-004", sku:"YL-CHD-006", product:"儿童防撞桌角贴", direction:"儿童安全防护", site:"UK", category:"Baby Safety", keyword:"corner protectors", grade:"C", score:51, demand:"增长", competition:"中", trend:"+29%", profit:"£0.9", margin:"11%", supplier:"69%", cpc:"£0.34", status:"不建议推进", reason:"合规风险与广告风险过高", risk:"儿童用品合规阻断", sellerSprite:"先查 CPC / 认证 / 责任风险，不直接跑选品", nextRule:"转合规预检" }
+    ];
+
+    const complianceRows = [
+      { id:"CMP-001", sku:"YL-KIT-042", product:"可折叠硅胶沥水篮", site:"UK", stage:"Brief 后预检", patent:"外观近似低", trademark:"未命中", copyright:"低", certification:"食品接触材质证明待补", platform:"通过", risk:"中", evidence:"同类折叠结构多为通用形态；需供应商提供 LFGB/Food Contact 材质证明。", ai:"可推进供应链测算，但未补证明前不允许进入刊登草稿。", status:"待补证明", owner:"产品开发" },
+      { id:"CMP-002", sku:"YL-BEA-118", product:"珍珠发箍套装", site:"UK", stage:"立项前复核", patent:"低", trademark:"品牌词未命中", copyright:"低", certification:"常规饰品质检报告待补", platform:"注意材质表达", risk:"中", evidence:"图片与标题不能暗示天然珍珠；供应商需确认牢固度测试。", ai:"允许进入小批量打样，Listing 禁用天然珍珠等高风险表达。", status:"人工复核", owner:"运营主管" },
+      { id:"CMP-003", sku:"YL-HOM-033", product:"桌面线缆收纳盒", site:"DE", stage:"内容生成前", patent:"外观近似中", trademark:"未命中", copyright:"低", certification:"无强制认证", platform:"通过", risk:"中", evidence:"德国站竞品外观相似度较高，主图和卖点需突出自有差异化。", ai:"先调整产品图和卖点方向，再生成德语 Listing。", status:"待处理", owner:"运营" },
+      { id:"CMP-004", sku:"YL-CHD-006", product:"儿童防撞桌角贴", site:"UK", stage:"机会预检", patent:"待查", trademark:"未命中", copyright:"低", certification:"儿童用品安全证明缺失", platform:"高风险", risk:"高", evidence:"Baby Safety 类目涉及儿童安全责任和材质证明，缺少证据不建议进入选品任务。", ai:"暂时阻断，转失败原因库和规则中心降低同类机会权重。", status:"阻断", owner:"产品开发" }
+    ];
+
+    const complianceCerts = [
+      { id:"CERT-001", sku:"YL-KIT-042", market:"UK", item:"Food Contact / LFGB 证明", source:"供应商", due:"本周", status:"待补" },
+      { id:"CERT-002", sku:"YL-BEA-118", market:"UK", item:"饰品质检与小配件牢固度", source:"供应商", due:"明天", status:"人工复核" },
+      { id:"CERT-003", sku:"YL-HOM-033", market:"DE", item:"包装回收与德语标签", source:"ERP 字段", due:"发布前", status:"待处理" },
+      { id:"CERT-004", sku:"YL-CHD-006", market:"UK", item:"儿童安全相关证明", source:"供应商", due:"立项前", status:"缺失" }
     ];
 
     const briefs = [
@@ -1138,6 +1160,7 @@
       return `<div class="analysis-grid">
         ${chartCard("审核类型分布", "看清今天谁在等人工确认", barChart([
           {label:"候选品", value:1, view:"opportunities"},
+          {label:"合规", value:2, view:"compliance"},
           {label:"图片", value:1, view:"images"},
           {label:"Listing", value:1, view:"listings"},
           {label:"新品处置", value:1, view:"newProducts"},
@@ -1154,25 +1177,21 @@
 
     function opportunityAnalytics() {
       return `<div class="analysis-grid">
-        ${chartCard("AI 选品漏斗", "硬规则、利润、供应商、机会评级逐层过滤", funnelChart([
-          {label:"候选输入", value:128},
-          {label:"硬规则通过", value:64},
-          {label:"利润成立", value:38},
-          {label:"供应商匹配", value:24},
-          {label:"A 类机会", value:6}
-        ]), "把选品过程从一个结果表变成可解释漏斗，方便复核每层淘汰原因。")}
-        ${chartCard("机会等级分布", "A/B/C 机会结构", donutChart([
-          {label:"A 类", value:6, color:"#13966a"},
-          {label:"B 类", value:18, color:"#d97706"},
-          {label:"C 类", value:40, color:"#dc4c45"}
-        ], "64"), "用于控制产品开发推进节奏，避免低质量候选进入内容生成。")}
-        ${chartCard("淘汰原因 Top5", "沉淀成下一轮规则", barChart([
-          {label:"合规风险", value:21},
-          {label:"利润不足", value:18},
-          {label:"广告过贵", value:16},
-          {label:"供应链弱", value:13},
-          {label:"评论壁垒", value:11}
-        ]), "淘汰原因会回流规则中心，而不是只丢弃候选品。")}
+        ${chartCard("机会雷达热力", "先找类目/关键词方向，再发起选品流程", matrixChart(opportunitySignals.map((s,index)=>({
+          label:s.direction,
+          value:s.heat,
+          note:`${s.site} · ${s.growth}`,
+          color:chartColors[index % chartColors.length],
+          view:"opportunities"
+        }))), "机会洞察不是替代卖家精灵，而是先判断哪些方向值得投入选品任务。")}
+        ${chartCard("关键词趋势", "近 7 日搜索与需求热度变化", lineChart([62,66,69,72,78,83,88], ["D-6","D-5","D-4","D-3","D-2","D-1","今天"], {alt:true}), "趋势用于判断是否值得进入下一步抓取 ASIN、类目和竞品数据。")}
+        ${chartCard("机会评分结构", "需求、竞争、利润、供应链、合规共同打分", barChart([
+          {label:"需求热度", value:88},
+          {label:"竞争可打", value:72},
+          {label:"利润空间", value:76, view:"profit"},
+          {label:"供应链可得", value:81, view:"supply"},
+          {label:"合规可控", value:64, view:"compliance"}
+        ]), "只有分数结构成立的机会，才应该进入正式选品漏斗和 Brief。")}
       </div>`;
     }
 
@@ -1181,6 +1200,7 @@
         ${chartCard("Brief 完整度分布", "内容生成前的资料健康度", columnChart(briefs.map(b=>({label:b.sku.replace("YL-",""), value:b.completeness, view:"briefs"}))), "Brief 是后续图片、Listing、刊登和新品测试的共同上下文。")}
         ${chartCard("下游阻断项", "缺字段会影响哪些环节", barChart([
           {label:"包装/FBA", value:3, view:"supply"},
+          {label:"合规证明", value:3, view:"compliance"},
           {label:"卖点依据", value:2, view:"listings"},
           {label:"生命周期计划", value:2, view:"newProducts"},
           {label:"供应商证明", value:1, view:"supply"}
@@ -1192,6 +1212,28 @@
           {label:"测试计划", value:9},
           {label:"成果沉淀", value:7}
         ]), "用于判断立项是否真的走到可刊登和可测试。")}
+      </div>`;
+    }
+
+    function complianceAnalytics() {
+      return `<div class="analysis-grid">
+        ${chartCard("合规风险分布", "专利、商标、版权、认证、平台政策综合判断", donutChart([
+          {label:"低风险", value:1, color:"#13966a"},
+          {label:"中风险", value:2, color:"#d97706"},
+          {label:"高风险", value:1, color:"#dc4c45"}
+        ], complianceRows.length), "合规页是商品进入供应链、内容生成和刊登前的风险闸口。")}
+        ${chartCard("风险类型 Top", "哪些风险最常阻断开品", barChart([
+          {label:"认证/证明缺失", value:3},
+          {label:"外观专利近似", value:2},
+          {label:"平台政策", value:2},
+          {label:"商标词", value:1},
+          {label:"版权图片", value:1}
+        ]), "风险类型会决定是补证明、改表达、改图、人工复核还是直接阻断。")}
+        ${chartCard("证据补齐进度", "供应商证明、站点要求、ERP 字段状态", columnChart(complianceCerts.map(c=>({
+          label:c.sku.replace("YL-",""),
+          value:c.status==="待补" || c.status==="缺失" ? 38 : c.status==="人工复核" ? 62 : 78,
+          view:"compliance"
+        }))), "证据补齐后才能解锁刊登草稿，避免后面才发现侵权或认证问题。")}
       </div>`;
     }
 
@@ -1528,8 +1570,9 @@
     function product360Analytics() {
       return `<div class="analysis-grid">
         ${chartCard("商品全生命周期路径", "从机会到复盘的对象级链路", funnelChart([
-          {label:"机会发现", value:128, view:"opportunities"},
+          {label:"机会洞察", value:128, view:"opportunities"},
           {label:"商品立项", value:42, view:"briefs"},
+          {label:"合规预检", value:31, view:"compliance"},
           {label:"内容/刊登", value:26, view:"content"},
           {label:"新品测试", value:31, view:"newProducts"},
           {label:"经营/复盘", value:18, view:"profit"}
@@ -1696,6 +1739,7 @@
         reviews: renderReviews,
         opportunities: renderOpportunities,
         briefs: renderBriefs,
+        compliance: renderCompliance,
         supply: renderSupply,
         content: renderContent,
         images: renderImages,
@@ -1725,7 +1769,7 @@
     }
 
     function renderDashboard() {
-      const reviewCounts = ["候选品审核","商品 Brief 审核","图片审核","Listing 审核","刊登草稿审核","新品测试处置审核","补货建议审核","清货建议审核"]
+      const reviewCounts = ["候选品审核","商品 Brief 审核","合规风控审核","图片审核","Listing 审核","刊登草稿审核","新品测试处置审核","补货建议审核","清货建议审核"]
         .map(type => ({ type, count: reviews.filter(item => item.type === type || (type === "商品 Brief 审核" && item.type === "Brief 审核")).length || Math.floor(Math.random() * 5) + 1 }));
       return `
         ${pageShell("首页指挥台", "一眼看到 AI 在执行什么、哪些结果需要审核、哪些生命周期状态和异常需要处理。", `
@@ -1849,7 +1893,7 @@
           {label:"广告效率", value:product.tacos, note:"TACoS / ACOS"}
         ])}</div>
         <div class="detail-section"><strong>生命周期时间轴</strong><div class="timeline">
-          ${["机会发现","商品立项","内容资产","刊登草稿","新品测试","广告/库存","利润健康","复盘沉淀"].map((item,i)=>`<div class="timeline-row"><div class="timeline-dot">${i+1}</div><div class="timeline-content"><strong>${item}</strong><span class="meta">${i < 5 ? "已完成或进行中" : "持续监控"}</span></div></div>`).join("")}
+          ${["机会洞察","商品立项","合规风控","内容资产","刊登草稿","新品测试","广告/库存","利润健康","复盘沉淀"].map((item,i)=>`<div class="timeline-row"><div class="timeline-dot">${i+1}</div><div class="timeline-content"><strong>${item}</strong><span class="meta">${i < 6 ? "已完成或进行中" : "持续监控"}</span></div></div>`).join("")}
         </div></div>
         <div class="detail-section"><strong>AI 下一步建议</strong><p class="muted" style="margin:0;line-height:1.55">${escapeHtml(pft.ai)}</p></div>
         <div class="detail-section"><div class="actions"><button class="btn" data-view="profit">看利润</button><button class="btn" data-view="voice">看反馈</button><button class="btn primary" data-action="addLogFor" data-id="${product.id}">记录动作</button></div></div>
@@ -1882,7 +1926,7 @@
         ${metrics([{label:"候选品审核",value:1,note:"A/B/C 结论与依据"},{label:"图片 / Listing",value:2,note:"校验项和人工意见"},{label:"生命周期处置",value:1,badge:"高风险",note:"D15 / D30 处理"},{label:"补货 / 清货",value:2,note:"资金与库存风险"}])}
         ${reviewAnalytics()}
         <div class="panel">
-          <div class="panel-head">${filterTabs(["全部","候选品审核","图片审核","Listing 审核","新品测试处置审核","补货建议审核","清货建议审核"])}</div>
+          <div class="panel-head">${filterTabs(["全部","候选品审核","合规风控审核","图片审核","Listing 审核","新品测试处置审核","补货建议审核","清货建议审核"])}</div>
           <div class="panel-body">${table([
             {key:"id",label:"审核编号"},{key:"type",label:"审核类型",kind:"status"},{key:"product",label:"审核对象",kind:"product"},{key:"conclusion",label:"AI 结论"},{key:"risk",label:"风险",kind:"status"},{key:"due",label:"最晚处理"},{key:"status",label:"状态",kind:"status"}
           ], filtered(reviews).map(r=>({...r, quick:`<button class="btn small success" data-action="approveReview" data-id="${r.id}">通过</button><button class="btn small danger" data-action="rejectReview" data-id="${r.id}">驳回</button>`})), "openReview")}</div>
@@ -1901,15 +1945,76 @@
 
     function renderOpportunities() {
       return `
-        ${pageShell("机会发现 / AI 选品", "输入关键词、ASIN、竞品链接后，系统执行硬规则、利润、需求、竞争和 1688 匹配，并输出 A/B/C 结论。", `
+        ${pageShell("机会洞察 / AI 选品", "先用市场、类目、关键词、竞品和企业能力发现值得选的方向，再把机会一键转成卖家精灵筛选包和正式选品任务。", `
           <button class="btn" data-action="importAsin"><i data-lucide="upload"></i>导入 ASIN / 关键词</button>
+          <button class="btn" data-action="runOpportunityRadar"><i data-lucide="radar"></i>运行机会雷达</button>
           <button class="btn primary" data-action="runSelection"><i data-lucide="scan-line"></i>运行选品漏斗</button>
         `)}
-        ${metrics([{label:"候选输入",value:128,note:"批量关键词 / ASIN"},{label:"通过粗筛",value:24,note:"硬规则和利润过滤"},{label:"A 类机会",value:6,badge:"可立项",note:"可进入 Brief"},{label:"淘汰沉淀",value:89,note:"带淘汰原因"}])}
+        ${metrics([{label:"机会信号",value:opportunitySignals.length,note:"类目 / 关键词 / 场景"},{label:"可发起选品",value:3,note:"已形成筛选包"},{label:"A 类机会",value:6,badge:"可立项",note:"可进入 Brief"},{label:"合规预警",value:2,badge:"需复核",note:"先查风险再开跑"}])}
         ${opportunityAnalytics()}
-        <div class="panel"><div class="panel-head">${filterTabs(["全部","A","B","C"])}</div><div class="panel-body">${table([
-          {key:"product",label:"候选品",kind:"product"},{key:"grade",label:"推荐等级",kind:"status"},{key:"score",label:"推荐分"},{key:"profit",label:"基准利润"},{key:"supplier",label:"供应商置信度"},{key:"cpc",label:"CPC"},{key:"status",label:"状态",kind:"status"},{key:"risk",label:"风险"}
-        ], filtered(opportunities).map(o=>({...o, quick:`<button class="btn small success" data-action="approveOpportunity" data-id="${o.id}">通过</button><button class="btn small danger" data-action="rejectOpportunity" data-id="${o.id}">淘汰</button>`})), "openOpportunity")}</div></div>
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-head"><div><h2>机会信号卡</h2><span>先判断方向是否值得投入正式选品</span></div>${status("前置决策")}</div>
+            <div class="panel-body card-list">${opportunitySignals.map(opportunitySignalCard).join("")}</div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><div><h2>卖家精灵筛选包</h2><span>由机会信号自动转成可执行条件</span></div>${status("可一键带入")}</div>
+            <div class="panel-body">
+              <div class="form-grid">
+                <div class="form-row"><label>站点</label><input class="input" value="Amazon UK"></div>
+                <div class="form-row"><label>机会方向</label><input class="input" value="厨房折叠收纳 / 轻小件"></div>
+                <div class="form-row"><label>类目</label><input class="input" value="Kitchen / Storage / Camping"></div>
+                <div class="form-row"><label>关键词组</label><input class="input" value="foldable colander, collapsible basket"></div>
+                <div class="form-row"><label>月销量</label><input class="input" value="300 - 5000"></div>
+                <div class="form-row"><label>评论数</label><input class="input" value="0 - 800"></div>
+                <div class="form-row"><label>售价带</label><input class="input" value="£8.99 - £15.99"></div>
+                <div class="form-row"><label>排除条件</label><input class="input" value="高认证风险 / 强品牌垄断 / CPC 过高"></div>
+                <div class="form-row full"><label>排序逻辑</label><textarea class="textarea" style="min-height:88px">增长率 > 利润空间 > 低评论机会 > 供应链置信度 > 合规可控度</textarea></div>
+              </div>
+              <div class="actions" style="justify-content:flex-end;margin-top:12px">
+                <button class="btn" data-action="saveOpportunityWatch" data-id="SIG-001"><i data-lucide="bookmark"></i>加入观察</button>
+                <button class="btn primary" data-action="startOpportunitySelection" data-id="SIG-001"><i data-lucide="play"></i>按此条件发起选品</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel"><div class="panel-head">${filterTabs(["全部","A","B","C","建议发起选品","先做合规预检"])}</div><div class="panel-body">${table([
+          {key:"product",label:"机会对象",kind:"product"},{key:"direction",label:"机会方向"},{key:"site",label:"站点"},{key:"category",label:"类目"},{key:"keyword",label:"核心关键词"},{key:"grade",label:"推荐等级",kind:"status"},{key:"score",label:"推荐分"},{key:"trend",label:"趋势"},{key:"margin",label:"毛利空间"},{key:"supplier",label:"供应商置信度"},{key:"cpc",label:"CPC"},{key:"status",label:"状态",kind:"status"},{key:"risk",label:"风险"}
+        ], filtered(opportunities).map(o=>({...o, quick:`<button class="btn small primary" data-action="startOpportunitySelection" data-id="${o.id}">发起选品</button><button class="btn small success" data-action="generateBriefFromOpportunity" data-id="${o.id}">生成 Brief</button><button class="btn small danger" data-action="rejectOpportunity" data-id="${o.id}">淘汰</button>`})), "openOpportunity")}</div></div>
+      `;
+    }
+
+    function opportunitySignalCard(signal) {
+      return `
+        <div class="card">
+          <div class="card-top">
+            <div><strong>${escapeHtml(signal.direction)}</strong><div class="meta">${escapeHtml(signal.site)} · ${escapeHtml(signal.category)}</div></div>
+            ${status(signal.status)}
+          </div>
+          ${miniKpis([
+            {label:"热度", value:signal.heat, note:signal.growth},
+            {label:"竞争", value:signal.competition, note:signal.price},
+            {label:"关键词", value:signal.keyword.split(",")[0], note:"可带入筛选"}
+          ])}
+          <div class="meta" style="line-height:1.55">${escapeHtml(signal.reason)}</div>
+          <div class="card-top"><span class="meta">风险：${escapeHtml(signal.risk)}</span>${status(signal.risk.includes("阻断") ? "高风险" : "需复核")}</div>
+          <div class="actions"><button class="btn small" data-action="saveOpportunityWatch" data-id="${signal.id}">观察</button><button class="btn small primary" data-action="startOpportunitySelection" data-id="${signal.id}">发起选品</button></div>
+        </div>
+      `;
+    }
+
+    function opportunityDetail(row) {
+      return `
+        <div class="detail-section"><h2>${escapeHtml(row.product || row.direction)}</h2><div class="meta">${escapeHtml(row.site || "")} · ${escapeHtml(row.category || "")} · ${escapeHtml(row.keyword || "")}</div>${status(row.grade ? `${row.grade} 类机会` : row.status)}</div>
+        <div class="detail-section">${miniKpis([
+          {label:"推荐分", value:row.score || row.heat, note:row.trend || row.growth},
+          {label:"利润空间", value:row.margin || row.price, note:row.profit || "按筛选包测算"},
+          {label:"竞争强度", value:row.competition || "待抓取", note:row.cpc || "CPC 待同步"}
+        ])}</div>
+        <div class="detail-section"><strong>AI 推荐理由</strong><p class="muted" style="margin:0;line-height:1.55">${escapeHtml(row.reason)}</p></div>
+        <div class="detail-section"><strong>卖家精灵筛选包</strong><p class="muted" style="margin:0;line-height:1.55">${escapeHtml(row.sellerSprite || "系统会把站点、类目、关键词、价格带、评论数、销量、CPC 和排除条件带入正式选品任务。")}</p></div>
+        <div class="detail-section"><strong>下一步</strong><ul class="reason-list"><li><span class="dot"></span><span>${escapeHtml(row.nextRule || "生成候选 ASIN 池，进入硬规则、利润和合规预检。")}</span></li><li><span class="dot"></span><span>高风险品类先进入知识产权与合规风控，再决定是否跑完整选品。</span></li></ul></div>
+        <div class="detail-section"><div class="actions"><button class="btn" data-action="saveOpportunityWatch" data-id="${row.id}">加入观察</button><button class="btn" data-view="compliance">合规预检</button><button class="btn primary" data-action="startOpportunitySelection" data-id="${row.id}">发起选品</button></div></div>
       `;
     }
 
@@ -1940,6 +2045,47 @@
         </div></div>
         <div class="detail-section"><strong>缺失字段提示</strong><ul class="reason-list"><li><span class="dot"></span><span>补充包装尺寸和 FBA 费用后可提高刊登完整度。</span></li><li><span class="dot"></span><span>生命周期计划需设置 D7 / D15 / D23 / D30 规则。</span></li></ul></div>
         <div class="detail-section"><div class="actions"><button class="btn" data-action="saveBrief">保存</button><button class="btn primary" data-action="submitBriefReview">提交审核</button></div></div>
+      `;
+    }
+
+    function renderCompliance() {
+      return `
+        ${pageShell("知识产权与合规风控", "在机会进入立项、供应链、内容生成和刊登前，集中检查专利、商标、版权、认证、平台政策和证据缺口。", `
+          <button class="btn" data-action="runComplianceScan"><i data-lucide="shield-check"></i>重新检测</button>
+          <button class="btn primary" data-action="submitComplianceReview"><i data-lucide="send"></i>提交人工复核</button>
+        `)}
+        ${metrics([{label:"待检测对象",value:complianceRows.length,note:"机会 / Brief / 草稿"},{label:"中高风险",value:3,badge:"需复核",note:"不可直接刊登"},{label:"证据缺口",value:complianceCerts.filter(c=>/待|缺失|复核/.test(c.status)).length,note:"供应商证明 / 标签 / 类目要求"},{label:"已阻断",value:1,badge:"高风险",note:"转失败原因库和规则中心"}])}
+        ${complianceAnalytics()}
+        <div class="layout-detail">
+          <div class="panel">
+            <div class="panel-head">${filterTabs(["全部","低","中","高","待补证明","阻断"])}</div>
+            <div class="panel-body">${table([
+              {key:"product",label:"商品 / 机会",kind:"product"},{key:"site",label:"站点"},{key:"stage",label:"检测阶段",kind:"status"},{key:"patent",label:"专利"},{key:"trademark",label:"商标"},{key:"copyright",label:"版权"},{key:"certification",label:"认证 / 证明"},{key:"platform",label:"平台政策",kind:"status"},{key:"risk",label:"综合风险",kind:"status"},{key:"status",label:"处理状态",kind:"status"}
+            ], filtered(complianceRows).map(row=>({...row, quick:`<button class="btn small" data-action="writeComplianceToBrief" data-id="${row.id}">写入 Brief</button><button class="btn small success" data-action="submitComplianceReview" data-id="${row.id}">复核</button><button class="btn small danger" data-action="blockComplianceRisk" data-id="${row.id}">阻断</button>`})), "openCompliance")}</div>
+          </div>
+          <aside class="detail-panel">${complianceDetail(complianceRows[0])}</aside>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div><h2>合规证据清单</h2><span>缺失证据会阻断刊登草稿和高风险表达</span></div>${status("证据可追溯")}</div>
+          <div class="panel-body">${table([
+            {key:"sku",label:"SKU"},{key:"market",label:"站点"},{key:"item",label:"证据项"},{key:"source",label:"来源"},{key:"due",label:"截止"},{key:"status",label:"状态",kind:"status"}
+          ], complianceCerts.map(c=>({...c, quick:`<button class="btn small" data-action="requestComplianceEvidence" data-id="${c.id}">催补</button>`})), "openRow")}</div>
+        </div>
+      `;
+    }
+
+    function complianceDetail(row) {
+      return `
+        <div class="detail-section"><h2>${escapeHtml(row.product)}</h2><div class="meta">${escapeHtml(row.sku)} · ${escapeHtml(row.site)} · ${escapeHtml(row.stage)}</div>${status(row.risk + "风险")}</div>
+        <div class="detail-section">${miniKpis([
+          {label:"专利", value:row.patent, note:"外观/结构/功能"},
+          {label:"商标", value:row.trademark, note:"品牌词与标题"},
+          {label:"认证", value:row.certification.includes("待") || row.certification.includes("缺") ? "待补" : "通过", note:row.certification}
+        ])}</div>
+        <div class="detail-section"><strong>检测证据</strong><p class="muted" style="margin:0;line-height:1.55">${escapeHtml(row.evidence)}</p></div>
+        <div class="detail-section"><strong>AI 处理结论</strong><p class="muted" style="margin:0;line-height:1.55">${escapeHtml(row.ai)}</p></div>
+        <div class="detail-section"><strong>风控动作</strong><ul class="reason-list"><li><span class="dot"></span><span>低风险可写入 Brief，并在 Listing 生成时作为禁用表达约束。</span></li><li><span class="dot"></span><span>中风险进入人工复核，缺证据时阻断刊登草稿。</span></li><li><span class="dot"></span><span>高风险进入失败原因库和规则中心，降低同类机会权重。</span></li></ul></div>
+        <div class="detail-section"><div class="actions"><button class="btn" data-action="writeComplianceToBrief" data-id="${row.id}">写入 Brief</button><button class="btn" data-action="submitComplianceReview" data-id="${row.id}">提交复核</button><button class="btn danger" data-action="blockComplianceRisk" data-id="${row.id}">阻断机会</button></div></div>
       `;
     }
 
@@ -2245,7 +2391,7 @@
     }
 
     function openDetailForAny(id) {
-      const pools = [tasks, reviews, opportunities, briefs, supply, contentAssets, drafts, newProducts, healthRows, adRows, voiceRows, replenishment, profitRows, priceRows, clearance, exceptions, inactive, logs, failureReasons, rules, quality.map((q,i)=>({...q,id:`QLT-${i+1}`})), library, credits, costRules];
+      const pools = [tasks, reviews, opportunitySignals, opportunities, briefs, complianceRows, complianceCerts, supply, contentAssets, drafts, newProducts, healthRows, adRows, voiceRows, replenishment, profitRows, priceRows, clearance, exceptions, inactive, logs, failureReasons, rules, quality.map((q,i)=>({...q,id:`QLT-${i+1}`})), library, credits, costRules];
       const row = pools.flat().find(item => item.id === id || item.sku === id);
       if (!row) return;
       const entries = Object.entries(row).filter(([key]) => key !== "quick" && key !== "steps");
@@ -2326,16 +2472,76 @@
       regenerateReview(){ toast("已重新生成", "AI 将基于审核意见重新生成结果。"); },
       bulkApprove(){ reviews.filter(r=>r.risk==="低").forEach(r=>r.status="通过"); render(); toast("低风险审核已批量通过", "记录已写入审核链路。"); },
       bulkReject(){ toast("批量驳回", "请选择结构化驳回原因后提交。"); },
-      openOpportunity(el){ openDetailForAny(el.dataset.id); },
+      openOpportunity(el){ const row=[...opportunities, ...opportunitySignals].find(x=>x.id===el.dataset.id); if(row) openDrawer(row.product || row.direction, opportunityDetail(row), `<button class="btn" data-action="saveOpportunityWatch" data-id="${row.id}">加入观察</button><button class="btn" data-view="compliance">合规预检</button><button class="btn primary" data-action="startOpportunitySelection" data-id="${row.id}">发起选品</button>`); },
       approveOpportunity(el){ const o=opportunities.find(x=>x.id===el.dataset.id); if(o)o.status="已生成 Brief"; toast("候选品已通过", "已生成商品 Brief，并进入内容准备。"); render(); },
       rejectOpportunity(el){ const o=opportunities.find(x=>x.id===el.dataset.id); if(o){o.grade="C";o.status="已淘汰";} toast("已进入淘汰池", "淘汰原因将用于选品规则回流。"); render(); },
-      importAsin(){ openModal("导入 ASIN / 关键词", `<textarea class="textarea">B0KITCH42\npearl headbands for women\ndesk cable organizer</textarea>`, `<button class="btn" data-action="closeModal">取消</button><button class="btn primary" data-action="closeModal">开始导入</button>`); },
-      runSelection(){ toast("选品漏斗已运行", "已完成硬规则、利润、需求、竞争和 1688 匹配。"); },
+      importAsin(){ openModal("导入 ASIN / 关键词", `<textarea class="textarea">B0KITCH42\npearl headbands for women\ndesk cable organizer\nfoldable colander</textarea>`, `<button class="btn" data-action="closeModal">取消</button><button class="btn primary" data-action="closeModal">开始导入</button>`); },
+      runOpportunityRadar(){ toast("机会雷达已刷新", "已按站点、类目、关键词趋势、竞品结构、利润和合规风险重新生成机会信号。"); },
+      runSelection(){ toast("选品漏斗已运行", "已完成卖家精灵数据筛选、硬规则、利润、需求、竞争、合规和 1688 匹配。"); },
+      saveOpportunityWatch(el){
+        const row=[...opportunities, ...opportunitySignals].find(x=>x.id===el.dataset.id);
+        if(row) row.status="已加入观察";
+        render();
+        toast("已加入机会观察", "系统会持续监控关键词趋势、竞品变化和合规风险。");
+      },
+      startOpportunitySelection(el){
+        const row=[...opportunities, ...opportunitySignals].find(x=>x.id===el.dataset.id) || opportunities[0];
+        const id = `TASK-${Date.now()}`;
+        state.credits -= 68;
+        tasks.unshift({ id, name:`机会选品：${row.direction || row.product}`, type:"自动化选品任务", stage:"卖家精灵数据筛选", progress:18, owner:"AI Agent", status:"执行中", credits:68, next:"按机会筛选包抓取 ASIN、类目和竞品数据", steps:["机会洞察","筛选包生成","卖家精灵采集","利润/竞争过滤","合规预检","候选品审核"] });
+        credits.unshift({ id:`CR-${Date.now()}`, task:`机会选品：${row.direction || row.product}`, type:"选品任务", module:"机会洞察 + 数据筛选", credits:68, status:"成功", refund:"否", time:"刚刚" });
+        closeDrawer();
+        setView("tasks");
+        toast("选品任务已发起", "机会方向已自动带入站点、类目、关键词、价格带和排除条件。");
+      },
+      generateBriefFromOpportunity(el){
+        const row=opportunities.find(x=>x.id===el.dataset.id) || opportunities[0];
+        if(!briefs.some(b=>b.sku===row.sku)){
+          briefs.unshift({ id:`BRF-${Date.now()}`, sku:row.sku, name:row.product, completeness:64, image:"未生成", listing:"未生成", erp:"未建档", draft:"未生成", lifecycle:"待规划", status:"补充资料" });
+        }
+        row.status="已生成 Brief";
+        closeDrawer();
+        setView("briefs");
+        toast("Brief 已生成", "机会结论、关键词、筛选包、风险提示已写入商品 Brief。");
+      },
       openBrief(el){ const b=briefs.find(x=>x.id===el.dataset.id); openDrawer(b.name, briefDetail(b), `<button class="btn" data-action="generateContentFromBrief" data-id="${b.id}">生成内容</button><button class="btn primary" data-action="submitBriefReview">提交审核</button>`); },
       createBrief(){ toast("Brief 已创建", "可从选品结论、历史商品或手工录入生成。"); },
       submitBriefReview(){ reviews.unshift({id:`REV-${Date.now()}`, type:"商品 Brief 审核", sku:"YL-KIT-042", product:"可折叠硅胶沥水篮", task:"Brief 提交", conclusion:"Brief 完整度 92%，建议通过", evidence:"产品事实、成本、关键词和生命周期计划基本完整", risk:"低", status:"待审核", due:"今天", owner:"运营主管"}); setView("reviews"); toast("已提交审核", "Brief 审核记录已生成。"); },
       saveBrief(){ toast("Brief 已保存", "下游图片、Listing、刊登草稿将使用最新上下文。"); },
       generateContentFromBrief(){ setView("content"); toast("内容生成任务已创建", "图片、Listing、A+ 和视频脚本进入内容资产中心。"); },
+      openCompliance(el){ const row=complianceRows.find(x=>x.id===el.dataset.id); if(row) openDrawer(`${row.product} · 合规风控`, complianceDetail(row), `<button class="btn" data-action="writeComplianceToBrief" data-id="${row.id}">写入 Brief</button><button class="btn" data-action="submitComplianceReview" data-id="${row.id}">提交复核</button><button class="btn danger" data-action="blockComplianceRisk" data-id="${row.id}">阻断机会</button>`); },
+      runComplianceScan(){ toast("合规检测已完成", "已重新检查专利近似、商标词、版权素材、认证证明和平台政策风险。"); },
+      submitComplianceReview(el){
+        const row=complianceRows.find(x=>x.id===el?.dataset?.id) || complianceRows.find(x=>x.status!=="已完成") || complianceRows[0];
+        reviews.unshift({id:`REV-${Date.now()}`, type:"合规风控审核", sku:row.sku, product:row.product, task:"合规风控", conclusion:row.ai, evidence:row.evidence, risk:row.risk, status:"待审核", due:"今天", owner:row.owner || "运营主管"});
+        row.status="待人工复核";
+        closeDrawer();
+        setView("reviews");
+        toast("已提交合规复核", "专利、商标、认证和平台政策证据已进入审核中心。");
+      },
+      writeComplianceToBrief(el){
+        const row=complianceRows.find(x=>x.id===el.dataset.id) || complianceRows[0];
+        const brief=briefs.find(b=>b.sku===row.sku);
+        if(brief){ brief.completeness = Math.min(100, Number(brief.completeness) + 4); brief.status = row.risk==="高" ? "合规阻断" : "合规已写入"; }
+        row.status = row.risk==="高" ? "阻断" : "已写入 Brief";
+        closeDrawer();
+        render();
+        toast("已写入 Brief", "合规结论会约束后续图片、Listing、刊登草稿和供应链证明字段。");
+      },
+      blockComplianceRisk(el){
+        const row=complianceRows.find(x=>x.id===el.dataset.id) || complianceRows[0];
+        row.status="阻断";
+        failureReasons.unshift({ id:`FAIL-${Date.now()}`, sku:row.sku, stage:"合规阻断", reason:row.certification || row.platform, root:row.evidence, impact:"停止立项或改换产品形态", rule:"高风险合规机会降低推荐权重", owner:row.owner || "产品开发", status:"待沉淀" });
+        closeDrawer();
+        setView("failure");
+        toast("已阻断并沉淀", "该风险已进入失败原因库，可回流选品和规则中心。");
+      },
+      requestComplianceEvidence(el){
+        const row=complianceCerts.find(x=>x.id===el.dataset.id);
+        if(row) row.status="已催补";
+        render();
+        toast("已发起证据催补", "供应商证明、标签或类目要求会同步给负责人。");
+      },
       recalcProfit(){ toast("利润已重新测算", "已刷新乐观、基准、压力利润和广告生存能力。"); },
       pushSupplyToBrief(){ toast("已写入 Brief", "供应链与成本字段已更新。"); },
       generateAssetPack(){ toast("内容包已生成", "图片、Listing、A+ 和视频脚本任务已创建。"); },
@@ -2393,7 +2599,7 @@
       testConnections(){ toast("连接测试完成", "ERP、广告、1688、平台 Listing、通知渠道均可用。"); },
       saveSettings(){ toast("设置已保存", "权限、通知和数据安全策略已更新。"); },
       openRow(el){ openDetailForAny(el.dataset.id); },
-      markDone(el){ const id=el.dataset.id; [drafts, newProducts, healthRows, adRows, voiceRows, replenishment, profitRows, priceRows, clearance, inactive, failureReasons, costRules].flat().forEach(row=>{ if(row.id===id) row.status="已完成"; }); closeDrawer(); render(); toast("状态已更新", "已完成并可关联动作日志。"); },
+      markDone(el){ const id=el.dataset.id; [complianceRows, complianceCerts, drafts, newProducts, healthRows, adRows, voiceRows, replenishment, profitRows, priceRows, clearance, inactive, failureReasons, costRules].flat().forEach(row=>{ if(row.id===id) row.status="已完成"; }); closeDrawer(); render(); toast("状态已更新", "已完成并可关联动作日志。"); },
       openSearch,
       openNotifications,
       openSku360(el){
@@ -2427,7 +2633,7 @@
 
     function openSearch() {
       const query = qs("#globalSearch").value.trim();
-      const rows = [...tasks.map(x=>({id:x.id,type:"任务",title:x.name})), ...products.map(x=>({id:x.id,type:"商品",title:`${x.id} ${x.name}`})), ...profitRows.map(x=>({id:x.id,type:"利润",title:`${x.sku} ${x.profitStatus}`})), ...voiceRows.map(x=>({id:x.id,type:"评论退货",title:`${x.sku} ${x.issue}`})), ...failureReasons.map(x=>({id:x.id,type:"失败原因",title:`${x.sku} ${x.reason}`})), ...exceptions.map(x=>({id:x.id,type:"异常",title:`${x.type} ${x.sku}`})), ...library.map(x=>({id:x.id,type:"成果",title:x.title}))];
+      const rows = [...tasks.map(x=>({id:x.id,type:"任务",title:x.name})), ...products.map(x=>({id:x.id,type:"商品",title:`${x.id} ${x.name}`})), ...opportunitySignals.map(x=>({id:x.id,type:"机会信号",title:`${x.direction} ${x.keyword}`})), ...opportunities.map(x=>({id:x.id,type:"机会池",title:`${x.product} ${x.keyword}`})), ...complianceRows.map(x=>({id:x.id,type:"合规风控",title:`${x.sku} ${x.product} ${x.risk}`})), ...profitRows.map(x=>({id:x.id,type:"利润",title:`${x.sku} ${x.profitStatus}`})), ...voiceRows.map(x=>({id:x.id,type:"评论退货",title:`${x.sku} ${x.issue}`})), ...failureReasons.map(x=>({id:x.id,type:"失败原因",title:`${x.sku} ${x.reason}`})), ...exceptions.map(x=>({id:x.id,type:"异常",title:`${x.type} ${x.sku}`})), ...library.map(x=>({id:x.id,type:"成果",title:x.title}))];
       const matched = rows.filter(row => !query || row.title.toLowerCase().includes(query.toLowerCase()) || row.type.includes(query)).slice(0,8);
       openModal("全局搜索", `
         <div class="field" style="width:100%"><label>搜索</label><input id="modalSearchInput" value="${escapeHtml(query)}" placeholder="任务、SKU、ASIN、异常、成果"></div>
