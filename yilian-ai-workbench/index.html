@@ -1,0 +1,1493 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>羿链 AI 工作台 - 全生命周期完整原型</title>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #fff;
+      --soft: #f7f9fc;
+      --soft-2: #eef4ff;
+      --line: #e7edf4;
+      --line-strong: #d8e2ee;
+      --text: #1f2937;
+      --muted: #6b778c;
+      --subtle: #a6b0bf;
+      --primary: #3478f6;
+      --primary-strong: #2368e8;
+      --primary-soft: #eef5ff;
+      --blue: #3478f6;
+      --blue-soft: #eef5ff;
+      --green: #13966a;
+      --green-soft: #eaf8f2;
+      --amber: #d97706;
+      --amber-soft: #fff7e8;
+      --red: #dc4c45;
+      --red-soft: #fff1f0;
+      --violet: #6b59b5;
+      --violet-soft: #f1eeff;
+      --shadow: 0 10px 30px rgba(31, 41, 55, .08);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-width: 1220px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+      letter-spacing: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 228px minmax(0, 1fr);
+    }
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: #f7f9fd;
+      color: #4f5f75;
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      z-index: 20;
+      border-right: 1px solid var(--line);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 4px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand-mark {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      display: block;
+      background: linear-gradient(135deg, #22d3ee 0 48%, transparent 49%),
+        linear-gradient(315deg, #5b7cfa 0 44%, transparent 45%),
+        #12c7b7;
+      color: transparent;
+      font-size: 0;
+      position: relative;
+    }
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      right: -2px;
+      bottom: -2px;
+      border-radius: 2px;
+      background: #5b7cfa;
+      border: 2px solid #f7f9fd;
+    }
+    .brand strong { display: block; color: #1f2937; font-size: 15px; font-weight: 900; }
+    .brand span { display: block; margin-top: 3px; color: #9aa5b5; font-size: 12px; }
+    .nav {
+      overflow: auto;
+      padding-right: 2px;
+      display: grid;
+      gap: 12px;
+    }
+    .nav-group-title {
+      margin: 10px 0 4px;
+      color: #9aa5b5;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .nav-btn {
+      width: 100%;
+      min-height: 36px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: #5f6f86;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-align: left;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+    .nav-btn svg, .btn svg, .icon-btn svg { width: 16px; height: 16px; flex: 0 0 16px; }
+    .nav-btn:hover { background: #eef3fb; color: var(--primary); }
+    .nav-btn.active { background: #eaf2ff; color: var(--primary); }
+    .nav-btn.active svg { color: var(--primary); }
+    .side-status {
+      margin-top: auto;
+      border: 1px solid #dce8ff;
+      border-radius: 8px;
+      background: #f0f6ff;
+      padding: 12px;
+      display: grid;
+      gap: 7px;
+    }
+    .side-status strong { color: #1f2937; }
+    .side-status p { margin: 0; color: #6b778c; line-height: 1.5; font-size: 12px; }
+
+    .workspace { min-width: 0; display: flex; flex-direction: column; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 15;
+      min-height: 58px;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.96);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .top-left, .top-right, .row, .actions { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .select, .input, .textarea {
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text);
+      outline: 0;
+      transition: border-color .16s ease, box-shadow .16s ease, background .16s ease;
+    }
+    .select:focus, .input:focus, .textarea:focus, .search:focus-within, .field:focus-within {
+      border-color: #9fc0ff;
+      box-shadow: 0 0 0 3px rgba(52, 120, 246, .12);
+    }
+    .select { height: 36px; padding: 0 12px; }
+    .input { height: 36px; padding: 0 12px; }
+    .textarea { width: 100%; min-height: 84px; padding: 10px 12px; line-height: 1.55; resize: vertical; }
+    .search {
+      width: min(360px, 30vw);
+      height: 36px;
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 10px;
+      color: var(--muted);
+    }
+    .search input { border: 0; outline: 0; width: 100%; background: transparent; color: var(--text); }
+    .main { padding: 20px 24px 36px; display: grid; gap: 16px; }
+    .page-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+    h1 { margin: 0; font-size: 20px; line-height: 1.22; letter-spacing: 0; font-weight: 850; }
+    h2, h3 { margin: 0; letter-spacing: 0; }
+    .page-desc { margin: 6px 0 0; color: var(--muted); line-height: 1.55; }
+
+    .btn {
+      min-height: 36px;
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text);
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      font-weight: 750;
+      white-space: nowrap;
+      box-shadow: 0 1px 2px rgba(31, 41, 55, .03);
+      transition: background .16s ease, border-color .16s ease, box-shadow .16s ease, color .16s ease;
+    }
+    .btn:hover { background: #f8fbff; border-color: #b9c8dc; box-shadow: 0 4px 12px rgba(31, 41, 55, .06); }
+    .btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; box-shadow: 0 8px 16px rgba(52,120,246,.18); }
+    .btn.primary:hover { background: var(--primary-strong); }
+    .btn.danger { color: var(--red); border-color: #e4c2bf; background: var(--red-soft); }
+    .btn.success { color: var(--green); border-color: #bfe0cd; background: var(--green-soft); }
+    .btn.ghost { background: transparent; }
+    .btn.small { min-height: 30px; padding: 0 10px; font-size: 12px; }
+    .icon-btn {
+      width: 36px; height: 36px; border: 1px solid var(--line-strong); border-radius: 9px; background: #fff; color: var(--text);
+      display: inline-grid; place-items: center;
+      box-shadow: 0 1px 2px rgba(31,41,55,.03);
+    }
+    .icon-btn:hover { background: var(--soft); }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+      overflow: hidden;
+      box-shadow: 0 8px 22px rgba(31, 41, 55, .04);
+    }
+    .panel-head {
+      min-height: 54px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .panel-head h2 { font-size: 15px; font-weight: 850; }
+    .panel-head span, .muted { color: var(--muted); }
+    .panel-body { padding: 18px; }
+    .panel-body.tight { padding: 0; }
+    .grid-2 { display: grid; grid-template-columns: 1.15fr .85fr; gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; }
+    .grid-5 { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 10px; }
+    .grid-6 { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 10px; }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      min-height: 98px;
+      padding: 14px;
+      display: grid;
+      gap: 8px;
+      align-content: space-between;
+      text-align: left;
+      box-shadow: 0 6px 18px rgba(31,41,55,.035);
+      transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+    }
+    button.metric:hover { border-color: #bcd0ea; background: #fbfdff; box-shadow: 0 10px 24px rgba(52,120,246,.08); transform: translateY(-1px); }
+    .metric label { color: var(--muted); font-weight: 800; display: flex; justify-content: space-between; gap: 8px; }
+    .metric strong { font-size: 24px; line-height: 1; font-weight: 850; }
+    .metric small { color: var(--muted); line-height: 1.45; }
+    .status {
+      min-height: 24px;
+      border-radius: 6px;
+      padding: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .status.green { color: var(--green); background: var(--green-soft); border: 1px solid #c9ecdc; }
+    .status.amber { color: var(--amber); background: var(--amber-soft); border: 1px solid #ffe4ba; }
+    .status.red { color: var(--red); background: var(--red-soft); border: 1px solid #ffd0cc; }
+    .status.blue { color: var(--blue); background: var(--blue-soft); border: 1px solid #cfe0ff; }
+    .status.violet { color: var(--violet); background: var(--violet-soft); border: 1px solid #ded7ff; }
+    .status.gray { color: var(--muted); background: #eef2f6; }
+
+    .goal-layout { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 12px; }
+    .goal-box {
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: #fff;
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+    .goal-box textarea { min-height: 70px; border: 0; outline: 0; resize: vertical; line-height: 1.55; color: var(--text); }
+    .chip-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .chip {
+      min-height: 30px;
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: var(--soft);
+      color: var(--muted);
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 760;
+      white-space: nowrap;
+    }
+    button.chip:hover, .chip.active { color: var(--primary); background: var(--primary-soft); border-color: #a9c7ff; }
+    .ai-side {
+      border: 1px solid #cfe0ff;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #f7fbff, #eef5ff);
+      padding: 14px;
+      display: grid;
+      gap: 8px;
+      align-content: center;
+    }
+    .ai-side strong { font-size: 24px; line-height: 1; color: var(--primary-strong); }
+    .ai-side span { color: #50627a; line-height: 1.5; }
+
+    .card-list { display: grid; gap: 10px; }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+      text-align: left;
+      box-shadow: 0 4px 14px rgba(31,41,55,.025);
+    }
+    button.card:hover { border-color: #bfd2eb; background: #fbfdff; }
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .card-title { display: flex; align-items: center; gap: 9px; min-width: 0; }
+    .card-title strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .meta { color: var(--muted); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; line-height: 1.45; }
+    .thumb {
+      width: 42px; height: 42px; border-radius: 10px; border: 1px solid var(--line); flex: 0 0 42px;
+      background: linear-gradient(135deg, #fff 0 55%, #eef5ff 56%);
+      position: relative; overflow: hidden;
+    }
+    .thumb::after {
+      content: "";
+      position: absolute;
+      left: 12px; top: 10px; width: 18px; height: 18px;
+      border: 4px solid #8bb6ff; border-radius: 6px; transform: rotate(-7deg);
+    }
+    .thumb.beauty::after { border-radius: 50%; border-color: #b99bc8; }
+    .thumb.storage::after { border-radius: 3px; border-color: #c2a36d; }
+    .progress { width: 100%; height: 7px; border-radius: 999px; background: #edf1f5; overflow: hidden; }
+    .progress span { display: block; height: 100%; width: var(--value, 50%); background: var(--primary); }
+    .stepper { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 8px; }
+    .step { border: 1px solid var(--line); border-radius: 10px; background: #fff; padding: 10px; min-height: 70px; box-shadow: 0 4px 14px rgba(31,41,55,.03); }
+    .step.done { border-color: #bfe8d2; background: var(--green-soft); }
+    .step.active { border-color: #a9c7ff; background: var(--primary-soft); }
+    .step strong { display: block; margin-bottom: 5px; }
+    .step span { color: var(--muted); font-size: 12px; line-height: 1.35; }
+
+    .tabs { display: flex; align-items: center; gap: 6px; overflow: auto; }
+    .tab {
+      min-height: 32px; border: 1px solid transparent; border-radius: 999px; padding: 0 14px;
+      background: transparent; color: var(--muted); font-weight: 800; white-space: nowrap;
+    }
+    .tab:hover, .tab.active { color: var(--primary); background: #fff; border-color: #b9d1ff; box-shadow: 0 2px 8px rgba(52,120,246,.12); }
+    .filters { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .field {
+      height: 36px;
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: #fff;
+      display: inline-flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    .field label {
+      height: 100%;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 10px;
+      color: var(--muted);
+      background: #f9fbfd;
+      border-right: 1px solid var(--line);
+      font-weight: 850;
+      white-space: nowrap;
+    }
+    .field input, .field select { height: 100%; border: 0; outline: 0; padding: 0 10px; background: transparent; color: var(--text); min-width: 120px; }
+
+    .table-wrap { border: 1px solid var(--line); border-radius: 12px; background: #fff; overflow: auto; box-shadow: 0 6px 18px rgba(31,41,55,.035); }
+    table { width: 100%; min-width: 980px; border-collapse: collapse; }
+    th, td { padding: 13px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; line-height: 1.45; }
+    th { background: #fbfcfe; color: #536178; font-size: 12px; font-weight: 850; white-space: nowrap; }
+    tbody tr:hover { background: #f8fbff; }
+    tr:last-child td { border-bottom: 0; }
+    .layout-detail { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 16px; align-items: start; }
+    .detail-panel { position: sticky; top: 78px; border: 1px solid var(--line); border-radius: 12px; background: #fff; overflow: hidden; box-shadow: 0 8px 22px rgba(31,41,55,.045); }
+    .detail-section { padding: 16px; border-bottom: 1px solid var(--line); display: grid; gap: 10px; }
+    .detail-section:last-child { border-bottom: 0; }
+    .kv { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+    .kv-item { border: 1px solid var(--line); border-radius: 10px; background: #f8fbff; padding: 11px; min-height: 64px; }
+    .kv-item label { display: block; color: var(--muted); font-size: 12px; font-weight: 850; margin-bottom: 5px; }
+    .kv-item strong { font-size: 16px; }
+    .reason-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+    .reason-list li { display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #ff8a1f; flex: 0 0 7px; margin-top: 7px; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+    .form-row { display: grid; gap: 6px; }
+    .form-row.full { grid-column: 1 / -1; }
+    .form-row label { color: var(--muted); font-weight: 850; font-size: 12px; }
+    .asset-grid { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 12px; }
+    .asset-card { border: 1px solid var(--line); border-radius: 12px; background: #fff; overflow: hidden; display: grid; text-align: left; box-shadow: 0 6px 16px rgba(31,41,55,.035); }
+    .asset-card.selected { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(52,120,246,.14), 0 8px 18px rgba(31,41,55,.05); }
+    .asset-preview { aspect-ratio: 1 / .78; background: linear-gradient(180deg, #fbfdff, #edf4ff); position: relative; border-bottom: 1px solid var(--line); }
+    .asset-preview::before { content: ""; position: absolute; width: 40%; height: 38%; left: 30%; top: 28%; border: 8px solid #8bb6ff; border-radius: 8px; transform: rotate(-7deg); background: rgba(255,255,255,.72); }
+    .asset-preview.scene::before { border-radius: 50% 50% 12px 12px; border-color: #a69ac4; }
+    .asset-preview.info::before { border-radius: 4px; border-color: #c0a05d; }
+    .asset-card footer { padding: 10px; display: grid; gap: 7px; }
+    .timeline { display: grid; gap: 0; }
+    .timeline-row { position: relative; display: grid; grid-template-columns: 28px minmax(0,1fr); gap: 10px; padding-bottom: 14px; }
+    .timeline-row::after { content: ""; position: absolute; left: 13px; top: 26px; bottom: 0; width: 1px; background: var(--line-strong); }
+    .timeline-row:last-child { padding-bottom: 0; }
+    .timeline-row:last-child::after { display: none; }
+    .timeline-dot { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--primary-soft); color: var(--primary); border: 1px solid #b9d1ff; font-weight: 900; z-index: 1; }
+    .timeline-content { border: 1px solid var(--line); border-radius: 10px; background: #fff; padding: 11px; display: grid; gap: 6px; }
+    .switch { position: relative; width: 44px; height: 24px; flex: 0 0 44px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; inset: 0; background: #cbd5e1; border-radius: 999px; transition: .2s; }
+    .slider::before { content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; box-shadow: 0 1px 4px rgba(0,0,0,.18); }
+    .switch input:checked + .slider { background: var(--primary); }
+    .switch input:checked + .slider::before { transform: translateX(20px); }
+
+    .drawer-mask, .modal-mask { position: fixed; inset: 0; background: rgba(15,23,42,.42); z-index: 40; display: none; backdrop-filter: blur(1px); }
+    .drawer-mask.open, .modal-mask.open { display: block; }
+    .drawer {
+      position: fixed; top: 0; right: 0; width: min(820px, 92vw); height: 100vh; background: #fff; z-index: 45;
+      box-shadow: var(--shadow); transform: translateX(102%); transition: transform .22s ease; display: flex; flex-direction: column;
+    }
+    .drawer.open { transform: translateX(0); }
+    .drawer-head, .modal-head { min-height: 64px; padding: 18px 24px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .drawer-head h2, .modal-head h2 { font-size: 17px; font-weight: 900; }
+    .drawer-body, .modal-body { padding: 22px 24px; overflow: auto; display: grid; gap: 14px; background: #fbfcfe; }
+    .drawer-foot, .modal-foot { margin-top: auto; padding: 14px 24px; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; gap: 10px; background: #fff; }
+    .modal {
+      position: fixed; top: 50%; left: 50%; width: min(780px, calc(100vw - 36px)); max-height: calc(100vh - 48px); z-index: 50;
+      border-radius: 12px; background: #fff; box-shadow: var(--shadow); transform: translate(-50%, -48%) scale(.98);
+      opacity: 0; pointer-events: none; transition: .18s ease; display: flex; flex-direction: column; overflow: hidden;
+    }
+    .modal.open { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
+    .toast-stack { position: fixed; right: 18px; bottom: 18px; z-index: 70; width: min(390px, calc(100vw - 36px)); display: grid; gap: 10px; }
+    .toast { border: 1px solid var(--line-strong); border-left: 4px solid var(--primary); border-radius: 10px; background: #fff; box-shadow: 0 12px 30px rgba(15,23,42,.12); padding: 12px; display: grid; gap: 4px; }
+    .toast span { color: var(--muted); line-height: 1.45; }
+    .empty { min-height: 160px; display: grid; place-items: center; text-align: center; color: var(--muted); padding: 24px; }
+
+    @media (max-width: 980px) {
+      body { min-width: 0; }
+      .app { grid-template-columns: 1fr; }
+      .sidebar { position: relative; height: auto; }
+      .nav { display: flex; overflow-x: auto; }
+      .nav-group-title, .side-status { display: none; }
+      .nav-btn { width: auto; flex: 0 0 auto; }
+      .topbar { position: relative; flex-wrap: wrap; padding: 12px; }
+      .main { padding: 14px; }
+      .grid-2, .grid-3, .grid-4, .grid-5, .grid-6, .goal-layout, .layout-detail, .form-grid { grid-template-columns: 1fr; }
+      .asset-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .detail-panel { position: static; }
+      .search { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">羿</div>
+        <div><strong>羿链 AI 工作台</strong><span>商品全生命周期经营系统</span></div>
+      </div>
+      <nav class="nav" id="nav"></nav>
+      <div class="side-status">
+        <strong>规则引擎在线</strong>
+        <p>选品、图片、Listing、新品测试、广告、补货、清货规则已接入。今日已触发 42 条判断。</p>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <header class="topbar">
+        <div class="top-left">
+          <select class="select" id="roleSelect">
+            <option>运营主管</option>
+            <option>老板 / 高管</option>
+            <option>运营</option>
+            <option>产品开发</option>
+            <option>广告人员</option>
+            <option>管理员</option>
+          </select>
+          <select class="select" id="platformSelect">
+            <option>Amazon</option>
+            <option>Walmart</option>
+            <option>TikTok Shop</option>
+            <option>Temu</option>
+          </select>
+          <select class="select" id="siteSelect">
+            <option>UK</option>
+            <option>US</option>
+            <option>DE</option>
+            <option>JP</option>
+          </select>
+        </div>
+        <div class="top-right">
+          <div class="search">
+            <i data-lucide="search"></i>
+            <input id="globalSearch" placeholder="搜索任务、SKU、ASIN、异常、成果">
+          </div>
+          <button class="icon-btn" data-action="openSearch" aria-label="搜索"><i data-lucide="command"></i></button>
+          <button class="icon-btn" data-action="openNotifications" aria-label="通知"><i data-lucide="bell"></i></button>
+          <button class="btn" data-action="syncData"><i data-lucide="refresh-cw"></i>同步</button>
+          <span class="status green" id="creditBadge">剩余积分 12,480</span>
+        </div>
+      </header>
+
+      <main class="main" id="appView"></main>
+    </section>
+  </div>
+
+  <div class="drawer-mask" id="drawerMask" data-action="closeDrawer"></div>
+  <aside class="drawer" id="drawer">
+    <div class="drawer-head">
+      <h2 id="drawerTitle">详情</h2>
+      <button class="icon-btn" data-action="closeDrawer" aria-label="关闭"><i data-lucide="x"></i></button>
+    </div>
+    <div class="drawer-body" id="drawerBody"></div>
+    <div class="drawer-foot" id="drawerFoot"></div>
+  </aside>
+
+  <div class="modal-mask" id="modalMask" data-action="closeModal"></div>
+  <section class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-head">
+      <h2 id="modalTitle">弹窗</h2>
+      <button class="icon-btn" data-action="closeModal" aria-label="关闭"><i data-lucide="x"></i></button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  </section>
+  <div class="toast-stack" id="toastStack"></div>
+
+  <script>
+    const state = {
+      view: "dashboard",
+      filter: "all",
+      selectedId: null,
+      goal: "帮我基于这批 ASIN 筛选适合英国站测款的发饰产品，并生成商品 Brief、套图、Listing 和 D30 新品测试计划。",
+      listingVersion: "SEO 覆盖版",
+      selectedImages: new Set(["IMG-001", "IMG-002", "IMG-004"]),
+      credits: 12480
+    };
+
+    const navGroups = [
+      { title: "经营中枢", items: [
+        ["dashboard", "首页指挥台", "layout-dashboard"],
+        ["tasks", "AI 任务中心", "workflow"],
+        ["reviews", "待我审核 / 审核中心", "badge-check"],
+        ["exceptions", "异常处理队列", "octagon-alert"]
+      ]},
+      { title: "开品与内容", items: [
+        ["opportunities", "机会发现 / AI 选品", "scan-search"],
+        ["briefs", "商品立项 / Brief", "clipboard-list"],
+        ["supply", "供应链与利润测算", "calculator"],
+        ["content", "内容资产中心", "folder-kanban"],
+        ["images", "AI 套图工厂", "images"],
+        ["listings", "AI Listing 工厂", "file-text"],
+        ["drafts", "ERP 建档 / 刊登草稿", "send"]
+      ]},
+      { title: "生命周期经营", items: [
+        ["newProducts", "新品测试", "timer"],
+        ["health", "在售经营健康", "activity"],
+        ["ads", "广告健康", "megaphone"],
+        ["inventory", "库存与补货决策", "package-check"],
+        ["clearance", "清货与复盘", "archive-x"],
+        ["inactive", "不动销处置队列", "list-end"]
+      ]},
+      { title: "沉淀与管理", items: [
+        ["logs", "动作日志", "history"],
+        ["rules", "规则中心", "sliders-horizontal"],
+        ["quality", "质量反馈中心", "message-square-warning"],
+        ["library", "成果库", "database"],
+        ["credits", "积分与任务记录", "coins"],
+        ["settings", "数据连接与权限", "settings"]
+      ]}
+    ];
+
+    const tasks = [
+      { id:"TASK-001", name:"英国站发饰开品全链路", type:"开品任务", stage:"图片待审核", progress:68, owner:"运营一组", status:"待审核", credits:236, next:"审核 28 张图片与 9 条 Listing", steps:["目标理解","选品结论","Brief","图片","Listing","刊登","新品测试"] },
+      { id:"TASK-002", name:"Kitchen 100 个 ASIN 自动粗筛", type:"自动化选品", stage:"候选品审核", progress:78, owner:"产品开发", status:"待审核", credits:128, next:"确认 6 个 A 类机会", steps:["目标理解","采集","规则过滤","利润核算","供应商匹配","候选结论"] },
+      { id:"TASK-003", name:"D15 弱动销新品诊断", type:"新品测试分析", stage:"处置建议生成", progress:91, owner:"运营主管", status:"执行中", credits:64, next:"生成异常队列和不动销处置", steps:["读取生命周期","D15 规则","广告利润","建议动作","动作日志"] },
+      { id:"TASK-004", name:"广告 TACoS 异常复盘", type:"广告异常分析", stage:"等待处理", progress:100, owner:"广告人员", status:"已完成", credits:46, next:"已写入异常队列", steps:["拉取广告","利润判断","库存判断","建议动作"] },
+      { id:"TASK-005", name:"清货失败复盘与规则回流", type:"清货复盘", stage:"失败原因待填", progress:52, owner:"运营主管", status:"执行中", credits:58, next:"补充失败原因", steps:["清货数据","动作日志","失败分类","规则建议"] }
+    ];
+
+    const lifecycle = [
+      ["机会池", 128, "opportunities"], ["已立项", 42, "briefs"], ["内容准备中", 26, "content"], ["待刊登", 12, "drafts"],
+      ["新品测试中", 31, "newProducts"], ["常规运营", 186, "health"], ["老品留存", 54, "health"], ["异常处理中", 27, "exceptions"],
+      ["清货中", 14, "clearance"], ["停售归档", 18, "library"]
+    ];
+
+    const reviews = [
+      { id:"REV-001", type:"候选品审核", sku:"YL-BEA-118", product:"珍珠发箍套装", task:"英国站发饰开品全链路", conclusion:"A 类候选，建议进入小批量测款", evidence:"利润 £2.3，低评新品可出单，供应商置信度 81%", risk:"中", status:"待审核", due:"今天 18:00", owner:"运营主管" },
+      { id:"REV-002", type:"图片审核", sku:"YL-KIT-042", product:"可折叠硅胶沥水篮", task:"Kitchen 内容生成", conclusion:"6 张套图中 4 张可用", evidence:"主图合规，尺寸图需补单位", risk:"低", status:"待审核", due:"今天 16:00", owner:"运营" },
+      { id:"REV-003", type:"Listing 审核", sku:"YL-KIT-042", product:"可折叠硅胶沥水篮", task:"Listing 三版生成", conclusion:"SEO 覆盖版可进入刊登草稿", evidence:"标题长度合规，核心词覆盖 86%", risk:"低", status:"待审核", due:"明天 10:00", owner:"运营" },
+      { id:"REV-004", type:"新品测试处置审核", sku:"YL-NP-211", product:"桌面线缆收纳盒", task:"D15 弱动销诊断", conclusion:"进入清仓模式，降价 10%-20%", evidence:"15 日销量 2，广告花费接近止损线", risk:"高", status:"待审核", due:"今天 14:30", owner:"运营主管" },
+      { id:"REV-005", type:"补货建议审核", sku:"YL-KIT-042", product:"可折叠硅胶沥水篮", task:"D30 小批量补货", conclusion:"允许补货 50-100 件", evidence:"剩余库存 3，平均利润 ≥ 0", risk:"中", status:"待审核", due:"明天 12:00", owner:"产品开发" },
+      { id:"REV-006", type:"清货建议审核", sku:"YL-BEA-099", product:"便携化妆镜", task:"D30 强制清仓", conclusion:"降价 25%，无效则移除库存", evidence:"剩余库存 18，30 日销量 0", risk:"高", status:"待审核", due:"今天 17:00", owner:"运营主管" }
+    ];
+
+    const products = [
+      { id:"YL-KIT-042", asin:"B0KITCH42", name:"可折叠硅胶沥水篮", category:"Kitchen", site:"UK", owner:"Lena", stage:"新品测试期", thumb:"kitchen", profit:"£2.8", tacos:"22%", stock:"34 天", status:"内容待审" },
+      { id:"YL-BEA-118", asin:"B0BEAUT118", name:"珍珠发箍套装", category:"Beauty", site:"UK", owner:"Mia", stage:"已立项", thumb:"beauty", profit:"£2.3", tacos:"未投放", stock:"测款前", status:"供应商复核" },
+      { id:"YL-HOM-033", asin:"B0HOME033", name:"桌面线缆收纳盒", category:"Home Storage", site:"DE", owner:"Kevin", stage:"新品测试期", thumb:"storage", profit:"£1.1", tacos:"31%", stock:"21 天", status:"D15 清仓模式" },
+      { id:"YL-BEA-099", asin:"B0BEAU099", name:"便携化妆镜", category:"Beauty", site:"UK", owner:"Ada", stage:"清货期", thumb:"beauty", profit:"-£0.6", tacos:"41%", stock:"82 天", status:"强制清仓" }
+    ];
+
+    const opportunities = [
+      { id:"OPP-001", sku:"YL-KIT-042", product:"可折叠硅胶沥水篮", grade:"A", score:86, profit:"£2.8", supplier:"88%", cpc:"£0.18", status:"可进入 Brief", reason:"低评新品出单，利润和供应链成立", risk:"材质表达需谨慎" },
+      { id:"OPP-002", sku:"YL-BEA-118", product:"珍珠发箍套装", grade:"A", score:82, profit:"£2.3", supplier:"81%", cpc:"£0.16", status:"需复核供应商", reason:"礼品场景明确，价格带健康", risk:"珍珠脱落差评点需规避" },
+      { id:"OPP-003", sku:"YL-HOM-033", product:"桌面线缆收纳盒", grade:"B", score:74, profit:"£1.9", supplier:"76%", cpc:"£0.22", status:"人工复核", reason:"需求稳定但评论门槛偏高", risk:"压力利润接近红线" },
+      { id:"OPP-004", sku:"YL-CHD-006", product:"儿童防撞桌角贴", grade:"C", score:51, profit:"£0.9", supplier:"69%", cpc:"£0.34", status:"不建议推进", reason:"合规风险与广告风险过高", risk:"儿童用品合规阻断" }
+    ];
+
+    const briefs = [
+      { id:"BRF-001", sku:"YL-KIT-042", name:"可折叠硅胶沥水篮", completeness:92, image:"待审核", listing:"待审核", erp:"未建档", draft:"未生成", lifecycle:"D7/D15/D30 已规划", status:"待审核" },
+      { id:"BRF-002", sku:"YL-BEA-118", name:"珍珠发箍套装", completeness:78, image:"未生成", listing:"未生成", erp:"未建档", draft:"未生成", lifecycle:"计划缺失", status:"补充资料" },
+      { id:"BRF-003", sku:"YL-HOM-033", name:"桌面线缆收纳盒", completeness:88, image:"已通过", listing:"已通过", erp:"已建档", draft:"已生成", lifecycle:"新品测试中", status:"已通过" }
+    ];
+
+    const supply = [
+      { id:"SUP-001", sku:"YL-KIT-042", supplier:"义乌 A 厂", purchase:"£0.8", moq:200, lead:"12 天", confidence:"88%", maxCost:"£1.05", verdict:"采购价安全", risk:"食品接触材质需证明" },
+      { id:"SUP-002", sku:"YL-BEA-118", supplier:"义乌饰品 B 厂", purchase:"£0.42", moq:300, lead:"7 天", confidence:"81%", maxCost:"£0.55", verdict:"需复核规格", risk:"珍珠牢固度待确认" },
+      { id:"SUP-003", sku:"YL-HOM-033", supplier:"宁波 C 厂", purchase:"£1.1", moq:500, lead:"18 天", confidence:"76%", maxCost:"£1.2", verdict:"接近红线", risk:"德站 CPC 偏高" }
+    ];
+
+    const contentAssets = [
+      { id:"AST-001", sku:"YL-KIT-042", name:"硅胶沥水篮套图 + Listing", image:"待审核", listing:"待审核", aplus:"未生成", video:"脚本待生成", online:"未上线", status:"审核中" },
+      { id:"AST-002", sku:"YL-HOM-033", name:"桌面收纳盒德语内容", image:"已通过", listing:"已通过", aplus:"已生成", video:"未生成", online:"已上线", status:"已沉淀" },
+      { id:"AST-003", sku:"YL-BEA-118", name:"珍珠发箍商品内容包", image:"未生成", listing:"未生成", aplus:"未生成", video:"未生成", online:"未上线", status:"待生成" }
+    ];
+
+    const imageAssets = [
+      { id:"IMG-001", sku:"YL-KIT-042", type:"白底主图", check:"通过", review:"待审核", credits:8, style:"" },
+      { id:"IMG-002", sku:"YL-KIT-042", type:"厨房场景图", check:"通过", review:"待审核", credits:8, style:"scene" },
+      { id:"IMG-003", sku:"YL-KIT-042", type:"尺寸图", check:"单位缺失", review:"待审核", credits:8, style:"info" },
+      { id:"IMG-004", sku:"YL-KIT-042", type:"折叠对比图", check:"通过", review:"待审核", credits:8, style:"info" },
+      { id:"IMG-005", sku:"YL-KIT-042", type:"露营场景图", check:"构图待优化", review:"待审核", credits:8, style:"scene" }
+    ];
+
+    const listingVersions = {
+      "SEO 覆盖版": "Title: Foldable Silicone Colander for Kitchen, Collapsible Strainer Basket for Fruit, Vegetables and Camping\n\nBullet 1: Space-saving foldable design helps small kitchens keep prep areas tidy.\nBullet 2: Flexible silicone body makes rinsing fruit, vegetables and pasta easier.\nBullet 3: Lightweight basket fits home cooking, camping and caravan storage.\nBullet 4: Stable side handles support quick draining after washing.\nBullet 5: Easy to rinse and store flat when not in use.",
+      "转化表达版": "Title: Collapsible Silicone Colander, Foldable Kitchen Strainer Basket for Vegetables, Fruit and Pasta\n\nBullet 1: Folds flat after use, saving drawer and cupboard space.\nBullet 2: Designed for daily rinsing, draining and quick food preparation.\nBullet 3: Soft silicone sides unfold quickly and return to compact storage.",
+      "本地化德语版": "Titel: Faltbares Silikon Sieb fuer Kueche, zusammenklappbarer Abtropfkorb fuer Obst, Gemuese und Camping\n\nPunkt 1: Platzsparendes Design fuer kleine Kuechen und Schubladen."
+    };
+
+    const drafts = [
+      { id:"DFT-001", sku:"YL-KIT-042", product:"可折叠硅胶沥水篮", site:"UK", draft:"96%", image:"100%", listing:"92%", attr:"88%", supply:"75%", risk:2, status:"待审核" },
+      { id:"DFT-002", sku:"YL-BEA-118", product:"珍珠发箍套装", site:"UK", draft:"74%", image:"0%", listing:"0%", attr:"68%", supply:"80%", risk:4, status:"字段缺失" },
+      { id:"DFT-003", sku:"YL-HOM-033", product:"桌面线缆收纳盒", site:"DE", draft:"100%", image:"100%", listing:"100%", attr:"96%", supply:"92%", risk:1, status:"已推送 ERP" }
+    ];
+
+    const newProducts = [
+      { id:"NP-001", sku:"YL-KIT-042", asin:"B0KITCH42", node:"D30", sales7:8, sales15:18, sales30:42, stock:3, exposure:8200, clicks:268, ad:"£48", tacos:"22%", profit:"£2.5", listing:"可售", buybox:"正常", baseAd:"已开启", suggestion:"允许补货 50-100", status:"待决策", due:"今天" },
+      { id:"NP-002", sku:"YL-HOM-033", asin:"B0HOME033", node:"D15", sales7:1, sales15:2, sales30:2, stock:34, exposure:3400, clicks:91, ad:"£39", tacos:"35%", profit:"-£0.2", listing:"可售", buybox:"正常", baseAd:"已开启", suggestion:"清仓模式，降价 10%-20%", status:"待处理", due:"今天" },
+      { id:"NP-003", sku:"YL-BEA-099", asin:"B0BEAU099", node:"D30", sales7:0, sales15:0, sales30:0, stock:18, exposure:0, clicks:0, ad:"£22", tacos:"--", profit:"-£0.6", listing:"可售", buybox:"正常", baseAd:"已开启", suggestion:"黑名单 SKU，停广告并填写失败原因", status:"待填写失败原因", due:"今天" },
+      { id:"NP-004", sku:"YL-OUT-008", asin:"B0OUT008", node:"D7", sales7:0, sales15:0, sales30:0, stock:20, exposure:0, clicks:0, ad:"£0", tacos:"--", profit:"£1.2", listing:"抑制", buybox:"异常", baseAd:"未开启", suggestion:"先修复基础销售条件，不判定不动销", status:"阻断", due:"明天" }
+    ];
+
+    const healthRows = [
+      { id:"HLT-001", sku:"YL-ADS-091", asin:"B0ADS091", stage:"常规运营期", sales30:120, sales7:12, trend:"下滑 60%", stock:"18 天", tacos:"28%", profit:"-£0.8", ad:"异常", listing:"可售", buybox:"正常", level:"高风险", issue:"广告效率和转化下降", action:"收缩高耗低转词，检查主图 CTR", status:"待处理" },
+      { id:"HLT-002", sku:"YL-KIT-042", asin:"B0KITCH42", stage:"新品测试期", sales30:42, sales7:8, trend:"增长", stock:"34 天", tacos:"22%", profit:"£2.5", ad:"正常", listing:"可售", buybox:"正常", level:"良好", issue:"库存接近触发点", action:"小批量补货复核", status:"待确认" },
+      { id:"HLT-003", sku:"YL-OLD-071", asin:"B0OLD071", stage:"老品留存", sales30:86, sales7:11, trend:"下滑", stock:"92 天", tacos:"18%", profit:"£1.1", ad:"正常", listing:"可售", buybox:"正常", level:"需关注", issue:"库存周转慢", action:"暂停补货，观察价格", status:"处理中" }
+    ];
+
+    const adRows = [
+      { id:"AD-001", sku:"YL-ADS-091", campaign:"UK-HOM-Auto", stage:"常规运营期", spend:"£128", acos:"52%", tacos:"28%", cpc:"£0.42", ctr:"0.39%", cvr:"4.1%", natural:"18%", stock:"18 天", profit:"-£0.8", diagnosis:"高花费低转化", action:"否词、降预算、重建精准广告", status:"待处理" },
+      { id:"AD-002", sku:"YL-KIT-042", campaign:"UK-KIT-Exact", stage:"新品测试期", spend:"£48", acos:"26%", tacos:"22%", cpc:"£0.16", ctr:"0.72%", cvr:"13.2%", natural:"35%", stock:"34 天", profit:"£2.5", diagnosis:"冷启动有效", action:"预算 £15 → £20，观察自然单", status:"待审批" },
+      { id:"AD-003", sku:"YL-BEA-099", campaign:"UK-BEA-Clearance", stage:"清货期", spend:"£22", acos:"--", tacos:"--", cpc:"£0.31", ctr:"0.2%", cvr:"0%", natural:"0%", stock:"82 天", profit:"-£0.6", diagnosis:"清货期广告未收缩", action:"停广告，转清货折扣", status:"待处理" }
+    ];
+
+    const replenishment = [
+      { id:"REP-001", sku:"YL-KIT-042", asin:"B0KITCH42", stage:"新品测试期", stock:3, inbound:0, sales7:8, sales15:18, sales30:42, trend:"增长", cover:"34 天", lead:"12 天", logistics:"15 天", profit:"£2.5", ad:"有效", tacos:"22%", qty:80, orderDate:"本周", advice:"允许小批量补货，不建议大货", risk:"中", status:"待审核" },
+      { id:"REP-002", sku:"YL-ADS-091", asin:"B0ADS091", stage:"常规运营期", stock:38, inbound:200, sales7:12, sales15:36, sales30:120, trend:"下滑", cover:"18 天", lead:"16 天", logistics:"14 天", profit:"-£0.8", ad:"异常", tacos:"28%", qty:0, orderDate:"不下单", advice:"不建议补货，先处理广告利润", risk:"高", status:"待处理" },
+      { id:"REP-003", sku:"YL-OLD-071", asin:"B0OLD071", stage:"老品留存", stock:260, inbound:0, sales7:11, sales15:23, sales30:86, trend:"下滑", cover:"92 天", lead:"18 天", logistics:"20 天", profit:"£1.1", ad:"正常", tacos:"18%", qty:0, orderDate:"暂停", advice:"暂停补货，防止积压", risk:"中", status:"观察" }
+    ];
+
+    const clearance = [
+      { id:"CLR-001", sku:"YL-BEA-099", asin:"B0BEAU099", stage:"清货期", stock:18, days:"无法预测", sales:0, profit:"-£0.6", adSpend:"£22", level:"黑名单候选", price:"降价 25%-35%", ad:"停广告", replenish:"不允许", failure:"待填写", status:"待处理", owner:"运营主管", due:"今天" },
+      { id:"CLR-002", sku:"YL-HOM-033", asin:"B0HOME033", stage:"新品 D15", stock:34, days:"45 天", sales:2, profit:"-£0.2", adSpend:"£39", level:"清仓模式", price:"降价 10%-20%", ad:"停止无效泛词", replenish:"不允许", failure:"Listing 转化差", status:"处理中", owner:"运营", due:"明天" },
+      { id:"CLR-003", sku:"YL-SEA-018", asin:"B0SEA018", stage:"季节尾声", stock:62, days:"28 天", sales:18, profit:"£0.1", adSpend:"£12", level:"最终折扣清仓", price:"降价 20%", ad:"保留精准词", replenish:"不允许", failure:"季节性误判", status:"待复盘", owner:"运营主管", due:"本周" }
+    ];
+
+    const exceptions = [
+      { id:"EXC-001", type:"D15 弱动销", priority:"P0", sku:"YL-HOM-033", asin:"B0HOME033", stage:"新品测试期", rule:"D15 销量 1-3", desc:"点击有但转化弱，广告接近止损线", action:"降价 10%-20%，停无效广告", owner:"运营", status:"待处理", due:"今天 14:00" },
+      { id:"EXC-002", type:"库存预警", priority:"P0", sku:"YL-KIT-042", asin:"B0KITCH42", stage:"新品测试期", rule:"库存覆盖低于供应链周期", desc:"库存只够 34 天，供应链周期 27 天", action:"进入补货审批", owner:"产品开发", status:"处理中", due:"今天 18:00" },
+      { id:"EXC-003", type:"老品广告异常", priority:"P1", sku:"YL-ADS-091", asin:"B0ADS091", stage:"常规运营期", rule:"TACoS 超过规则线", desc:"销售下滑，广告未收缩，利润转负", action:"否词、降预算、检查主图", owner:"广告人员", status:"待处理", due:"明天" },
+      { id:"EXC-004", type:"Listing 异常", priority:"P2", sku:"YL-OUT-008", asin:"B0OUT008", stage:"新品测试期", rule:"Listing 状态抑制", desc:"基础销售条件未满足，不进入不动销计时", action:"修复 Listing 和 Buy Box", owner:"运营", status:"待处理", due:"明天" }
+    ];
+
+    const inactive = [
+      { id:"INA-001", sku:"YL-HOM-033", asin:"B0HOME033", site:"DE", node:"D15", level:"清仓", price:"降价 10%-20%", ad:"停无效泛词", replenish:"不补货", clearance:"进入清仓观察", failure:"Listing 转化差", owner:"运营", status:"处理中", due:"明天" },
+      { id:"INA-002", sku:"YL-BEA-099", asin:"B0BEAU099", site:"UK", node:"D30", level:"黑名单", price:"降价 25%-35%", ad:"停广告", replenish:"不补货", clearance:"强制清仓 / 移除", failure:"待填写", owner:"运营主管", status:"待处理", due:"今天" },
+      { id:"INA-003", sku:"YL-KIT-042", asin:"B0KITCH42", site:"UK", node:"D30", level:"补货候选", price:"保持价格", ad:"保留精准广告", replenish:"补货 50-100", clearance:"不清货", failure:"无", owner:"产品开发", status:"待审核", due:"今天" }
+    ];
+
+    const logs = [
+      { id:"LOG-001", related:"EXC-003", sku:"YL-ADS-091", asin:"B0ADS091", type:"否词", content:"加入 12 个低转化搜索词，日预算从 £35 降到 £22", user:"广告人员", time:"2026-07-08 10:20", before:"ACOS 52%", after:"待观察", review:"2026-07-11", result:"待观察" },
+      { id:"LOG-002", related:"INA-001", sku:"YL-HOM-033", asin:"B0HOME033", type:"降价", content:"售价下调 15%，开启 10% coupon", user:"运营", time:"2026-07-08 11:05", before:"15 日销量 2", after:"待观察", review:"2026-07-12", result:"待观察" },
+      { id:"LOG-003", related:"REV-003", sku:"YL-KIT-042", asin:"B0KITCH42", type:"修改 Listing", content:"补充折叠后尺寸表达，删除过度材质承诺", user:"运营", time:"2026-07-08 12:18", before:"规则提醒 2 项", after:"校验通过", review:"2026-07-15", result:"有效" }
+    ];
+
+    const rules = [
+      { id:"RULE-001", name:"D15 弱动销清仓模式", type:"新品测试规则", scope:"Amazon / UK / 全类目", condition:"15 日销量 1-3 且广告接近止损线", action:"降价 10%-20%，停止无效广告", risk:"高", enabled:true, updated:"2026-07-08" },
+      { id:"RULE-002", name:"A 类选品利润红线", type:"选品规则", scope:"Amazon / UK / Kitchen", condition:"基准利润 ≥ £2 且压力利润 > £1", action:"允许进入 Brief", risk:"中", enabled:true, updated:"2026-07-06" },
+      { id:"RULE-003", name:"清货期广告收缩", type:"广告规则", scope:"Amazon / 全站点", condition:"生命周期 = 清货期 且广告无转化", action:"暂停广告或仅保留精准词", risk:"高", enabled:true, updated:"2026-07-05" },
+      { id:"RULE-004", name:"图片主图合规", type:"图片规则", scope:"Amazon / 全站点", condition:"白底、主体占比、无多余文字", action:"不通过则进入人工审核", risk:"中", enabled:true, updated:"2026-07-03" },
+      { id:"RULE-005", name:"新品预算审批", type:"审核规则", scope:"Amazon / UK", condition:"新品 7 天预算超过 £20", action:"转运营主管审批", risk:"中", enabled:false, updated:"2026-07-01" }
+    ];
+
+    const quality = [
+      { module:"选品", pass:"74%", reject:"12%", business:"A 类 D15 动销率 68%", issue:"低价高 CPC 类目误判", suggestion:"降低 Beauty 低价带推荐权重" },
+      { module:"图片", pass:"61%", reject:"28%", business:"上线后 CTR +9%", issue:"尺寸图缺单位", suggestion:"图片 Prompt 模板强制输出单位" },
+      { module:"Listing", pass:"73%", reject:"18%", business:"CVR +6%", issue:"本地化表达生硬", suggestion:"德语站引入站点语气模板" },
+      { module:"广告建议", pass:"69%", reject:"11%", business:"ACOS 平均下降 4.2%", issue:"断货风险下仍建议放量", suggestion:"广告规则强依赖库存覆盖天数" },
+      { module:"补货建议", pass:"66%", reject:"15%", business:"断货率下降 8%", issue:"促销冲量误判为常态需求", suggestion:"加入活动周期衰减系数" },
+      { module:"清货建议", pass:"81%", reject:"7%", business:"平均清完天数 24", issue:"失败原因填写不完整", suggestion:"D30 黑名单强制填写原因" }
+    ];
+
+    const library = [
+      { id:"LIB-001", type:"商品 Brief", sku:"YL-KIT-042", title:"硅胶沥水篮完整 Brief", source:"开品任务", review:"通过", used:"图片 / Listing / 刊登 / 广告", effect:"D30 允许补货", time:"2026-07-08" },
+      { id:"LIB-002", type:"图片套图", sku:"YL-HOM-033", title:"桌面收纳盒德语内容套图", source:"图片工厂", review:"通过", used:"Amazon DE", effect:"CTR +7%", time:"2026-07-06" },
+      { id:"LIB-003", type:"复盘报告", sku:"YL-BEA-099", title:"便携化妆镜失败复盘", source:"清货复盘", review:"待审核", used:"规则回流", effect:"待确认", time:"2026-07-08" },
+      { id:"LIB-004", type:"规则建议", sku:"类目规则", title:"低价 Beauty CPC 风险规则", source:"质量反馈", review:"待审核", used:"选品规则", effect:"未启用", time:"2026-07-08" }
+    ];
+
+    const credits = [
+      { id:"CR-001", task:"英国站发饰开品全链路", type:"开品任务", module:"选品 + Brief + 图片 + Listing", credits:236, status:"成功", refund:"否", time:"2026-07-08 09:40" },
+      { id:"CR-002", task:"硅胶沥水篮套图生成", type:"图片任务", module:"图片工厂", credits:48, status:"成功", refund:"否", time:"2026-07-08 10:10" },
+      { id:"CR-003", task:"桌面收纳盒德语 Listing", type:"Listing", module:"Listing 工厂", credits:28, status:"失败", refund:"是", time:"2026-07-08 11:02" },
+      { id:"CR-004", task:"D15 弱动销诊断", type:"生命周期", module:"新品测试", credits:16, status:"成功", refund:"否", time:"2026-07-08 12:20" }
+    ];
+
+    const qs = (selector, root = document) => root.querySelector(selector);
+    const qsa = (selector, root = document) => [...root.querySelectorAll(selector)];
+    const escapeHtml = value => String(value).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+
+    function iconRefresh() {
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function colorFor(value) {
+      const text = String(value);
+      if (/通过|已完成|已推送|良好|有效|成功|可售|正常|A|在线|允许|启用/.test(text)) return "green";
+      if (/待|中|需|观察|补充|B|审批|复核|小批量/.test(text)) return "amber";
+      if (/高|阻断|失败|异常|黑名单|强制|清仓|不建议|C|缺失|抑制|负|P0/.test(text)) return "red";
+      if (/P1|蓝|任务|执行/.test(text)) return "blue";
+      return "gray";
+    }
+
+    function status(text) {
+      return `<span class="status ${colorFor(text)}">${escapeHtml(text)}</span>`;
+    }
+
+    function renderNav() {
+      qs("#nav").innerHTML = navGroups.map(group => `
+        <div>
+          <div class="nav-group-title">${escapeHtml(group.title)}</div>
+          ${group.items.map(([view, title, icon]) => `
+            <button class="nav-btn ${state.view === view ? "active" : ""}" data-view="${view}">
+              <i data-lucide="${icon}"></i>${escapeHtml(title)}
+            </button>
+          `).join("")}
+        </div>
+      `).join("");
+    }
+
+    function pageShell(title, desc, actions = "") {
+      return `
+        <div class="page-head">
+          <div>
+            <h1>${escapeHtml(title)}</h1>
+            <p class="page-desc">${escapeHtml(desc)}</p>
+          </div>
+          <div class="actions">${actions}</div>
+        </div>
+      `;
+    }
+
+    function metrics(items, cls = "grid-4") {
+      return `<div class="${cls}">${items.map(item => `
+        <button class="metric" data-view="${item.view || state.view}">
+          <label>${escapeHtml(item.label)} ${item.badge ? status(item.badge) : ""}</label>
+          <strong>${escapeHtml(item.value)}</strong>
+          <small>${escapeHtml(item.note || "")}</small>
+        </button>
+      `).join("")}</div>`;
+    }
+
+    function table(columns, rows, rowAction = "openRow") {
+      return `<div class="table-wrap"><table><thead><tr>${columns.map(col => `<th>${escapeHtml(col.label)}</th>`).join("")}<th>操作</th></tr></thead><tbody>
+        ${rows.map(row => `<tr>${columns.map(col => `<td>${cell(row, col)}</td>`).join("")}<td><div class="actions"><button class="btn small" data-action="${rowAction}" data-id="${row.id}">详情</button>${row.quick || ""}</div></td></tr>`).join("") || `<tr><td colspan="${columns.length + 1}"><div class="empty">暂无数据</div></td></tr>`}
+      </tbody></table></div>`;
+    }
+
+    function cell(row, col) {
+      const value = row[col.key];
+      if (col.kind === "status") return status(value);
+      if (col.kind === "progress") return `<div class="progress" style="--value:${escapeHtml(value)}"><span></span></div><div class="meta">${escapeHtml(value)}</div>`;
+      if (col.kind === "product") {
+        const product = products.find(item => item.id === row.sku) || products[0];
+        return `<div class="card-title"><div class="thumb ${product?.thumb || ""}"></div><div><strong>${escapeHtml(value || row.product || row.name || row.sku)}</strong><div class="meta">${escapeHtml(row.sku || "")} ${row.asin ? "· " + escapeHtml(row.asin) : ""}</div></div></div>`;
+      }
+      if (col.kind === "priority") return status(value);
+      return escapeHtml(value ?? "");
+    }
+
+    function render() {
+      renderNav();
+      qs("#creditBadge").textContent = `剩余积分 ${state.credits.toLocaleString()}`;
+      const renderers = {
+        dashboard: renderDashboard,
+        tasks: renderTasks,
+        reviews: renderReviews,
+        opportunities: renderOpportunities,
+        briefs: renderBriefs,
+        supply: renderSupply,
+        content: renderContent,
+        images: renderImages,
+        listings: renderListings,
+        drafts: renderDrafts,
+        newProducts: renderNewProducts,
+        health: renderHealth,
+        ads: renderAds,
+        inventory: renderInventory,
+        clearance: renderClearance,
+        exceptions: renderExceptions,
+        inactive: renderInactive,
+        logs: renderLogs,
+        rules: renderRules,
+        quality: renderQuality,
+        library: renderLibrary,
+        credits: renderCredits,
+        settings: renderSettings
+      };
+      qs("#appView").innerHTML = renderers[state.view]();
+      iconRefresh();
+    }
+
+    function renderDashboard() {
+      const reviewCounts = ["候选品审核","商品 Brief 审核","图片审核","Listing 审核","刊登草稿审核","新品测试处置审核","补货建议审核","清货建议审核"]
+        .map(type => ({ type, count: reviews.filter(item => item.type === type || (type === "商品 Brief 审核" && item.type === "Brief 审核")).length || Math.floor(Math.random() * 5) + 1 }));
+      return `
+        ${pageShell("首页指挥台", "一眼看到 AI 在执行什么、哪些结果需要审核、哪些生命周期状态和异常需要处理。", `
+          <button class="btn" data-action="uploadMaterial"><i data-lucide="upload"></i>上传资料</button>
+          <button class="btn" data-action="chooseHistory"><i data-lucide="folder-open"></i>选择历史商品</button>
+          <button class="btn primary" data-action="openPlanner"><i data-lucide="sparkles"></i>开始规划任务</button>
+        `)}
+        <div class="panel">
+          <div class="panel-head"><div><h2>经营目标输入区</h2><span>输入目标后先生成任务规划，确认后进入任务流和审核流</span></div>${status("人工审核默认开启")}</div>
+          <div class="panel-body">
+            <div class="goal-layout">
+              <div class="goal-box">
+                <textarea id="goalInput">${escapeHtml(state.goal)}</textarea>
+                <div class="row">
+                  <div class="field"><label>平台</label><select><option>Amazon</option><option>Walmart</option><option>TikTok Shop</option></select></div>
+                  <div class="field"><label>站点</label><select><option>UK</option><option>US</option><option>DE</option></select></div>
+                  <div class="field"><label>类目</label><input value="Beauty / Kitchen"></div>
+                </div>
+                <div class="chip-row">
+                  ${["开发新品","自动选品","生成图片","生成 Listing","刊登草稿","新品测试","分析广告异常","补货判断","处理不动销"].map(goal => `<button class="chip" data-action="quickGoal" data-goal="${goal}">${goal}</button>`).join("")}
+                </div>
+              </div>
+              <div class="ai-side">
+                <span>今日 AI 产出</span>
+                <strong>86 项</strong>
+                <span>含 11 个候选结论、28 张图片、9 条 Listing、7 条生命周期处置建议。</span>
+                <button class="btn primary" data-action="openPlanner"><i data-lucide="play"></i>规划任务</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        ${metrics([
+          {label:"AI 执行中任务", value:tasks.filter(t=>t.status==="执行中").length, note:"3 项即将进入审核", view:"tasks"},
+          {label:"待我审核", value:reviews.length, note:"候选品、图片、Listing、处置建议", view:"reviews"},
+          {label:"异常处理中", value:exceptions.length, badge:"P0 2", note:"库存、广告、D15 弱动销", view:"exceptions"},
+          {label:"清货 / 黑名单", value:clearance.length, badge:"高风险", note:"6 个待填写失败原因", view:"clearance"}
+        ])}
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-head"><h2>今日 AI 任务</h2><button class="btn small" data-view="tasks">全部任务</button></div>
+            <div class="panel-body card-list">${tasks.slice(0,3).map(taskCard).join("")}</div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h2>待我审核</h2><button class="btn small" data-view="reviews">进入审核中心</button></div>
+            <div class="panel-body">
+              <div class="grid-4">${reviewCounts.map(item => `<button class="metric" data-view="reviews"><label>${item.type}</label><strong>${item.count}</strong><small>点击进入筛选处理</small></button>`).join("")}</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>商品生命周期概览</h2><span>点击阶段进入对应列表</span></div>
+          <div class="panel-body"><div class="grid-5">${lifecycle.map(([label, count, view]) => `<button class="metric" data-view="${view}"><label>${label}</label><strong>${count}</strong><small>查看明细与 AI 建议</small></button>`).join("")}</div></div>
+        </div>
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-head"><h2>经营异常与建议动作</h2><button class="btn small" data-view="exceptions">异常队列</button></div>
+            <div class="panel-body card-list">${exceptions.slice(0,4).map(exceptionCard).join("")}</div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h2>AI Agent / 数据 / 规则 / 积分</h2><button class="btn small" data-view="credits">积分记录</button></div>
+            <div class="panel-body card-list">
+              ${["数据连接：ERP / Ads / 1688 已同步","规则状态：D7 / D15 / D23 / D30 已启用","今日积分：消耗 392，剩余 12,480","质量回流：新增 4 条规则优化建议"].map((text, i) => `<div class="card"><div class="card-top"><strong>${text}</strong>${status(i === 2 ? "正常" : "在线")}</div></div>`).join("")}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function taskCard(task) {
+      return `
+        <div class="card">
+          <div class="card-top">
+            <div><strong>${escapeHtml(task.name)}</strong><div class="meta">${task.type} · ${task.owner} · ${task.stage}</div></div>
+            ${status(task.status)}
+          </div>
+          <div class="progress" style="--value:${task.progress}%"><span></span></div>
+          <div class="meta">待处理：${escapeHtml(task.next)} · 积分 ${task.credits}</div>
+          <div class="actions"><button class="btn small" data-action="openTask" data-id="${task.id}">查看</button><button class="btn small" data-action="pauseTask" data-id="${task.id}">暂停</button><button class="btn small primary" data-action="continueTask" data-id="${task.id}">继续</button></div>
+        </div>
+      `;
+    }
+
+    function exceptionCard(row) {
+      return `
+        <div class="card">
+          <div class="card-top">
+            <div><strong>${row.type} · ${row.sku}</strong><div class="meta">${row.stage} · ${row.desc}</div></div>
+            ${status(row.priority)}
+          </div>
+          <div class="meta">AI 建议：${row.action}</div>
+          <div class="actions"><button class="btn small" data-action="openException" data-id="${row.id}">处理</button><button class="btn small" data-action="addLogFor" data-id="${row.id}">记录动作</button></div>
+        </div>
+      `;
+    }
+
+    function renderTasks() {
+      return `
+        ${pageShell("AI 任务中心", "管理所有 AI 任务，包括创建、拆解、执行、暂停、失败重试、结果查看、审核流和积分记录。", `
+          <button class="btn" data-action="retryFailed"><i data-lucide="rotate-cw"></i>重试失败任务</button>
+          <button class="btn primary" data-action="openTaskCreate"><i data-lucide="plus"></i>创建 AI 任务</button>
+        `)}
+        ${metrics([{label:"执行中",value:tasks.filter(t=>t.status==="执行中").length,note:"后台任务不阻塞页面"},{label:"待审核",value:tasks.filter(t=>t.status==="待审核").length,note:"结果可进入审核中心"},{label:"已完成",value:tasks.filter(t=>t.status==="已完成").length,note:"可查看结果和积分"},{label:"今日积分消耗",value:"392",note:"失败任务支持退回"}])}
+        <div class="panel">
+          <div class="panel-head"><div class="tabs">${["全部","执行中","待审核","已完成"].map(f=>`<button class="tab ${state.filter===f || (state.filter==="all"&&f==="全部") ? "active":""}" data-action="setFilter" data-filter="${f}">${f}</button>`).join("")}</div></div>
+          <div class="panel-body">
+            <div class="grid-3">${filtered(tasks).map(taskCard).join("")}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderReviews() {
+      return `
+        ${pageShell("待我审核 / 审核中心", "集中处理候选品、Brief、图片、Listing、刊登草稿、新品处置、补货、清货和规则调整审核。", `
+          <button class="btn" data-action="bulkReject"><i data-lucide="x"></i>批量驳回</button>
+          <button class="btn primary" data-action="bulkApprove"><i data-lucide="check-check"></i>批量通过低风险</button>
+        `)}
+        ${metrics([{label:"候选品审核",value:1,note:"A/B/C 结论与依据"},{label:"图片 / Listing",value:2,note:"校验项和人工意见"},{label:"生命周期处置",value:1,badge:"高风险",note:"D15 / D30 处理"},{label:"补货 / 清货",value:2,note:"资金与库存风险"}])}
+        <div class="panel">
+          <div class="panel-head">${filterTabs(["全部","候选品审核","图片审核","Listing 审核","新品测试处置审核","补货建议审核","清货建议审核"])}</div>
+          <div class="panel-body">${table([
+            {key:"id",label:"审核编号"},{key:"type",label:"审核类型",kind:"status"},{key:"product",label:"审核对象",kind:"product"},{key:"conclusion",label:"AI 结论"},{key:"risk",label:"风险",kind:"status"},{key:"due",label:"最晚处理"},{key:"status",label:"状态",kind:"status"}
+          ], filtered(reviews).map(r=>({...r, quick:`<button class="btn small success" data-action="approveReview" data-id="${r.id}">通过</button><button class="btn small danger" data-action="rejectReview" data-id="${r.id}">驳回</button>`})), "openReview")}</div>
+        </div>
+      `;
+    }
+
+    function filterTabs(items) {
+      return `<div class="tabs">${items.map(f => `<button class="tab ${state.filter===f || (state.filter==="all"&&f==="全部") ? "active":""}" data-action="setFilter" data-filter="${f}">${f}</button>`).join("")}</div>`;
+    }
+
+    function filtered(rows) {
+      if (state.filter === "all" || state.filter === "全部") return rows;
+      return rows.filter(row => Object.values(row).some(value => String(value).includes(state.filter)));
+    }
+
+    function renderOpportunities() {
+      return `
+        ${pageShell("机会发现 / AI 选品", "输入关键词、ASIN、竞品链接后，系统执行硬规则、利润、需求、竞争和 1688 匹配，并输出 A/B/C 结论。", `
+          <button class="btn" data-action="importAsin"><i data-lucide="upload"></i>导入 ASIN / 关键词</button>
+          <button class="btn primary" data-action="runSelection"><i data-lucide="scan-line"></i>运行选品漏斗</button>
+        `)}
+        ${metrics([{label:"候选输入",value:128,note:"批量关键词 / ASIN"},{label:"通过粗筛",value:24,note:"硬规则和利润过滤"},{label:"A 类机会",value:6,badge:"可立项",note:"可进入 Brief"},{label:"淘汰沉淀",value:89,note:"带淘汰原因"}])}
+        <div class="panel"><div class="panel-head">${filterTabs(["全部","A","B","C"])}</div><div class="panel-body">${table([
+          {key:"product",label:"候选品",kind:"product"},{key:"grade",label:"推荐等级",kind:"status"},{key:"score",label:"推荐分"},{key:"profit",label:"基准利润"},{key:"supplier",label:"供应商置信度"},{key:"cpc",label:"CPC"},{key:"status",label:"状态",kind:"status"},{key:"risk",label:"风险"}
+        ], filtered(opportunities).map(o=>({...o, quick:`<button class="btn small success" data-action="approveOpportunity" data-id="${o.id}">通过</button><button class="btn small danger" data-action="rejectOpportunity" data-id="${o.id}">淘汰</button>`})), "openOpportunity")}</div></div>
+      `;
+    }
+
+    function renderBriefs() {
+      return `
+        ${pageShell("商品立项 / 商品 Brief", "Brief 是系统核心资产，承接选品结论、产品事实、供应链成本、关键词竞品、内容方向和生命周期计划。", `
+          <button class="btn" data-action="createBrief"><i data-lucide="plus"></i>新建 Brief</button>
+          <button class="btn primary" data-action="submitBriefReview"><i data-lucide="send"></i>提交审核</button>
+        `)}
+        <div class="layout-detail">
+          <div class="panel"><div class="panel-head"><h2>商品 Brief 列表</h2>${status("完整度自动计算")}</div><div class="panel-body">${table([
+            {key:"name",label:"商品",kind:"product"},{key:"completeness",label:"完整度"},{key:"image",label:"图片状态",kind:"status"},{key:"listing",label:"Listing 状态",kind:"status"},{key:"erp",label:"ERP 建档",kind:"status"},{key:"draft",label:"刊登状态",kind:"status"},{key:"status",label:"审核状态",kind:"status"}
+          ], briefs.map(b=>({...b, quick:`<button class="btn small" data-action="generateContentFromBrief" data-id="${b.id}">生成内容</button>`})), "openBrief")}</div></div>
+          <aside class="detail-panel">${briefDetail(briefs[0])}</aside>
+        </div>
+      `;
+    }
+
+    function briefDetail(brief) {
+      return `
+        <div class="detail-section"><h2>${escapeHtml(brief.name)}</h2><div class="meta">${brief.sku} · 当前状态：${brief.status}</div></div>
+        <div class="detail-section"><div class="kv">
+          <div class="kv-item"><label>产品事实</label><strong>8 / 9</strong></div>
+          <div class="kv-item"><label>供应链成本</label><strong>6 / 8</strong></div>
+          <div class="kv-item"><label>关键词竞品</label><strong>完整</strong></div>
+          <div class="kv-item"><label>生命周期计划</label><strong>${escapeHtml(brief.lifecycle)}</strong></div>
+        </div></div>
+        <div class="detail-section"><strong>缺失字段提示</strong><ul class="reason-list"><li><span class="dot"></span><span>补充包装尺寸和 FBA 费用后可提高刊登完整度。</span></li><li><span class="dot"></span><span>生命周期计划需设置 D7 / D15 / D23 / D30 规则。</span></li></ul></div>
+        <div class="detail-section"><div class="actions"><button class="btn" data-action="saveBrief">保存</button><button class="btn primary" data-action="submitBriefReview">提交审核</button></div></div>
+      `;
+    }
+
+    function renderSupply() {
+      return moduleTable("供应链与利润测算", "将 1688 匹配、采购价、MOQ、交期、FBA、头程、广告生存能力统一计算，输出可解释利润结论。", supply, [
+        {key:"sku",label:"SKU"},{key:"supplier",label:"供应商"},{key:"purchase",label:"采购价"},{key:"moq",label:"MOQ"},{key:"lead",label:"交期"},{key:"confidence",label:"匹配置信度"},{key:"maxCost",label:"最高可接受采购价"},{key:"verdict",label:"AI 结论",kind:"status"},{key:"risk",label:"风险"}
+      ], `<button class="btn" data-action="recalcProfit"><i data-lucide="calculator"></i>重新测算</button><button class="btn primary" data-action="pushSupplyToBrief"><i data-lucide="send"></i>写入 Brief</button>`);
+    }
+
+    function renderContent() {
+      return moduleTable("内容资产中心", "统一管理商品 Brief、图片、Listing、A+、视频脚本、审核状态和上线状态。", contentAssets, [
+        {key:"name",label:"资产包",kind:"product"},{key:"image",label:"图片状态",kind:"status"},{key:"listing",label:"Listing 状态",kind:"status"},{key:"aplus",label:"A+ 状态",kind:"status"},{key:"video",label:"视频脚本"},{key:"online",label:"上线状态",kind:"status"},{key:"status",label:"审核状态",kind:"status"}
+      ], `<button class="btn" data-action="generateAssetPack"><i data-lucide="package-plus"></i>生成内容包</button><button class="btn primary" data-action="addToLibrary"><i data-lucide="database"></i>加入成果库</button>`);
+    }
+
+    function renderImages() {
+      return `
+        ${pageShell("AI 套图工厂", "基于商品 Brief、产品图、竞品图、平台规则和图片方向，生成可审核套图。", `
+          <button class="btn" data-action="regenerateImages"><i data-lucide="wand-sparkles"></i>重新生成</button>
+          <button class="btn primary" data-action="approveImages"><i data-lucide="check"></i>通过所选图片</button>
+        `)}
+        ${metrics([{label:"待审核图片",value:imageAssets.length,note:"每张可通过或驳回"},{label:"已选图片",value:state.selectedImages.size,note:"通过后加入商品资产"},{label:"AI 校验异常",value:2,badge:"需处理",note:"单位缺失、构图待优化"},{label:"消耗积分",value:40,note:"失败可退回"}])}
+        <div class="panel"><div class="panel-head"><h2>图片矩阵</h2>${status("人工审核中")}</div><div class="panel-body"><div class="asset-grid">${imageAssets.map(img => `
+          <button class="asset-card ${state.selectedImages.has(img.id) ? "selected" : ""}" data-action="toggleImage" data-id="${img.id}">
+            <div class="asset-preview ${img.style}"></div>
+            <footer><strong>${img.type}</strong><span class="meta">${img.id} · ${img.sku}</span>${status(img.check)}${status(state.selectedImages.has(img.id) ? "已选" : img.review)}</footer>
+          </button>
+        `).join("")}</div></div></div>
+      `;
+    }
+
+    function renderListings() {
+      return `
+        ${pageShell("AI Listing 工厂", "基于 Brief、关键词、竞品、差评、图片方向和平台规则生成可审核 Listing。", `
+          <button class="btn" data-action="checkListing"><i data-lucide="shield-check"></i>规则校验</button>
+          <button class="btn primary" data-action="submitListingReview"><i data-lucide="send"></i>进入审核</button>
+        `)}
+        <div class="grid-2">
+          <div class="panel"><div class="panel-head"><div class="tabs">${Object.keys(listingVersions).map(v=>`<button class="tab ${state.listingVersion===v?"active":""}" data-action="setListingVersion" data-version="${v}">${v}</button>`).join("")}</div></div><div class="panel-body"><textarea class="textarea" style="min-height:390px" id="listingEditor">${escapeHtml(listingVersions[state.listingVersion])}</textarea><div class="actions" style="justify-content:flex-end;margin-top:10px"><button class="btn" data-action="saveListing">保存修改</button><button class="btn primary" data-action="submitListingReview">提交审核</button></div></div></div>
+          <div class="panel"><div class="panel-head"><h2>右侧规则校验</h2>${status("校验完成")}</div><div class="panel-body card-list">
+            ${["标题长度合规","敏感词未命中","关键词覆盖 86%","五点表达不重复","建议补充折叠后尺寸","材质承诺需与供应商证明一致"].map((x,i)=>`<div class="card"><div class="card-top"><strong>${x}</strong>${status(i<4?"通过":i===4?"建议":"注意")}</div></div>`).join("")}
+            <button class="btn danger" data-action="rejectListing">驳回并选择原因</button>
+          </div></div>
+        </div>
+      `;
+    }
+
+    function renderDrafts() {
+      return moduleTable("ERP 建档 / 刊登草稿", "把商品 Brief、审核通过图片、Listing、供应链和平台字段规则自动转成 ERP 产品资料与刊登草稿。", drafts, [
+        {key:"product",label:"草稿",kind:"product"},{key:"site",label:"站点"},{key:"draft",label:"刊登完整度",kind:"progress"},{key:"image",label:"图片完整度",kind:"progress"},{key:"listing",label:"Listing 完整度",kind:"progress"},{key:"attr",label:"类目属性",kind:"progress"},{key:"supply",label:"供应链字段",kind:"progress"},{key:"risk",label:"风险项"},{key:"status",label:"状态",kind:"status"}
+      ], `<button class="btn" data-action="validateDrafts"><i data-lucide="shield-check"></i>重新校验</button><button class="btn primary" data-action="submitDraftReview"><i data-lucide="send"></i>提交审核</button>`);
+    }
+
+    function renderNewProducts() {
+      return `
+        ${pageShell("新品测试", "自动识别新品 D7 / D15 / D23 / D30 状态，并给出处置建议。", `
+          <button class="btn" data-action="syncLifecycle"><i data-lucide="refresh-cw"></i>同步生命周期</button>
+          <button class="btn primary" data-action="generateLifecycleExceptions"><i data-lucide="octagon-alert"></i>生成异常 / 处置任务</button>
+        `)}
+        ${metrics([{label:"新品测试中",value:31,note:"自动监控 D7/D15/D23/D30"},{label:"D7 待处理",value:8,note:"无流量 / 不转化 / 弱动销"},{label:"D15 待处理",value:6,note:"补货候选 / 清仓模式"},{label:"D23 加速清仓",value:4,note:"库存较多"},{label:"D30 决策",value:5,badge:"待处理",note:"补货、清仓、黑名单"},{label:"黑名单候选",value:2,badge:"高风险",note:"必须填写失败原因"}], "grid-6")}
+        <div class="panel"><div class="panel-head">${filterTabs(["全部","D7","D15","D23","D30","阻断"])}</div><div class="panel-body">${table([
+          {key:"sku",label:"SKU"},{key:"asin",label:"ASIN"},{key:"node",label:"当前节点",kind:"status"},{key:"sales7",label:"7日销量"},{key:"sales15",label:"15日销量"},{key:"sales30",label:"30日销量"},{key:"stock",label:"库存"},{key:"ad",label:"广告花费"},{key:"profit",label:"平均利润"},{key:"listing",label:"Listing",kind:"status"},{key:"buybox",label:"Buy Box",kind:"status"},{key:"baseAd",label:"基础广告",kind:"status"},{key:"suggestion",label:"系统建议"},{key:"status",label:"处理状态",kind:"status"}
+        ], filtered(newProducts).map(r=>({...r, quick:`<button class="btn small success" data-action="confirmLifecycleAction" data-id="${r.id}">确认执行</button><button class="btn small" data-action="adjustLifecycleAction" data-id="${r.id}">调整建议</button>`})), "openLifecycle")}</div></div>
+      `;
+    }
+
+    function renderHealth() {
+      return moduleTable("在售经营健康", "管理常规运营期和老品留存期 ASIN 健康，不走新品 D7/D15/D30 强制清仓逻辑，而是进入老品异常管理。", healthRows, [
+        {key:"sku",label:"SKU"},{key:"stage",label:"生命周期",kind:"status"},{key:"sales30",label:"30日销量"},{key:"sales7",label:"7日销量"},{key:"trend",label:"销量趋势",kind:"status"},{key:"stock",label:"库存覆盖"},{key:"tacos",label:"TACoS"},{key:"profit",label:"利润/单"},{key:"ad",label:"广告",kind:"status"},{key:"listing",label:"Listing",kind:"status"},{key:"buybox",label:"Buy Box",kind:"status"},{key:"level",label:"健康等级",kind:"status"},{key:"action",label:"AI 建议"},{key:"status",label:"处理状态",kind:"status"}
+      ], `<button class="btn" data-action="runHealthScan"><i data-lucide="activity"></i>重新诊断</button><button class="btn primary" data-action="createExceptionFromHealth"><i data-lucide="plus"></i>生成异常</button>`);
+    }
+
+    function renderAds() {
+      return moduleTable("广告健康", "结合生命周期、利润、库存和销售状态判断广告该放大、收缩、暂停还是配合清货。", adRows, [
+        {key:"sku",label:"SKU"},{key:"campaign",label:"广告活动"},{key:"stage",label:"生命周期",kind:"status"},{key:"spend",label:"广告花费"},{key:"acos",label:"ACOS",kind:"status"},{key:"tacos",label:"TACoS"},{key:"cpc",label:"CPC"},{key:"ctr",label:"CTR"},{key:"cvr",label:"CVR"},{key:"natural",label:"自然单占比"},{key:"stock",label:"库存覆盖"},{key:"profit",label:"利润/单"},{key:"diagnosis",label:"AI 诊断",kind:"status"},{key:"action",label:"建议动作"},{key:"status",label:"处理状态",kind:"status"}
+      ], `<button class="btn" data-action="pullAds"><i data-lucide="download-cloud"></i>拉取广告数据</button><button class="btn primary" data-action="approveAdActions"><i data-lucide="check"></i>审批建议动作</button>`);
+    }
+
+    function renderInventory() {
+      return moduleTable("库存与补货决策", "综合销量趋势、生命周期、广告、利润、供应商交期和物流时效，判断该补、不补还是暂停。", replenishment, [
+        {key:"sku",label:"SKU"},{key:"stage",label:"生命周期",kind:"status"},{key:"stock",label:"当前库存"},{key:"inbound",label:"在途"},{key:"sales7",label:"7日销量"},{key:"trend",label:"趋势",kind:"status"},{key:"cover",label:"库存覆盖"},{key:"lead",label:"供应商交期"},{key:"logistics",label:"物流时效"},{key:"profit",label:"利润/单"},{key:"tacos",label:"TACoS"},{key:"qty",label:"建议量"},{key:"orderDate",label:"建议下单"},{key:"advice",label:"AI 建议"},{key:"risk",label:"风险",kind:"status"},{key:"status",label:"状态",kind:"status"}
+      ], `<button class="btn" data-action="refreshReplenish"><i data-lucide="refresh-cw"></i>刷新建议</button><button class="btn primary" data-action="approveReplenish"><i data-lucide="package-plus"></i>确认补货建议</button>`);
+    }
+
+    function renderClearance() {
+      return moduleTable("清货与复盘", "把失败产品及时止损，并把失败原因沉淀为下一轮选品、图片、Listing、广告和补货规则。", clearance, [
+        {key:"sku",label:"SKU"},{key:"stage",label:"生命周期",kind:"status"},{key:"stock",label:"剩余库存"},{key:"days",label:"预计清完"},{key:"sales",label:"累计销量"},{key:"profit",label:"利润/单"},{key:"adSpend",label:"广告花费"},{key:"level",label:"清仓等级",kind:"status"},{key:"price",label:"价格建议"},{key:"ad",label:"广告建议"},{key:"replenish",label:"补货建议"},{key:"failure",label:"失败原因",kind:"status"},{key:"status",label:"状态",kind:"status"}
+      ], `<button class="btn" data-action="generateReviewReport"><i data-lucide="file-text"></i>生成复盘报告</button><button class="btn primary" data-action="feedbackRule"><i data-lucide="repeat"></i>生成规则回流</button>`);
+    }
+
+    function renderExceptions() {
+      return `
+        ${pageShell("异常处理队列", "所有 AI 识别出来的问题进入队列，支持按类型、优先级、负责人筛选，处理后关联动作日志。", `
+          <button class="btn" data-action="dedupeExceptions"><i data-lucide="copy-check"></i>防重复校验</button>
+          <button class="btn primary" data-action="createException"><i data-lucide="plus"></i>新增异常</button>
+        `)}
+        ${metrics([{label:"P0 异常",value:2,badge:"今日必处理",note:"库存预警、D15 弱动销"},{label:"处理中",value:1,note:"已分配负责人"},{label:"待忽略原因",value:0,note:"已忽略必须填原因"},{label:"关联动作日志",value:logs.length,note:"可追溯"}])}
+        <div class="layout-detail">
+          <div class="panel"><div class="panel-head">${filterTabs(["全部","P0","P1","D15 弱动销","库存预警","老品广告异常","Listing 异常"])}</div><div class="panel-body">${table([
+            {key:"id",label:"异常编号"},{key:"type",label:"异常类型",kind:"status"},{key:"priority",label:"优先级",kind:"priority"},{key:"sku",label:"SKU"},{key:"stage",label:"生命周期",kind:"status"},{key:"rule",label:"触发规则"},{key:"desc",label:"异常说明"},{key:"action",label:"AI 建议"},{key:"owner",label:"负责人"},{key:"status",label:"处理状态",kind:"status"},{key:"due",label:"最晚处理"}
+          ], filtered(exceptions).map(e=>({...e, quick:`<button class="btn small" data-action="startException" data-id="${e.id}">开始</button><button class="btn small success" data-action="completeException" data-id="${e.id}">完成</button><button class="btn small danger" data-action="ignoreException" data-id="${e.id}">忽略</button>`})), "openException")}</div></div>
+          <aside class="detail-panel">${exceptionDetail(exceptions[0])}</aside>
+        </div>
+      `;
+    }
+
+    function exceptionDetail(row) {
+      return `
+        <div class="detail-section"><h2>${row.type}</h2><div class="meta">${row.id} · ${row.sku} · ${row.asin}</div>${status(row.priority)}</div>
+        <div class="detail-section"><strong>AI 判断</strong><p class="muted" style="margin:0;line-height:1.55">${row.desc}</p></div>
+        <div class="detail-section"><strong>建议动作</strong><p class="muted" style="margin:0;line-height:1.55">${row.action}</p></div>
+        <div class="detail-section"><div class="actions"><button class="btn" data-action="transferInactive" data-id="${row.id}">转不动销</button><button class="btn" data-action="addLogFor" data-id="${row.id}">记录日志</button><button class="btn primary" data-action="completeException" data-id="${row.id}">标记完成</button></div></div>
+      `;
+    }
+
+    function renderInactive() {
+      return moduleTable("不动销处置队列", "专门处理新品 D7/D15/D23/D30 不动销、清货、强制清仓、补货候选和黑名单。", inactive, [
+        {key:"id",label:"处置编号"},{key:"sku",label:"SKU"},{key:"node",label:"处置阶段",kind:"status"},{key:"level",label:"处置等级",kind:"status"},{key:"price",label:"价格建议"},{key:"ad",label:"广告建议"},{key:"replenish",label:"补货建议"},{key:"clearance",label:"清仓建议"},{key:"failure",label:"失败原因",kind:"status"},{key:"owner",label:"负责人"},{key:"status",label:"状态",kind:"status"},{key:"due",label:"最晚处理"}
+      ], `<button class="btn" data-action="requireFailureReason"><i data-lucide="message-square-warning"></i>检查失败原因</button><button class="btn primary" data-action="completeInactive"><i data-lucide="check"></i>完成处置并记录日志</button>`);
+    }
+
+    function renderLogs() {
+      return moduleTable("动作日志", "记录降价、开券、停广告、否词、补货、清货、修改内容等关键动作，用于复盘和责任追踪。", logs, [
+        {key:"id",label:"动作编号"},{key:"related",label:"关联编号"},{key:"sku",label:"SKU"},{key:"type",label:"动作类型",kind:"status"},{key:"content",label:"动作内容"},{key:"user",label:"执行人"},{key:"time",label:"执行时间"},{key:"before",label:"执行前"},{key:"after",label:"执行后"},{key:"review",label:"复查时间"},{key:"result",label:"复查结果",kind:"status"}
+      ], `<button class="btn primary" data-action="addLog"><i data-lucide="plus"></i>新增动作日志</button>`);
+    }
+
+    function renderRules() {
+      return `
+        ${pageShell("规则中心", "沉淀选品、利润、站点、供应商、图片、Listing、广告、补货、清货、生命周期、审核和通知规则。", `
+          <button class="btn" data-action="addRule"><i data-lucide="plus"></i>新增规则</button>
+          <button class="btn primary" data-action="saveRules"><i data-lucide="save"></i>保存规则</button>
+        `)}
+        ${metrics([{label:"启用规则",value:rules.filter(r=>r.enabled).length,note:"被 AI Agent 调用"},{label:"生命周期规则",value:1,note:"D7/D15/D23/D30"},{label:"规则建议",value:4,badge:"待审核",note:"来自质量反馈中心"},{label:"禁用规则",value:rules.filter(r=>!r.enabled).length,note:"不再触发新异常"}])}
+        <div class="panel"><div class="panel-head">${filterTabs(["全部","选品规则","新品测试规则","广告规则","图片规则","审核规则"])}</div><div class="panel-body">${table([
+          {key:"id",label:"规则编号"},{key:"name",label:"规则名称"},{key:"type",label:"规则类型",kind:"status"},{key:"scope",label:"适用范围"},{key:"condition",label:"触发条件"},{key:"action",label:"处理建议"},{key:"risk",label:"风险",kind:"status"},{key:"enabledText",label:"是否启用",kind:"status"},{key:"updated",label:"更新时间"}
+        ], filtered(rules.map(r=>({...r, enabledText:r.enabled?"已启用":"已禁用", quick:`<button class="btn small" data-action="editRule" data-id="${r.id}">编辑</button><button class="btn small" data-action="toggleRule" data-id="${r.id}">${r.enabled?"禁用":"启用"}</button>`}))), "openRule")}</div></div>
+      `;
+    }
+
+    function renderQuality() {
+      return `
+        ${pageShell("质量反馈中心", "统计人工反馈和上线后经营表现，让 AI 从提效工具变成质量提升系统。", `
+          <button class="btn" data-action="syncQuality"><i data-lucide="refresh-cw"></i>同步上线表现</button>
+          <button class="btn primary" data-action="applyQualitySuggestions"><i data-lucide="repeat"></i>应用规则优化建议</button>
+        `)}
+        ${metrics([{label:"AI 结果平均通过率",value:"70.7%",note:"选品、图片、Listing、广告等"},{label:"平均驳回率",value:"15.2%",note:"结构化驳回原因"},{label:"经营回流指标",value:"6 类",note:"CTR、CVR、ACOS、动销率等"},{label:"优化建议",value:quality.length,note:"可转规则审核"}])}
+        <div class="panel"><div class="panel-head"><h2>质量反馈统计</h2>${status("可回流规则中心")}</div><div class="panel-body">${table([
+          {key:"module",label:"模块",kind:"status"},{key:"pass",label:"人工通过率"},{key:"reject",label:"驳回率"},{key:"business",label:"上线后质量回流"},{key:"issue",label:"主要问题"},{key:"suggestion",label:"系统优化建议"}
+        ], quality.map((q,i)=>({...q,id:`QLT-${i+1}`,quick:`<button class="btn small primary" data-action="createRuleFromQuality" data-id="QLT-${i+1}">转规则建议</button>`})), "openQuality")}</div></div>
+      `;
+    }
+
+    function renderLibrary() {
+      return moduleTable("成果库", "沉淀 AI 产出的 Brief、图片、Listing、A+、广告建议、补货建议、复盘报告和规则建议。", library, [
+        {key:"id",label:"成果编号"},{key:"type",label:"成果类型",kind:"status"},{key:"sku",label:"关联对象"},{key:"title",label:"成果名称"},{key:"source",label:"来源"},{key:"review",label:"审核状态",kind:"status"},{key:"used",label:"使用位置"},{key:"effect",label:"效果"},{key:"time",label:"创建时间"}
+      ], `<button class="btn" data-action="reuseAsset"><i data-lucide="copy"></i>复用成果</button><button class="btn primary" data-action="exportAsset"><i data-lucide="file-down"></i>导出成果</button>`);
+    }
+
+    function renderCredits() {
+      return moduleTable("积分与任务记录", "记录每次 AI 调用的任务、模块、消耗积分、成功失败、失败是否退回。", credits, [
+        {key:"id",label:"记录编号"},{key:"task",label:"任务名称"},{key:"type",label:"任务类型",kind:"status"},{key:"module",label:"消耗模块"},{key:"credits",label:"消耗积分"},{key:"status",label:"状态",kind:"status"},{key:"refund",label:"失败是否退回",kind:"status"},{key:"time",label:"时间"}
+      ], `<button class="btn" data-action="creditRecharge"><i data-lucide="plus"></i>充值记录</button><button class="btn primary" data-action="exportCredits"><i data-lucide="file-down"></i>导出明细</button>`);
+    }
+
+    function renderSettings() {
+      return `
+        ${pageShell("数据连接与权限", "配置 ERP、广告、1688、平台 Listing、库存、利润、通知、角色权限和数据安全策略。", `
+          <button class="btn" data-action="testConnections"><i data-lucide="plug-zap"></i>测试连接</button>
+          <button class="btn primary" data-action="saveSettings"><i data-lucide="save"></i>保存设置</button>
+        `)}
+        ${metrics([{label:"ERP 数据",value:"在线",note:"商品、订单、库存、采购"},{label:"广告数据",value:"在线",note:"Amazon Ads 已同步"},{label:"1688 / 供应商",value:"在线",note:"图片搜索和规格匹配"},{label:"通知渠道",value:"飞书",note:"P0 异常推负责人和主管"}])}
+        <div class="grid-2">
+          <div class="panel"><div class="panel-head"><h2>角色权限</h2></div><div class="panel-body card-list">${["老板 / 高管：查看全部数据、审批高风险建议","运营主管：创建任务、审核、分配异常、调整部分规则","运营：补充资料、审核图片/Listing、处理异常","产品开发：确认供应商、采购价、失败原因","广告人员：处理广告异常、记录广告动作","管理员：配置数据连接、规则、权限、通知、积分"].map(x=>`<div class="card"><strong>${x}</strong></div>`).join("")}</div></div>
+          <div class="panel"><div class="panel-head"><h2>安全与审计</h2>${status("审核记录不可删除")}</div><div class="panel-body card-list">${["所有关键动作记录操作人、时间和结果","ERP 写入、发布、预算、补货必须人工确认","审核记录只允许作废，不允许物理删除","客户数据只用于客户自身业务任务"].map(x=>`<div class="card"><strong>${x}</strong></div>`).join("")}</div></div>
+        </div>
+      `;
+    }
+
+    function moduleTable(title, desc, rows, columns, actions) {
+      return `
+        ${pageShell(title, desc, actions)}
+        <div class="panel"><div class="panel-head">${filterTabs(["全部","待处理","待审核","已完成","高风险"])}</div><div class="panel-body">${table(columns, filtered(rows).map(row => ({...row, quick: genericQuick(row)})), "openRow")}</div></div>
+      `;
+    }
+
+    function genericQuick(row) {
+      if (row.status && /待|中|缺失|风险/.test(row.status)) {
+        return `<button class="btn small success" data-action="markDone" data-id="${row.id}">完成</button><button class="btn small" data-action="addLogFor" data-id="${row.id}">记日志</button>`;
+      }
+      return `<button class="btn small" data-action="addLogFor" data-id="${row.id}">记日志</button>`;
+    }
+
+    function openModal(title, body, foot) {
+      qs("#modalTitle").textContent = title;
+      qs("#modalBody").innerHTML = body;
+      qs("#modalFoot").innerHTML = foot || `<button class="btn primary" data-action="closeModal">知道了</button>`;
+      qs("#modalMask").classList.add("open");
+      qs("#modal").classList.add("open");
+      iconRefresh();
+    }
+
+    function closeModal() {
+      qs("#modalMask").classList.remove("open");
+      qs("#modal").classList.remove("open");
+    }
+
+    function openDrawer(title, body, foot) {
+      qs("#drawerTitle").textContent = title;
+      qs("#drawerBody").innerHTML = body;
+      qs("#drawerFoot").innerHTML = foot || `<button class="btn primary" data-action="closeDrawer">关闭</button>`;
+      qs("#drawerMask").classList.add("open");
+      qs("#drawer").classList.add("open");
+      iconRefresh();
+    }
+
+    function closeDrawer() {
+      qs("#drawerMask").classList.remove("open");
+      qs("#drawer").classList.remove("open");
+    }
+
+    function toast(title, msg) {
+      const node = document.createElement("div");
+      node.className = "toast";
+      node.innerHTML = `<strong>${escapeHtml(title)}</strong><span>${escapeHtml(msg)}</span>`;
+      qs("#toastStack").appendChild(node);
+      setTimeout(() => node.remove(), 3600);
+    }
+
+    function setView(view) {
+      state.view = view;
+      state.filter = "all";
+      render();
+      window.scrollTo({top: 0, behavior: "smooth"});
+    }
+
+    function openPlanner() {
+      const goal = qs("#goalInput")?.value || state.goal;
+      state.goal = goal;
+      openModal("AI 任务规划确认", `
+        <div class="goal-box"><textarea id="plannerGoal">${escapeHtml(goal)}</textarea></div>
+        <div class="stepper">
+          ${["理解经营目标","采集 ERP/广告/供应链数据","执行选品判断","生成商品 Brief","生成图片与 Listing","生成刊登草稿","设置 D7/D15/D30 测试"].map((s,i)=>`<div class="step ${i<2?"done":i===2?"active":""}"><strong>${i+1}</strong><span>${s}</span></div>`).join("")}
+        </div>
+        <div class="grid-3">
+          <div class="kv-item"><label>预计耗时</label><strong>18-35 分钟</strong></div>
+          <div class="kv-item"><label>预计积分</label><strong>180-260</strong></div>
+          <div class="kv-item"><label>输出物</label><strong>Brief / 图片 / Listing / 新品计划</strong></div>
+        </div>
+        <div class="card"><strong>人工审核点</strong><div class="meta">候选品、Brief、图片、Listing、刊登草稿、新品处置建议、补货和清货建议均进入审核中心。</div></div>
+      `, `<button class="btn" data-action="closeModal">取消</button><button class="btn primary" data-action="confirmPlan">确认执行</button>`);
+    }
+
+    function openTaskCreate() {
+      openModal("创建 AI 任务", `
+        <div class="form-grid">
+          <div class="form-row"><label>任务名称</label><input class="input" id="newTaskName" value="新品全链路任务"></div>
+          <div class="form-row"><label>任务类型</label><select class="input" id="newTaskType"><option>开品任务</option><option>自动化选品任务</option><option>图片生成任务</option><option>Listing 生成任务</option><option>新品测试分析任务</option><option>广告异常分析任务</option><option>补货建议任务</option><option>清货复盘任务</option></select></div>
+          <div class="form-row"><label>平台</label><select class="input"><option>Amazon</option><option>Walmart</option><option>TikTok Shop</option></select></div>
+          <div class="form-row"><label>站点</label><select class="input"><option>UK</option><option>US</option><option>DE</option></select></div>
+          <div class="form-row full"><label>输入关键词 / ASIN / 竞品链接</label><textarea class="textarea">foldable silicone colander\nB0KITCH42\npearl headbands for women</textarea></div>
+          <div class="form-row full"><label>执行范围</label><div class="chip-row">${["选品","Brief","图片","Listing","刊登草稿","新品测试","异常队列"].map(x=>`<span class="chip active">${x}</span>`).join("")}</div></div>
+        </div>
+      `, `<button class="btn" data-action="closeModal">取消</button><button class="btn primary" data-action="confirmCreateTask">创建并执行</button>`);
+    }
+
+    function openDetailForAny(id) {
+      const pools = [tasks, reviews, opportunities, briefs, supply, contentAssets, drafts, newProducts, healthRows, adRows, replenishment, clearance, exceptions, inactive, logs, rules, quality.map((q,i)=>({...q,id:`QLT-${i+1}`})), library, credits];
+      const row = pools.flat().find(item => item.id === id || item.sku === id);
+      if (!row) return;
+      const entries = Object.entries(row).filter(([key]) => key !== "quick" && key !== "steps");
+      openDrawer(row.name || row.product || row.title || row.type || row.id, `
+        <div class="kv">${entries.slice(0,8).map(([k,v])=>`<div class="kv-item"><label>${escapeHtml(k)}</label><strong>${escapeHtml(v)}</strong></div>`).join("")}</div>
+        <div class="card"><strong>AI 结论</strong><div class="meta">${escapeHtml(row.conclusion || row.action || row.suggestion || row.advice || row.verdict || "系统已基于 ERP 数据、企业规则和生命周期状态给出当前处理建议。")}</div></div>
+        <div class="card"><strong>判断依据</strong><ul class="reason-list"><li><span class="dot"></span><span>调用商品、库存、广告、利润、供应链与历史结果。</span></li><li><span class="dot"></span><span>命中对应业务规则后进入审核、异常或处置队列。</span></li><li><span class="dot"></span><span>处理结果会写入动作日志并回流质量反馈中心。</span></li></ul></div>
+      `, `<button class="btn" data-action="addLogFor" data-id="${id}">记录动作</button><button class="btn success" data-action="markDone" data-id="${id}">标记完成</button><button class="btn primary" data-action="closeDrawer">关闭</button>`);
+    }
+
+    function approveReview(id) {
+      const row = reviews.find(item => item.id === id);
+      if (row) row.status = "通过";
+      logs.unshift({ id:`LOG-${Date.now()}`, related:id, sku:row?.sku || "", asin:"", type:"审核通过", content:`${row?.type || "审核"} 已通过，触发下一步流程`, user:"运营主管", time:"刚刚", before:"待审核", after:"通过", review:"--", result:"有效" });
+      render();
+      toast("审核已通过", "已触发下一步流程，并写入审核记录。");
+    }
+
+    function rejectReview(id) {
+      openModal("驳回审核", `
+        <div class="form-row"><label>结构化驳回原因</label><select class="input" id="rejectReason"><option>商品事实不完整</option><option>图片不符合平台规则</option><option>Listing 夸大承诺</option><option>供应链成本不成立</option><option>生命周期建议风险过高</option></select></div>
+        <div class="form-row"><label>审核意见</label><textarea class="textarea" id="rejectNote">请补充依据后重新生成。</textarea></div>
+      `, `<button class="btn" data-action="closeModal">取消</button><button class="btn danger" data-action="confirmRejectReview" data-id="${id}">确认驳回</button>`);
+    }
+
+    function addLog(id = "") {
+      openModal("新增动作日志", `
+        <div class="form-grid">
+          <div class="form-row"><label>关联编号</label><input class="input" id="logRelated" value="${escapeHtml(id)}"></div>
+          <div class="form-row"><label>SKU / ASIN</label><input class="input" id="logSku" value="YL-KIT-042 / B0KITCH42"></div>
+          <div class="form-row"><label>动作类型</label><select class="input" id="logType">${["降价","开券","停广告","否词","降预算","补货","清仓","修改 Listing","更换主图","加入黑名单"].map(x=>`<option>${x}</option>`).join("")}</select></div>
+          <div class="form-row"><label>复查时间</label><input class="input" id="logReview" value="3 天后"></div>
+          <div class="form-row full"><label>动作内容</label><textarea class="textarea" id="logContent">根据 AI 建议执行处理动作，并设置复查节点。</textarea></div>
+        </div>
+      `, `<button class="btn" data-action="closeModal">取消</button><button class="btn primary" data-action="confirmAddLog">保存日志</button>`);
+    }
+
+    const handlers = {
+      openPlanner,
+      closeModal,
+      closeDrawer,
+      openTaskCreate,
+      confirmCreateTask() {
+        const id = `TASK-${Date.now()}`;
+        tasks.unshift({ id, name:qs("#newTaskName").value, type:qs("#newTaskType").value, stage:"目标理解", progress:6, owner:"AI Agent", status:"执行中", credits:0, next:"读取数据与企业规则", steps:["目标理解","数据采集","规则过滤","生成结果","进入审核"] });
+        closeModal(); setView("tasks"); toast("任务已创建", "AI Agent 已开始执行，结果会进入审核中心。");
+      },
+      confirmPlan() {
+        const id = `TASK-${Date.now()}`;
+        state.credits -= 180;
+        tasks.unshift({ id, name:"AI 规划任务：" + (qs("#plannerGoal").value.slice(0,18)), type:"开品任务", stage:"数据采集", progress:12, owner:"AI Agent", status:"执行中", credits:180, next:"调用 ERP、广告、1688 和规则中心", steps:["目标理解","数据采集","规则过滤","选品结论","Brief","内容生成","生命周期"] });
+        credits.unshift({ id:`CR-${Date.now()}`, task:"AI 规划任务", type:"开品任务", module:"Agent 编排", credits:180, status:"成功", refund:"否", time:"刚刚" });
+        closeModal(); render(); toast("任务已启动", "系统已拆解任务，人工审核点已预置。");
+      },
+      quickGoal(el) {
+        const text = el.dataset.goal;
+        const map = {
+          "开发新品":"帮我从 UK 站 Beauty 和 Kitchen 类目开发一批新品，完成选品、Brief、图片、Listing、刊登草稿和 D30 新品测试计划。",
+          "自动选品":"导入 100 个 ASIN，执行硬规则、利润、需求、竞争和 1688 匹配，输出 A/B/C 推荐等级。",
+          "处理不动销":"筛选 D7 / D15 / D23 / D30 不动销商品，生成清货、补货、黑名单和动作日志建议。"
+        };
+        qs("#goalInput").value = map[text] || `帮我${text}，输出结论、依据、风险、建议动作和待审核项。`;
+      },
+      uploadMaterial(){ toast("上传入口", "原型中模拟上传图片、Excel、产品事实表和竞品链接。"); },
+      chooseHistory(){ openSearch(); },
+      setFilter(el){ state.filter = el.dataset.filter === "全部" ? "all" : el.dataset.filter; render(); },
+      openTask(el){ const task = tasks.find(t=>t.id===el.dataset.id); if (!task) return; openDrawer(task.name, `<div class="stepper">${task.steps.map((s,i)=>`<div class="step ${i<Math.round(task.progress/18)?"done":i===Math.round(task.progress/18)?"active":""}"><strong>${i+1}</strong><span>${s}</span></div>`).join("")}</div><div class="card"><strong>当前阶段结果</strong><div class="meta">${task.stage} · ${task.next}</div></div><div class="kv"><div class="kv-item"><label>积分消耗</label><strong>${task.credits}</strong></div><div class="kv-item"><label>状态</label><strong>${task.status}</strong></div></div>`, `<button class="btn" data-action="pauseTask" data-id="${task.id}">暂停</button><button class="btn" data-action="taskToReview" data-id="${task.id}">结果进审核</button><button class="btn primary" data-action="continueTask" data-id="${task.id}">继续</button>`); },
+      continueTask(el){ closeDrawer(); toast("继续任务", "已进入当前任务下一步处理页面。"); },
+      pauseTask(el){ const t=tasks.find(x=>x.id===el.dataset.id); if(t) t.status = t.status==="执行中" ? "已暂停" : "执行中"; closeDrawer(); render(); toast("任务状态已更新", t?.status || "已更新"); },
+      retryFailed(){ toast("失败任务已重试", "失败原因和积分退回记录已保留。"); },
+      taskToReview(el){ const t=tasks.find(x=>x.id===el.dataset.id); reviews.unshift({ id:`REV-${Date.now()}`, type:"任务结果审核", sku:"--", product:t?.name || "AI 任务结果", task:t?.name || "", conclusion:"AI 任务结果待人工确认", evidence:"系统生成结构化结果、依据和建议动作", risk:"中", status:"待审核", due:"今天", owner:"运营主管" }); closeDrawer(); setView("reviews"); toast("已进入审核中心", "任务结果已生成审核记录。"); },
+      openReview(el){ const r=reviews.find(x=>x.id===el.dataset.id); if(!r)return; openDrawer(`${r.type}：${r.product}`, `<div class="card"><strong>AI 结论</strong><div class="meta">${r.conclusion}</div></div><div class="card"><strong>判断依据</strong><div class="meta">${r.evidence}</div></div><div class="card"><strong>风险提示</strong>${status(r.risk)}</div>`, `<button class="btn" data-action="reassignReview" data-id="${r.id}">转交</button><button class="btn" data-action="regenerateReview" data-id="${r.id}">重新生成</button><button class="btn danger" data-action="rejectReview" data-id="${r.id}">驳回</button><button class="btn primary" data-action="approveReview" data-id="${r.id}">通过</button>`); },
+      approveReview(el){ approveReview(el.dataset.id); closeDrawer(); },
+      rejectReview(el){ rejectReview(el.dataset.id); },
+      confirmRejectReview(el){ const r=reviews.find(x=>x.id===el.dataset.id); if(r){ r.status="驳回"; r.rejectReason=qs("#rejectReason").value; } closeModal(); closeDrawer(); render(); toast("审核已驳回", "驳回原因已进入质量反馈中心。"); },
+      reassignReview(){ toast("已转交", "审核任务已转交给对应负责人。"); },
+      regenerateReview(){ toast("已重新生成", "AI 将基于审核意见重新生成结果。"); },
+      bulkApprove(){ reviews.filter(r=>r.risk==="低").forEach(r=>r.status="通过"); render(); toast("低风险审核已批量通过", "记录已写入审核链路。"); },
+      bulkReject(){ toast("批量驳回", "请选择结构化驳回原因后提交。"); },
+      openOpportunity(el){ openDetailForAny(el.dataset.id); },
+      approveOpportunity(el){ const o=opportunities.find(x=>x.id===el.dataset.id); if(o)o.status="已生成 Brief"; toast("候选品已通过", "已生成商品 Brief，并进入内容准备。"); render(); },
+      rejectOpportunity(el){ const o=opportunities.find(x=>x.id===el.dataset.id); if(o){o.grade="C";o.status="已淘汰";} toast("已进入淘汰池", "淘汰原因将用于选品规则回流。"); render(); },
+      importAsin(){ openModal("导入 ASIN / 关键词", `<textarea class="textarea">B0KITCH42\npearl headbands for women\ndesk cable organizer</textarea>`, `<button class="btn" data-action="closeModal">取消</button><button class="btn primary" data-action="closeModal">开始导入</button>`); },
+      runSelection(){ toast("选品漏斗已运行", "已完成硬规则、利润、需求、竞争和 1688 匹配。"); },
+      openBrief(el){ const b=briefs.find(x=>x.id===el.dataset.id); openDrawer(b.name, briefDetail(b), `<button class="btn" data-action="generateContentFromBrief" data-id="${b.id}">生成内容</button><button class="btn primary" data-action="submitBriefReview">提交审核</button>`); },
+      createBrief(){ toast("Brief 已创建", "可从选品结论、历史商品或手工录入生成。"); },
+      submitBriefReview(){ reviews.unshift({id:`REV-${Date.now()}`, type:"商品 Brief 审核", sku:"YL-KIT-042", product:"可折叠硅胶沥水篮", task:"Brief 提交", conclusion:"Brief 完整度 92%，建议通过", evidence:"产品事实、成本、关键词和生命周期计划基本完整", risk:"低", status:"待审核", due:"今天", owner:"运营主管"}); setView("reviews"); toast("已提交审核", "Brief 审核记录已生成。"); },
+      saveBrief(){ toast("Brief 已保存", "下游图片、Listing、刊登草稿将使用最新上下文。"); },
+      generateContentFromBrief(){ setView("content"); toast("内容生成任务已创建", "图片、Listing、A+ 和视频脚本进入内容资产中心。"); },
+      recalcProfit(){ toast("利润已重新测算", "已刷新乐观、基准、压力利润和广告生存能力。"); },
+      pushSupplyToBrief(){ toast("已写入 Brief", "供应链与成本字段已更新。"); },
+      generateAssetPack(){ toast("内容包已生成", "图片、Listing、A+ 和视频脚本任务已创建。"); },
+      addToLibrary(){ toast("已加入成果库", "审核通过资产会沉淀到成果库。"); },
+      toggleImage(el){ const id=el.dataset.id; state.selectedImages.has(id)?state.selectedImages.delete(id):state.selectedImages.add(id); render(); },
+      regenerateImages(){ toast("图片重新生成中", "驳回原因将进入质量反馈中心。"); },
+      approveImages(){ imageAssets.forEach(img=>{ if(state.selectedImages.has(img.id)) img.review="通过"; }); render(); toast("所选图片已通过", "图片已加入商品资产，可进入刊登草稿。"); },
+      setListingVersion(el){ state.listingVersion=el.dataset.version; render(); },
+      checkListing(){ toast("Listing 校验完成", "标题、敏感词、关键词覆盖和字段一致性已检查。"); },
+      saveListing(){ listingVersions[state.listingVersion]=qs("#listingEditor").value; toast("Listing 已保存", "修改内容已进入版本记录。"); },
+      submitListingReview(){ reviews.unshift({id:`REV-${Date.now()}`, type:"Listing 审核", sku:"YL-KIT-042", product:"可折叠硅胶沥水篮", task:"Listing 提交", conclusion:`${state.listingVersion} 待审核`, evidence:"规则校验通过，需人工确认表达", risk:"低", status:"待审核", due:"今天", owner:"运营主管"}); setView("reviews"); toast("Listing 已进入审核", "审核通过后可推送刊登草稿。"); },
+      rejectListing(){ rejectReview("REV-003"); },
+      validateDrafts(){ toast("草稿已重新校验", "风险字段和待人工确认项已刷新。"); },
+      submitDraftReview(){ reviews.unshift({id:`REV-${Date.now()}`, type:"刊登草稿审核", sku:"YL-KIT-042", product:"可折叠硅胶沥水篮", task:"刊登草稿", conclusion:"草稿完整度 96%，可人工审核发布", evidence:"图片、Listing、属性和供应链字段基本完整", risk:"中", status:"待审核", due:"今天", owner:"运营主管"}); setView("reviews"); },
+      syncLifecycle(){ toast("生命周期已同步", "销量、库存、广告、利润、Listing、Buy Box 状态已刷新。"); },
+      generateLifecycleExceptions(){ exceptions.unshift({id:`EXC-${Date.now()}`, type:"D30 决策待处理", priority:"P0", sku:"YL-BEA-099", asin:"B0BEAU099", stage:"新品测试期", rule:"D30 黑名单 SKU", desc:"30 日销量 0，需停广告并填写失败原因", action:"加入黑名单，进入清货复盘", owner:"运营主管", status:"待处理", due:"今天"}); setView("exceptions"); toast("异常已生成", "D7/D15/D23/D30 命中规则已写入异常和处置队列。"); },
+      openLifecycle(el){ openDetailForAny(el.dataset.id); },
+      confirmLifecycleAction(el){ const r=newProducts.find(x=>x.id===el.dataset.id); if(r)r.status="已确认"; logs.unshift({id:`LOG-${Date.now()}`, related:el.dataset.id, sku:r?.sku||"", asin:r?.asin||"", type:"确认处置", content:r?.suggestion||"", user:"运营主管", time:"刚刚", before:"待处理", after:"已确认", review:"3 天后", result:"待观察"}); render(); toast("处置建议已确认", "动作已写入日志。"); },
+      adjustLifecycleAction(el){ addLog(el.dataset.id); },
+      runHealthScan(){ toast("经营健康诊断完成", "老品异常已按销量、利润、广告、库存和 Listing 分类。"); },
+      createExceptionFromHealth(){ exceptions.unshift({id:`EXC-${Date.now()}`, type:"老品利润异常", priority:"P1", sku:"YL-ADS-091", asin:"B0ADS091", stage:"常规运营期", rule:"利润/单 < 0", desc:"销售下滑，广告未收缩，单件利润转负", action:"收缩广告并检查转化", owner:"广告人员", status:"待处理", due:"明天"}); setView("exceptions"); },
+      pullAds(){ toast("广告数据已拉取", "ACOS、TACoS、CPC、CTR、CVR 和搜索词报告已更新。"); },
+      approveAdActions(){ toast("广告建议已审批", "否词、降预算和暂停广告动作已进入动作日志。"); },
+      refreshReplenish(){ toast("补货建议已刷新", "已重新计算供应商交期、物流时效和库存覆盖。"); },
+      approveReplenish(){ reviews.unshift({id:`REV-${Date.now()}`, type:"补货建议审核", sku:"YL-KIT-042", product:"可折叠硅胶沥水篮", task:"补货建议", conclusion:"建议补货 80 件", evidence:"D30 剩余库存 3，平均利润为正", risk:"中", status:"待审核", due:"今天", owner:"产品开发"}); setView("reviews"); },
+      generateReviewReport(){ library.unshift({id:`LIB-${Date.now()}`, type:"复盘报告", sku:"YL-BEA-099", title:"失败产品复盘报告", source:"清货与复盘", review:"待审核", used:"规则回流", effect:"待确认", time:"刚刚"}); setView("library"); toast("复盘报告已生成", "失败原因将用于下一轮规则优化。"); },
+      feedbackRule(){ rules.unshift({id:`RULE-${Date.now()}`, name:"便携化妆镜低价带风险下调", type:"选品规则", scope:"Amazon / UK / Beauty", condition:"低价带 + 高 CPC + 供应链无差异", action:"降低推荐权重", risk:"中", enabled:false, updated:"刚刚"}); setView("rules"); },
+      openException(el){ const e=exceptions.find(x=>x.id===el.dataset.id); openDrawer(`${e.type} · ${e.sku}`, exceptionDetail(e), `<button class="btn" data-action="startException" data-id="${e.id}">开始处理</button><button class="btn" data-action="transferInactive" data-id="${e.id}">转不动销</button><button class="btn danger" data-action="ignoreException" data-id="${e.id}">忽略</button><button class="btn primary" data-action="completeException" data-id="${e.id}">完成</button>`); },
+      startException(el){ const e=exceptions.find(x=>x.id===el.dataset.id); if(e)e.status="处理中"; closeDrawer(); render(); toast("异常已开始处理", "请填写处理动作或转入对应任务。"); },
+      completeException(el){ const e=exceptions.find(x=>x.id===el.dataset.id); if(e){e.status="已完成"; logs.unshift({id:`LOG-${Date.now()}`, related:e.id, sku:e.sku, asin:e.asin, type:"异常处理", content:e.action, user:e.owner, time:"刚刚", before:"待处理", after:"已完成", review:"3 天后", result:"待观察"});} closeDrawer(); render(); toast("异常已完成", "处理动作已关联动作日志。"); },
+      ignoreException(el){ openModal("忽略异常", `<div class="form-row"><label>忽略原因</label><textarea class="textarea" id="ignoreReason">业务已确认无需处理。</textarea></div>`, `<button class="btn" data-action="closeModal">取消</button><button class="btn danger" data-action="confirmIgnoreException" data-id="${el.dataset.id}">确认忽略</button>`); },
+      confirmIgnoreException(el){ const e=exceptions.find(x=>x.id===el.dataset.id); if(e)e.status="已忽略"; closeModal(); closeDrawer(); render(); toast("异常已忽略", "忽略原因已记录，可追溯。"); },
+      transferInactive(el){ const e=exceptions.find(x=>x.id===el.dataset.id); if(e) inactive.unshift({id:`INA-${Date.now()}`, sku:e.sku, asin:e.asin, site:"UK", node:"D15/D30", level:"清仓", price:"按规则降价", ad:"按建议收缩", replenish:"不补货", clearance:"进入处置", failure:"待填写", owner:e.owner, status:"待处理", due:"今天"}); closeDrawer(); setView("inactive"); toast("已转入不动销处置队列", "请继续确认价格、广告、补货和失败原因。"); },
+      dedupeExceptions(){ toast("防重复校验完成", "同一 ASIN 同一天同类型异常不会重复生成。"); },
+      createException(){ openModal("新增异常", `<div class="form-grid"><div class="form-row"><label>异常类型</label><input class="input" value="数据缺失"></div><div class="form-row"><label>SKU</label><input class="input" value="YL-KIT-042"></div><div class="form-row full"><label>异常说明</label><textarea class="textarea">关键字段缺失，阻断高质量生成。</textarea></div></div>`, `<button class="btn" data-action="closeModal">取消</button><button class="btn primary" data-action="closeModal">创建</button>`); },
+      requireFailureReason(){ toast("失败原因检查完成", "D30 黑名单 / 强制清仓项必须填写失败原因。"); },
+      completeInactive(){ inactive.forEach(i=>{ if(i.status==="待处理") i.status="已完成"; }); render(); toast("处置已完成", "动作日志和复盘记录已生成。"); },
+      addLog(){ addLog(); },
+      addLogFor(el){ addLog(el.dataset.id); },
+      confirmAddLog(){ logs.unshift({id:`LOG-${Date.now()}`, related:qs("#logRelated").value, sku:qs("#logSku").value.split("/")[0].trim(), asin:qs("#logSku").value.split("/")[1]?.trim() || "", type:qs("#logType").value, content:qs("#logContent").value, user:qs("#roleSelect").value, time:"刚刚", before:"执行前数据", after:"待观察", review:qs("#logReview").value, result:"待观察"}); closeModal(); setView("logs"); toast("动作日志已保存", "后续复查结果会进入质量反馈和复盘。"); },
+      addRule(){ openModal("新增规则", `<div class="form-grid"><div class="form-row"><label>规则名称</label><input class="input" id="ruleName" value="新品测试预算审批"></div><div class="form-row"><label>规则类型</label><select class="input" id="ruleType"><option>审核规则</option><option>选品规则</option><option>新品测试规则</option><option>广告规则</option><option>补货规则</option><option>清货规则</option></select></div><div class="form-row full"><label>触发条件</label><textarea class="textarea" id="ruleCondition">新品 7 天预算超过 £20。</textarea></div></div>`, `<button class="btn" data-action="closeModal">取消</button><button class="btn primary" data-action="confirmAddRule">保存规则</button>`); },
+      confirmAddRule(){ rules.unshift({id:`RULE-${Date.now()}`, name:qs("#ruleName").value, type:qs("#ruleType").value, scope:"Amazon / UK", condition:qs("#ruleCondition").value, action:"转运营主管审批", risk:"中", enabled:true, updated:"刚刚"}); closeModal(); render(); toast("规则已新增", "规则将被 AI Agent 和异常队列调用。"); },
+      editRule(el){ const r=rules.find(x=>x.id===el.dataset.id); openModal("编辑规则", `<div class="form-row"><label>规则名称</label><input class="input" id="editRuleName" value="${escapeHtml(r.name)}"></div><div class="form-row"><label>处理建议</label><textarea class="textarea" id="editRuleAction">${escapeHtml(r.action)}</textarea></div>`, `<button class="btn" data-action="closeModal">取消</button><button class="btn primary" data-action="confirmEditRule" data-id="${r.id}">保存</button>`); },
+      confirmEditRule(el){ const r=rules.find(x=>x.id===el.dataset.id); if(r){r.name=qs("#editRuleName").value;r.action=qs("#editRuleAction").value;r.updated="刚刚";} closeModal(); render(); toast("规则已更新", "规则变更记录已保留。"); },
+      toggleRule(el){ const r=rules.find(x=>x.id===el.dataset.id); if(r)r.enabled=!r.enabled; render(); toast("规则状态已变更", r?.enabled ? "已启用" : "已禁用，不再触发新异常。"); },
+      saveRules(){ toast("规则已保存", "规则中心已同步到 Agent 编排和异常队列。"); },
+      syncQuality(){ toast("质量数据已同步", "CTR、CVR、ACOS、动销率、断货率和清货表现已回填。"); },
+      applyQualitySuggestions(){ toast("优化建议已进入规则审核", "结构化反馈已转入规则中心待审核。"); },
+      createRuleFromQuality(el){ rules.unshift({id:`RULE-${Date.now()}`, name:"质量反馈规则建议", type:"质量回流规则", scope:"Amazon / 全站点", condition:"来自 " + el.dataset.id, action:"根据反馈优化模板与阈值", risk:"中", enabled:false, updated:"刚刚"}); setView("rules"); },
+      openQuality(el){ openDetailForAny(el.dataset.id); },
+      reuseAsset(){ toast("成果已复用", "已复制到当前商品任务上下文。"); },
+      exportAsset(){ toast("成果已导出", "原型中模拟导出 Brief、图片、Listing 或复盘报告。"); },
+      creditRecharge(){ toast("充值记录", "管理员可查看积分充值、扣减、失败退回。"); },
+      exportCredits(){ toast("积分明细已导出", "任务、模块、积分、状态与退回记录已导出。"); },
+      testConnections(){ toast("连接测试完成", "ERP、广告、1688、平台 Listing、通知渠道均可用。"); },
+      saveSettings(){ toast("设置已保存", "权限、通知和数据安全策略已更新。"); },
+      openRow(el){ openDetailForAny(el.dataset.id); },
+      markDone(el){ const id=el.dataset.id; [drafts, newProducts, healthRows, adRows, replenishment, clearance, inactive].flat().forEach(row=>{ if(row.id===id) row.status="已完成"; }); closeDrawer(); render(); toast("状态已更新", "已完成并可关联动作日志。"); },
+      openSearch,
+      openNotifications,
+      searchOpen(el){ closeModal(); openDetailForAny(el.dataset.id); },
+      syncData(){ toast("数据已同步", "ERP、广告、库存、采购、Listing 和生命周期主表已刷新。"); }
+    };
+
+    function openSearch() {
+      const query = qs("#globalSearch").value.trim();
+      const rows = [...tasks.map(x=>({id:x.id,type:"任务",title:x.name})), ...products.map(x=>({id:x.id,type:"商品",title:`${x.id} ${x.name}`})), ...exceptions.map(x=>({id:x.id,type:"异常",title:`${x.type} ${x.sku}`})), ...library.map(x=>({id:x.id,type:"成果",title:x.title}))];
+      const matched = rows.filter(row => !query || row.title.toLowerCase().includes(query.toLowerCase()) || row.type.includes(query)).slice(0,8);
+      openModal("全局搜索", `
+        <div class="field" style="width:100%"><label>搜索</label><input id="modalSearchInput" value="${escapeHtml(query)}" placeholder="任务、SKU、ASIN、异常、成果"></div>
+        <div class="card-list" id="modalSearchResults">${matched.map(row=>`<button class="card" data-action="searchOpen" data-id="${row.id}"><div class="card-top"><div><strong>${escapeHtml(row.title)}</strong><div class="meta">${row.type}</div></div><i data-lucide="arrow-right"></i></div></button>`).join("") || `<div class="empty">没有搜索结果</div>`}</div>
+      `, `<button class="btn primary" data-action="closeModal">关闭</button>`);
+    }
+
+    function openNotifications() {
+      openDrawer("通知中心", `
+        <div class="card-list">
+          <div class="card"><div class="card-top"><strong>P0 异常：D15 弱动销</strong>${status("P0")}</div><div class="meta">YL-HOM-033 需要今天处理。</div><button class="btn small" data-view="exceptions">去处理</button></div>
+          <div class="card"><div class="card-top"><strong>审核任务：图片审核</strong>${status("待审核")}</div><div class="meta">硅胶沥水篮 5 张图片等待确认。</div><button class="btn small" data-view="reviews">去审核</button></div>
+          <div class="card"><div class="card-top"><strong>积分提醒</strong>${status("正常")}</div><div class="meta">今日消耗 392，剩余 12,480。</div><button class="btn small" data-view="credits">查看积分</button></div>
+        </div>
+      `);
+    }
+
+    document.addEventListener("click", event => {
+      const view = event.target.closest("[data-view]");
+      if (view) {
+        event.preventDefault();
+        closeDrawer();
+        closeModal();
+        setView(view.dataset.view);
+        return;
+      }
+      const action = event.target.closest("[data-action]");
+      if (!action) return;
+      event.preventDefault();
+      const handler = handlers[action.dataset.action];
+      if (handler) handler(action);
+    });
+
+    document.addEventListener("keydown", event => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") { event.preventDefault(); openSearch(); }
+      if (event.key === "Enter" && document.activeElement?.id === "globalSearch") openSearch();
+      if (event.key === "Escape") { closeModal(); closeDrawer(); }
+    });
+
+    render();
+  </script>
+</body>
+</html>
